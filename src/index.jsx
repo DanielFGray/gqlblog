@@ -10,7 +10,7 @@ const someList = [
   'baz'
 ]
 
-const listItem = (e: string) =>
+const listItem = e =>
   <li key={e}>{e}</li>
 
 const App = ({ name, list }) =>
