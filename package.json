@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -w webpack.config.babel.js -w .eslintrc.json -w .babelrc -x 'webpack-dev-server --progress'",
     "build": "NODE_ENV=production webpack --progress -p",
-    "lint": "(eslint --ext=js,jsx webpack.config.babel.js src; stylelint src/**/*.sss) || true"
+    "lint": "concurrently 'flow --quiet' 'eslint src' 'stylelint src/**/*.{css,sss}' --names 'flow,eslint,stylelint' -c red,green,blue"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "concurrently": "^3.4.0",
     "css-loader": "^0.28.0",
     "cssnano": "^3.10.0",
     "empty": "^0.10.1",
