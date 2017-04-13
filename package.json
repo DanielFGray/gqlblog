@@ -26,6 +26,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.0",
     "cssnano": "^3.10.0",
+    "empty": "^0.10.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-loader": "^1.7.1",

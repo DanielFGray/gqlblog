@@ -1,8 +1,12 @@
 [ignore]
+<PROJECT_ROOT>/node_modules/stylelint/.*
 
 [include]
 
 [libs]
 
 [options]
+module.system=haste
+module.name_mapper='^\(actions\|components\|constants\)?\/\(.*\)$' -> '<PROJECT_ROOT>/src/\1/\2'
+module.name_mapper='^.*\.[cs]ss$' -> 'empty/object'
 suppress_comment= \\(.\\|\n\\)*\\flow-disable-next-line

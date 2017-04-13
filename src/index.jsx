@@ -1,29 +1,14 @@
 // @flow
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { render } from 'react-dom'
 
-import './style.sss'
+import SomeList from 'components/SomeList'
+import 'style.sss'
 
 const someList = [
   'foo',
   'bar',
-  'baz'
+  'baz',
 ]
 
-const listItem = e =>
-  <li key={e}>{e}</li>
-
-const App = ({ name, list }) =>
-  <div className="test">
-    <h1>Hello {name}!</h1>
-    <ul>
-      {list.map(listItem)}
-    </ul>
-  </div>
-
-App.propTypes = {
-  name: PropTypes.string.isRequired,
-  list: PropTypes.arrayOf(PropTypes.string),
-}
-
-render(<App name="world" list={someList} />, document.getElementById('main'))
+render(<SomeList name="world" list={someList} />, document.getElementById('main'))
