@@ -1,10 +1,20 @@
 // @flow
 import React from 'react'
 import { render } from 'react-dom'
+import {
+  HashRouter as Router,
+  Route,
+} from 'react-router-dom'
 
-import SomeList from 'components/SomeList'
+import Home from 'containers/Home'
 import 'style.sss'
 
-const someList = [ 1, 2, 3, 4 ]
+const Init = () => (
+  <Router>
+    <div>
+      <Route exact path="/" component={Home} />
+    </div>
+  </Router>
+)
 
-render(<SomeList name="world" list={someList} />, document.getElementById('main'))
+render(<Init />, document.getElementById('main'))

@@ -1,5 +1,6 @@
 // @flow
-import React, { PropTypes } from 'react'
+import React from 'react'
+import { string, arrayOf, number } from 'prop-types'
 
 const ListItem = (e: number) =>
   <li key={e}>{e} * {e} = {e * e}</li>
@@ -13,8 +14,8 @@ const SomeList = ({ name, list }: { name: string, list: Array<number> }) =>
   </div>
 
 SomeList.propTypes = {
-  name: PropTypes.string.isRequired,
-  list: PropTypes.arrayOf(PropTypes.string),
+  name: string.isRequired,
+  list: arrayOf(number),
 }
 
 export default SomeList

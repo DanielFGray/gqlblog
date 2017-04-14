@@ -5,6 +5,7 @@ My "boilerplate" for new React projects
 the usual hipster stack
 
 * Component based UI with [React][1]
+* Routing via React-Router
 * Bundling with [Webpack][2]
   * Separate vendor bundle
   * module resolution to `src` dir (instead of using relative paths)
