@@ -13,7 +13,7 @@ the usual hipster stack
     * [semicolons][6] [are][7] [disabled][8]
 * Type-checking with [flow][9]
 * clean extensible CSS with [PostCSS][10], [cssnext][11], and [SugarSS][12]
-  * also includes [postcss-nested][13] for Stylus-like syntax
+  * also includes [postcss-nested][13]
   * linting with [stylelint][14] and [stylelint-config-standard][15]
 
 [1]: https://reactjs.org
