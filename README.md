@@ -31,3 +31,10 @@ the usual hipster stack
 [13]: https://github.com/postcss/postcss-nested
 [14]: https://stylelint.io
 [15]: https://github.com/stylelint/stylelint-config-standard
+
+## Roadmap
+* source maps
+* separate CSS vendor bundle
+* hot module reloading
+* state management
+  * via redux-observable or mobx
