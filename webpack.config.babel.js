@@ -14,6 +14,7 @@ const babelOpts = {
 
 const cssOpts = {
   test: /\.[sc]ss$/,
+  exclude: /node_modules/,
   use: ExtractTextPlugin.extract({
     use: [
       'css-loader',
@@ -38,20 +39,20 @@ const pluginList = [
   }),
 ]
 
-if (process.env.NODE_ENV === 'production') {
-  pluginList.push(
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      sourceMap: false,
-    }),
-  )
-}
+// if (process.env.NODE_ENV === 'production') {
+//   pluginList.push(
+//     new webpack.optimize.UglifyJsPlugin({
+//       comments: false,
+//       sourceMap: false,
+//     }),
+//   )
+// }
 
 module.exports = {
   entry: './src/index',
   resolve: {
-    extensions: ['.js', '.jsx'],
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    extensions: [ '.js', '.jsx' ],
+    modules: [ path.resolve(__dirname, 'src'), 'node_modules' ],
   },
   output: {
     filename: '[name].bundle.js',

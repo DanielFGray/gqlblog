@@ -1,10 +1,10 @@
 // @flow
 import React, { PropTypes } from 'react'
 
-const ListItem = e =>
-  <li key={e}>{e}</li>
+const ListItem = (e: number) =>
+  <li key={e}>{e} * {e} = {e * e}</li>
 
-const SomeList = ({ name, list }: { name: string, list: Array<string>}) =>
+const SomeList = ({ name, list }: { name: string, list: Array<number> }) =>
   <div className="test">
     <h1>Hello {name}!</h1>
     <ul>
