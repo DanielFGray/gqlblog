@@ -7,7 +7,7 @@ the usual hipster stack
 * Component based UI with [React][react]
 * Routing via [React-Router][rr]
 * Bundling with [Webpack][webpack]
-  * Separate vendor bundle
+  * separate JS vendor bundle
   * module resolution to `src` dir (instead of using relative paths)
 * Transpiling with [Babel][babel] with ES2015 and Stage-0 presets
   * linting with [eslint][eslint] and the [Airbnb config][airbnb]
