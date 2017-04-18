@@ -6,15 +6,14 @@ import {
   Route,
 } from 'react-router-dom'
 
-import Home from 'containers/Home'
-import 'style.sss'
+import Home from './containers/Home'
+import './style.sss'
 
-const Init = () => (
+const Init = () =>
   <Router>
     <div>
       <Route exact path="/" component={Home} />
     </div>
   </Router>
-)
 
 render(<Init />, document.getElementById('main'))

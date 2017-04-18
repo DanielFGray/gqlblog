@@ -1,8 +1,19 @@
 {
   "presets": [
-    ["es2015", { "modules": false }],
+    "es2015",
     "stage-0",
     "react",
-    "flow"
-  ]
+    "flow",
+    "jest"
+  ],
+  "plugins": [
+    "transform-decorators-legacy"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "flow-react-proptypes"
+      ]
+    }
+  }
 }

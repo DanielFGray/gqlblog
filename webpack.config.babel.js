@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -9,6 +10,7 @@ const babelOpts = {
   exclude: /node_modules/,
   use: [
     'babel-loader',
+    'eslint-loader',
   ],
 }
 
@@ -17,7 +19,7 @@ const cssOpts = {
   exclude: /node_modules/,
   use: ExtractTextPlugin.extract({
     use: [
-      'css-loader',
+      'css-loader?modules',
       'postcss-loader',
     ],
   }),
@@ -29,7 +31,10 @@ const pluginList = [
     minChunks: module =>
       module.context && module.context.indexOf('node_modules') !== -1,
   }),
-  new ExtractTextPlugin('styles.bundle.css'),
+  new ExtractTextPlugin({
+    filename: '[name].bundle.css',
+    allChunks: true,
+  }),
   new HtmlWebpackPlugin({
     template: 'src/index.ejs',
     inject: false,
@@ -39,20 +44,16 @@ const pluginList = [
   }),
 ]
 
-// if (process.env.NODE_ENV === 'production') {
-//   pluginList.push(
-//     new webpack.optimize.UglifyJsPlugin({
-//       comments: false,
-//       sourceMap: false,
-//     }),
-//   )
-// }
+const stats = {
+  chunks: false,
+  modules: false,
+  children: false,
+}
 
 module.exports = {
   entry: './src/index',
   resolve: {
     extensions: [ '.js', '.jsx' ],
-    modules: [ path.resolve(__dirname, 'src'), 'node_modules' ],
   },
   output: {
     filename: '[name].bundle.js',
@@ -68,9 +69,7 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',
+    stats,
   },
-  stats: {
-    modules: false,
-    children: false,
-  },
+  stats,
 }

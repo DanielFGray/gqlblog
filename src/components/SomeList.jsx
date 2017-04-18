@@ -1,21 +1,29 @@
 // @flow
-import React from 'react'
-import { string, arrayOf, number } from 'prop-types'
+import React, { Component } from 'react'
 
-const ListItem = (e: number) =>
-  <li key={e}>{e} * {e} = {e * e}</li>
+import styles from './list.sss'
+import ItemEntry from './ItemEntry'
 
-const SomeList = ({ name, list }: { name: string, list: Array<number> }) =>
-  <div className="test">
-    <h1>Hello {name}!</h1>
-    <ul>
-      {list.map(ListItem)}
-    </ul>
-  </div>
+/* eslint-disable react/prop-types */
 
-SomeList.propTypes = {
-  name: string.isRequired,
-  list: arrayOf(number),
+class SomeList extends Component {
+  state = {
+    list: [1, 2, 3],
+  }
+
+  addItem = (num: number) =>
+    this.setState(prev => ({ list: prev.list.concat(num) }), () => console.log(this.state.list))
+
+  render() {
+    return (
+      <div className={styles.list}>
+        <ItemEntry addItem={this.addItem} />
+        <ul>
+          {this.state.list.map(e => <li key={e}>{e} * {e} = {e * e}</li>)}
+        </ul>
+      </div>
+    )
+  }
 }
 
 export default SomeList

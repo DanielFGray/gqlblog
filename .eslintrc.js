@@ -9,17 +9,11 @@ module.exports = {
   ],
   env: {
     browser: true,
+    jest: true,
   },
   rules: {
-    semi: [ 'error', 'never' ],
+    semi: ['error', 'never'],
     'no-unexpected-multiline': 'error',
     'array-bracket-spacing': [ 'error', 'always' ],
-  },
-  settings: {
-    'import/resolver': {
-      node: {
-        paths: [ 'src' ],
-      },
-    },
   },
 }

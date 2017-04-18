@@ -1,13 +1,12 @@
 // @flow
 import React from 'react'
-import SomeList from 'components/SomeList'
+import SomeList from '../components/SomeList'
 
-const Home = () => {
-  const list = [ 1, 2, 3, 'foo' ]
+import styles from '../style.sss'
 
-  return (
-    <SomeList name="world" list={list} />
-  )
-}
+const Home = () =>
+  <div className={styles.main}>
+    <SomeList />
+  </div>
 
 export default Home

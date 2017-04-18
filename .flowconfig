@@ -4,9 +4,9 @@
 [include]
 
 [libs]
+<PROJECT_ROOT>/node_modules/mobx/lib/mobx.js.flow
 
 [options]
 module.system=haste
-module.name_mapper='^\(containers\|components\)?\/\(.*\)$' -> '<PROJECT_ROOT>/src/\1/\2'
 module.name_mapper='^.*\.[cs]ss$' -> 'empty/object'
 suppress_comment= \\(.\\|\n\\)*\\flow-disable-next-line
