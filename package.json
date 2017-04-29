@@ -9,18 +9,6 @@
     "build": "NODE_ENV=production webpack --progress -p",
     "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true"
   },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.([sc]ss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ]
-  },
   "dependencies": {
     "normalize.css": "^6.0.0",
     "react": "^15.5.4",
