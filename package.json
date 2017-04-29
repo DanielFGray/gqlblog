@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon -w webpack.config.babel.js -w .eslintrc.js -w .babelrc -x 'webpack-dev-server --progress'",
     "build": "NODE_ENV=production webpack --progress -p",
-    "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true",
+    "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true"
   },
   "jest": {
     "moduleNameMapper": {
