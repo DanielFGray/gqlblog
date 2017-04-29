@@ -4,10 +4,6 @@
     "stage-0",
     "react",
     "flow",
-    "jest"
-  ],
-  "plugins": [
-    "transform-decorators-legacy"
   ],
   "env": {
     "development": {
