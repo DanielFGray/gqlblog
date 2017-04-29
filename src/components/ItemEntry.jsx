@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 import styles from './list.sss'
 
@@ -10,11 +11,11 @@ class ItemEntry extends Component {
     addItem: Function,
   }
 
-  numChange = (e) => {
-    this.setState({ num: e.target.value })
+  numChange = (e: SyntheticInputEvent) => {
+    this.setState({ num: Number(e.target.value) })
   }
 
-  submit = (e) => {
+  submit = (e: SyntheticInputEvent) => {
     e.preventDefault()
     this.props.addItem(this.state.num)
   }
