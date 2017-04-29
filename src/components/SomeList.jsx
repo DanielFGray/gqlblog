@@ -6,7 +6,7 @@ import ItemEntry from './ItemEntry'
 
 class SomeList extends Component {
   state = {
-    list: [ 1, 2, 3 ],
+    list: [1, 2, 3],
   }
 
   addItem = (num: number) => {
