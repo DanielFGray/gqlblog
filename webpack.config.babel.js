@@ -53,7 +53,7 @@ const stats = {
 module.exports = {
   entry: './src/index',
   resolve: {
-    extensions: [ '.js', '.jsx' ],
+    extensions: ['.js', '.jsx'],
   },
   output: {
     filename: '[name].bundle.js',
