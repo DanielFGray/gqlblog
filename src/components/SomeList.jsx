@@ -1,27 +1,15 @@
 // @flow
-import React, { Component } from 'react'
+import React from 'react'
+import { injectState } from 'freactal'
 
 import styles from './list.sss'
 import ItemEntry from './ItemEntry'
 
-class SomeList extends Component {
-  state = {
-    list: [1, 2, 3],
-  }
-
-  addItem = (num: number) => {
-    this.setState(prev => ({ list: prev.list.concat(num) }))
-  }
-
-  render() {
-    return (
-      <div className={styles.list}>
-        <ItemEntry addItem={this.addItem} />
-        <ListView list={this.state.list} />
-      </div>
-    )
-  }
-}
+const SomeList = injectState(({ state }) =>
+  <div className={styles.list}>
+    <ItemEntry />
+    <ListView list={state.list} />
+  </div>)
 
 const ListView = ({ list }: { list: Array<number> }) =>
   <ul>

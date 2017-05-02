@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react'
+import { injectState } from 'freactal'
 import styles from './list.sss'
 
 class ItemEntry extends Component {
@@ -32,4 +33,4 @@ class ItemEntry extends Component {
   }
 }
 
-export default ItemEntry
+export default injectState(({ effects }) => <ItemEntry {...effects} />)
