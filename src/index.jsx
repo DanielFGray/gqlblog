@@ -14,7 +14,7 @@ const wrapComponentWithState = provideState({
   initialState: () => ({ list: [1, 2, 3] }),
   effects: {
     addItem: (effects, newVal) => state =>
-      ({ ...state, list: state.list.concat(newVal * 2) }),
+      ({ ...state, list: state.list.concat(newVal) }),
   },
 })
 
