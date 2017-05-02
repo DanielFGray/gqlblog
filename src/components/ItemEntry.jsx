@@ -26,7 +26,12 @@ class ItemEntry extends Component {
       <div className={styles.formGroup}>
         <form onSubmit={this.submit}>
           <label htmlFor="list_num">Enter a number: </label>
-          <input name="list_num" type="number" value={this.state.num} onChange={this.numChange} />
+          <input
+            name="list_num"
+            type="number"
+            value={this.state.num}
+            onChange={this.numChange}
+          />
         </form>
       </div>
     )
