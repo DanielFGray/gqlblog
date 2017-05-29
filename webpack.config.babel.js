@@ -25,7 +25,7 @@ const cssOpts = {
   }),
 }
 
-const pluginList = [
+const plugins = [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: module =>
@@ -65,7 +65,7 @@ module.exports = {
       cssOpts,
     ],
   },
-  plugins: pluginList,
+  plugins,
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',

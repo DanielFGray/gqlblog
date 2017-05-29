@@ -5,20 +5,11 @@ import {
   HashRouter as Router,
   Route,
 } from 'react-router-dom'
-import { provideState } from 'freactal'
 
 import Home from './containers/Home'
 import './style.sss'
 
-const wrapComponentWithState = provideState({
-  initialState: () => ({ list: [1, 2, 3] }),
-  effects: {
-    addItem: (effects, newVal) => state =>
-      ({ ...state, list: state.list.concat(newVal) }),
-  },
-})
-
-const Init = wrapComponentWithState(() =>
+const Init = () => (
   <Router>
     <div>
       <Route exact path="/" component={Home} />

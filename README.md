@@ -6,6 +6,7 @@ the usual hipster stack
 
 * Component based UI with [React][react]
 * Routing via [React-Router][rr]
+* state management with [Freactal][freactal]
 * Bundling with [Webpack][webpack]
   * separate JS vendor bundle
 * Transpiling with [Babel][babel] with ES2015 and Stage-0 presets
@@ -18,6 +19,7 @@ the usual hipster stack
 
 [react]: https://reactjs.org
 [rr]: https://reacttraining.com/react-router/web/
+[freactal]: https://github.com/FormidableLabs/freactal
 [webpack]: https://webpack.js.org
 [babel]: https://babeljs.io
 [eslint]: http://eslint.org/
@@ -37,5 +39,3 @@ the usual hipster stack
 * source maps
 * separate CSS vendor bundle
 * hot module reloading
-* state management
-  * via redux-observable or mobx

@@ -4,12 +4,14 @@ import { injectState } from 'freactal'
 import styles from './list.sss'
 
 class ItemEntry extends Component {
-  state = {
-    num: 4,
+  props: {
+    effects: {
+      addItem: Function,
+    },
   }
 
-  props: {
-    addItem: Function,
+  state = {
+    num: 4,
   }
 
   numChange = (e: SyntheticInputEvent) => {
@@ -18,7 +20,8 @@ class ItemEntry extends Component {
 
   submit = (e: SyntheticInputEvent) => {
     e.preventDefault()
-    this.props.addItem(this.state.num)
+    this.props.effects.addItem(this.state.num)
+    this.setState(p => ({ num: p.num + 1 }))
   }
 
   render() {
@@ -38,4 +41,4 @@ class ItemEntry extends Component {
   }
 }
 
-export default injectState(({ effects }) => <ItemEntry {...effects} />)
+export default injectState(ItemEntry)

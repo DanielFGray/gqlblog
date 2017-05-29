@@ -4,6 +4,8 @@ module.exports = {
     'postcss-import': {},
     'postcss-nested': {},
     'postcss-cssnext': {},
+    'postcss-inherit': {},
+    'postcss-css-variables': {},
   },
   env: {
     production: {

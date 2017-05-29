@@ -1,14 +1,21 @@
 {
   "presets": [
-    "es2015",
+    ["es2015", { "modules": false }],
     "stage-0",
-    "react",
-    "flow",
+    "react"
   ],
   "env": {
     "development": {
       "plugins": [
         "flow-react-proptypes"
+      ]
+    },
+    "production": {
+      "plugins": [
+        ["lodash", { "id": [
+          "ramda",
+          "rxjs"
+        ]}]
       ]
     }
   }
