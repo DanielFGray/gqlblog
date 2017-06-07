@@ -1,0 +1,21 @@
+.spinner
+  display: flex
+  justify-content: space-around
+  align-items: center
+
+  > div
+    --radius: 30px
+    margin-top: 10px
+    border-radius: 50%
+    width: var(--radius)
+    height: var(--radius)
+    border: 0.25rem solid #3336
+    border-top-color: #333
+    animation: spin 1s infinite linear
+
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)

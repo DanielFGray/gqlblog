@@ -13,8 +13,7 @@
     "production": {
       "plugins": [
         ["lodash", { "id": [
-          "ramda",
-          "rxjs"
+          "lodash"
         ]}]
       ]
     }

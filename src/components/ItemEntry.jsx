@@ -1,13 +1,10 @@
 // @flow
 import React, { Component } from 'react'
-import { injectState } from 'freactal'
 import styles from './list.sss'
 
 class ItemEntry extends Component {
   props: {
-    effects: {
-      addItem: Function,
-    },
+    addItem: Function,
   }
 
   state = {
@@ -20,7 +17,7 @@ class ItemEntry extends Component {
 
   submit = (e: SyntheticInputEvent) => {
     e.preventDefault()
-    this.props.effects.addItem(this.state.num)
+    this.props.addItem(this.state.num)
     this.setState(p => ({ num: p.num + 1 }))
   }
 
@@ -41,4 +38,4 @@ class ItemEntry extends Component {
   }
 }
 
-export default injectState(ItemEntry)
+export default ItemEntry

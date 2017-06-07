@@ -1,14 +1,13 @@
 // @flow
 import { provideState } from 'freactal'
-import { Observable } from 'rxjs'
 import { get } from 'superagent'
 
-const wrapWithPending = (pendingKey, cb) => effects =>
+const wrapWithPending = (pendingKey, cb) => (effects, ...a) =>
   effects.setFlag(pendingKey, true)
-    .then(cb)
+    .then(() => cb(effects, ...a))
     .then(value => effects.setFlag(pendingKey, false).then(() => value))
 
-const wrapComponentWithState = provideState({
+const Provider = provideState({
   initialState: () => ({
     list: [1, 2, 3],
     user: null,
@@ -19,11 +18,10 @@ const wrapComponentWithState = provideState({
       ({ ...state, list: state.list.concat(num) }),
     setFlag: (effects, key, value) => state => ({ ...state, [key]: value }),
     getUser: wrapWithPending('userPending', () =>
-      Observable.from(get('https://randomuser.me/api'))
-        .map(x => x.body.results)
-        .map(user => state => ({ ...state, user }))
-        .toPromise()),
+      get('https://randomuser.me/api')
+        .then(x => x.body.results[0])
+        .then(user => state => ({ ...state, user }))),
   },
 })
 
-export default wrapComponentWithState
+export default Provider

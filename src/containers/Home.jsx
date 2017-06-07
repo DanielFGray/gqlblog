@@ -1,21 +1,14 @@
 // @flow
 import React from 'react'
-import { provideState } from 'freactal'
+import Provider from '../actions'
 import SomeList from '../components/SomeList'
+import UserThing from '../components/UserThing'
 
-import styles from '../style.sss'
-
-const Provider = provideState({
-  initialState: () => ({ list: [1, 2, 3] }),
-  effects: {
-    addItem: (effects, newVal) => state =>
-      ({ ...state, list: state.list.concat(newVal) }),
-  },
-})
-
-const Home = Provider(() => (
-  <div className={styles.card}>
+const Home = () => (
+  <div>
     <SomeList />
-  </div>))
+    <UserThing />
+  </div>
+)
 
-export default Home
+export default Provider(Home)
