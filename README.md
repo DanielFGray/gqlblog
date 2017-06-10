@@ -2,7 +2,6 @@
 My "boilerplate" for new React projects
 
 ## Features
-the usual hipster stack
 
 * Component based UI with [React][react]
 * Routing via [React-Router][rr]
@@ -14,8 +13,11 @@ the usual hipster stack
     * [semicolons][semi1] [are][semi2] [disabled][semi3]
 * Type-checking with [flow][flow]
 * clean extensible CSS with [PostCSS][postcss], [cssnext][cssnext], and [SugarSS][sugarss]
-  * also includes [postcss-nested][nested]
   * linting with [stylelint][stylint] and [stylelint-config-standard][stylconf]
+  * also includes:
+    * [postcss-nested][nested] for cleaner nesting
+    * [css-variables][cssvars] for selector-local variables
+    * [inherit][cssinherit] for selector composition
 
 [react]: https://reactjs.org
 [rr]: https://reacttraining.com/react-router/web/
@@ -32,10 +34,11 @@ the usual hipster stack
 [cssnext]: https://cssnext.io
 [sugarss]: https://github.com/postcss/sugarss
 [nested]: https://github.com/postcss/postcss-nested
+[cssinherit]: https://github.com/GarthDB/postcss-inherit
+[cssvars]: https://github.com/MadLittleMods/postcss-css-variables
 [stylint]: https://stylelint.io
 [stylconf]: https://github.com/stylelint/stylelint-config-standard
 
 ## Roadmap
 * source maps
-* separate CSS vendor bundle
 * hot module reloading
