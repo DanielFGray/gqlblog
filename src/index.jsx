@@ -9,13 +9,14 @@ import {
 import 'normalize.css'
 import './style.sss'
 
+import Provider from './actions'
 import Home from './containers/Home'
 
-const Init = () => (
+const Init = Provider(() => (
   <Router>
     <div>
       <Route exact path="/" component={Home} />
     </div>
-  </Router>)
+  </Router>))
 
 render(<Init />, document.getElementById('main'))
