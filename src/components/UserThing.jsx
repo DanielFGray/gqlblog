@@ -5,13 +5,33 @@ import Spinner from './Spinner'
 
 import styles from '../style.sss'
 
+const User = props => (
+  <div
+    style={{
+      padding: '10px',
+      margin: '10px 0',
+      background: '#fff',
+      'border-radius': '5px',
+    }}
+  >
+    <img
+      alt=""
+      src={props.picture.large}
+      style={{ 'border-radius': '5px', float: 'right' }}
+    />
+    <pre style={{ margin: 0 }}>
+      {JSON.stringify(props, null, 2)}
+    </pre>
+  </div>
+)
+
 class UserThing extends Component {
   props: {
     effects: {
       getUser: Function,
     },
     state: {
-      user: {},
+      user: Array<Object>,
       userPending: boolean,
     },
   }
@@ -31,9 +51,12 @@ class UserThing extends Component {
           Fetch
         </button>
         <div>
-          {this.props.state.userPending || ! this.props.state.user
-            ? <div style={{ textAlign: 'center' }}>Fetching data from randomuser.me<Spinner /></div>
-            : JSON.stringify(this.props.state.user)}
+          {this.props.state.userPending &&
+            <div style={{ textAlign: 'center' }}>
+              Fetching data from randomuser.me
+              <Spinner />
+            </div>}
+          {this.props.state.user.map(User)}
         </div>
       </div>
     )

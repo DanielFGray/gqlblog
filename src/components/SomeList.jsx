@@ -5,10 +5,7 @@ import { injectState } from 'freactal'
 import styles from './list.sss'
 import ItemEntry from './ItemEntry'
 
-const SomeList = ({
-  state,
-  effects,
-}: {
+const SomeList = ({ state, effects }: {
   effects: {
     addItem: Function, // eslint-disable-line react/no-unused-prop-types
   },

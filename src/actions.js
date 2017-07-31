@@ -10,7 +10,7 @@ const wrapWithPending = (pendingKey, cb) => (effects, ...a) =>
 const Provider = provideState({
   initialState: () => ({
     list: [1, 2, 3],
-    user: null,
+    user: [],
     userPending: false,
   }),
   effects: {
@@ -20,7 +20,7 @@ const Provider = provideState({
     getUser: wrapWithPending('userPending', () =>
       get('https://randomuser.me/api')
         .then(x => x.body.results[0])
-        .then(user => state => ({ ...state, user }))),
+        .then(user => state => ({ ...state, user: [user].concat(state.user) }))),
   },
 })
 
