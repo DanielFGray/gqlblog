@@ -1,23 +1,31 @@
 {
-  "presets": [
-    ["es2015", { "modules": false }],
-    "stage-0",
-    "flow",
-    "react"
+  presets: [
+    ['env', {
+      targets: {
+        browsers: ['last 2 versions'],
+        loose: true,
+        modules: false,
+      },
+    }],
+    'stage-0',
+    'flow',
+    'react'
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        "flow-react-proptypes"
+  env: {
+    development: {
+      plugins: [
+        'flow-react-proptypes'
       ]
     },
-    "production": {
-      "plugins": [
-        ["lodash", { "id": [
-          "ramda",
-          "recompose"
+    production: {
+      plugins: [
+        ['lodash', { id: [
+          'ramda',
+          'recompose'
         ]}]
       ]
     }
   }
 }
+
+// vim: ft=javascript
