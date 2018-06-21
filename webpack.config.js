@@ -1,8 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const path = require('path')
-const webpack = require('webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const rules = [
@@ -17,33 +15,20 @@ const rules = [
   {
     test: /\.[sc]ss$/,
     exclude: /node_modules/,
-    use: ExtractTextPlugin.extract({
-      use: [
-        'css-loader?modules',
-        'postcss-loader',
-      ],
-    }),
+    use: [
+      'css-loader?modules',
+      'postcss-loader',
+    ],
   },
   {
     test: /css$/,
-    use: ExtractTextPlugin.extract({
-      use: [
-        'css-loader',
-      ],
-    }),
+    use: [
+      'css-loader',
+    ],
   },
 ]
 
 const plugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: module =>
-      module.context && module.context.indexOf('node_modules') !== -1,
-  }),
-  new ExtractTextPlugin({
-    filename: '[name].bundle.css',
-    allChunks: true,
-  }),
   new HtmlWebpackPlugin({
     template: 'src/index.ejs',
     inject: false,
