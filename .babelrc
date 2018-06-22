@@ -1,27 +1,25 @@
 {
-  presets: [
-    ['env', {
-      targets: {
-        browsers: ['last 2 versions'],
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": {
+          "development": "last 1 version",
+          "production": "> 5%"
+        },
+        "node": "current"
       },
-      loose: true,
-      modules: false,
+      "loose": true,
+      "modules": false
     }],
-    'stage-0',
-    'flow',
-    'react'
+    "stage-0",
+    "react"
   ],
-  env: {
-    development: {
-      plugins: [
-        'flow-react-proptypes'
-      ]
-    },
-    production: {
-      plugins: [
-        ['lodash', { id: [
-          'ramda',
-          'recompose'
+  "env": {
+    "production": {
+      "plugins": [
+        ["lodash", { "id": [
+          "ramda",
+          "recompose"
         ]}]
       ]
     }

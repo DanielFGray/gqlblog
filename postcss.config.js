@@ -2,8 +2,9 @@ module.exports = {
   parser: 'sugarss',
   plugins: {
     'postcss-import': {},
-    'postcss-nested': {},
-    'postcss-cssnext': {},
+    'postcss-preset-env': {
+      browsers: '> 5%',
+    },
     'postcss-inherit': {},
     'postcss-css-variables': {},
   },
