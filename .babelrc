@@ -2,28 +2,15 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": {
-          "development": "last 1 version",
-          "production": "> 5%"
-        },
-        "node": "current"
+        "browsers": ["last 2 versions"]
       },
       "loose": true,
       "modules": false
     }],
-    "stage-0",
+    "stage-1",
     "react"
   ],
-  "env": {
-    "production": {
-      "plugins": [
-        ["lodash", { "id": [
-          "ramda",
-          "recompose"
-        ]}]
-      ]
-    }
-  }
+  "plugins": [
+    ["lodash", { "id": ["lodash", "ramda", "recompose"] }]
+  ]
 }
-
-// vim: ft=javascript

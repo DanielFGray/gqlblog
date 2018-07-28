@@ -1,13 +1,11 @@
 module.exports = {
-  parser: 'sugarss',
-  plugins: {
-    'postcss-import': {},
-    'postcss-preset-env': {
-      browsers: '> 5%',
-    },
-    'postcss-inherit': {},
-    'postcss-css-variables': {},
-  },
+  plugins: [
+    require('postcss-preset-env')({
+      stage: 1,
+      browsers: 'last 2 versions',
+    }),
+    // require('postcss-nesting')(),
+  ],
   env: {
     production: {
       cssnano: { autoprefixer: false },

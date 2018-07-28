@@ -1,6 +1,8 @@
 module.exports = {
   parser: 'babel-eslint',
-  extends: 'airbnb',
+  extends: [
+    'airbnb',
+  ],
   env: {
     browser: true,
   },
@@ -22,12 +24,17 @@ module.exports = {
       ignoreRestSiblings: true,
     }],
     'arrow-parens': ['error', 'as-needed'],
-    'react/prop-types': 'warn',
-    'react/forbid-prop-types': ['warn', {
-      forbid: [
-        'any',
-        'array',
-        'object',
+    'react/destructuring-assignment': 'off',
+    'react/sort-comp': ['error', {
+      order: [
+        'type-annotations',
+        'static-methods',
+        'lifecycle',
+        '/^on.+$/',
+        '/^(get|set)(?!(InitialState$|DefaultProps$|ChildContext$)).+$/',
+        'everything-else',
+        '/^render.+$/',
+        'render',
       ],
     }],
   },
