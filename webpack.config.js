@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
-import path from 'path'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import nodeExternals from 'webpack-node-externals'
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const nodeExternals = require('webpack-node-externals')
 
 const devMode = process.env.NODE_ENV !== 'production'
 
