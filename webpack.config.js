@@ -75,6 +75,12 @@ if (devMode) {
   // plugins.push(new FriendlyErrorsWebpackPlugin())
 }
 
+const stats = {
+  chunks: false,
+  modules: false,
+  colors: true,
+}
+
 const clientConfig = {
   mode: process.env.NODE_ENV || 'development',
   entry: { main: './src/client/index' },
@@ -89,21 +95,17 @@ const clientConfig = {
     rules,
   },
   plugins,
-  devServer: {
-    contentBase: outPath,
-    publicPath: '/',
-    compress: true,
-    lazy: true,
-    port: process.env.PORT || 9001,
-    allowedHosts: [
-      'danielfgray.com',
-    ],
-  },
+  stats,
 }
 
 if (devMode) {
   const webpackServeWaitpage = require('webpack-serve-waitpage')
   clientConfig.serve = {
+    port: process.env.PORT || 8080,
+    host: process.env.HOST || 'localhost',
+    devMiddleware: {
+      stats,
+    },
     add(app, middleware, options) {
       app.use(webpackServeWaitpage(options))
     },

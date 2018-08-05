@@ -1,11 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Main from './Main'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Routes from '../Routes'
 import './style.css'
 
 const Init = (
-  // state management, routing..
-  <Main />
+  <Router>
+    <Routes />
+  </Router>
 )
 
 const root = document.getElementById('root')
