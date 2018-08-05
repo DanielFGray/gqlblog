@@ -46,7 +46,14 @@ const rules = [
   {
     test: /\.jsx?$/,
     exclude: /node_modules/,
-    use: 'babel-loader',
+    use: [
+      {
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
+      },
+    ],
   },
 ]
 
