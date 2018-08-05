@@ -7,13 +7,17 @@ const Routes = () => (
     <nav>
       <ul>
         <li>
-          <Link to="/testing">Testing</Link>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/test">test</Link>
         </li>
       </ul>
     </nav>
     <Switch>
       <Route path="/" exact component={Main} />
-      <Route path="/testing" exact render={() => 'hello world'} />
+      <Route path="/test" exact render={() => <p>hello world</p>} />
+      <Route render={({ location: { pathname } }) => <p>{pathname} does not exist</p>} />
     </Switch>
   </div>
 )
