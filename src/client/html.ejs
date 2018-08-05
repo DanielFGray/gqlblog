@@ -9,7 +9,7 @@
   if (htmlWebpackPlugin.options.mobile) { %>
   <meta name="viewport" content="width=device-width, initial-scale=1" /><% }
   for (var css in htmlWebpackPlugin.files.css) { %>
-  <link type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[css] %>" /><% } %>
+  <link type="text/css" rel="stylesheet" href="/<%= htmlWebpackPlugin.files.css[css] %>" /><% } %>
 </head>
 
 <body>
@@ -38,7 +38,7 @@ if (htmlWebpackPlugin.options.window) { %>
   <% } %>
 </script>
 <% }
-for (var chunk in htmlWebpackPlugin.files.chunks) { %><script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+for (var chunk in htmlWebpackPlugin.files.chunks) { %><script type="text/javascript" src="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
 <% }
 if (htmlWebpackPlugin.options.devServer) { %>
 <script src="<%= htmlWebpackPlugin.options.devServer%>/webpack-dev-server.js"></script>

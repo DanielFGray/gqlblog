@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "rm -fr public; nodemon -w \"./{webpack.config.js,.babelrc}\" -x webpack-serve",
+    "start": "rm -fr public; concurrently 'nodemon -w \"./{webpack.config.js,.babelrc}\" -x \"webpack -d --watch --progress\"' 'nodemon -w \"./public/server.js\" -x \"node ./public/server.js\"'",
     "build": "rm -fr public; NODE_ENV=production webpack -p",
     "test": "concurrently --names=css,js -r 'stylelint \"./src/**/*.sss\"' 'eslint --cache src --ext=.js,.jsx'"
   },
@@ -12,9 +12,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
     "ramda": "^0.25.0",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

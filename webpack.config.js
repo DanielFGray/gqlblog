@@ -29,6 +29,18 @@ const rules = [
       'postcss-loader',
     ],
   },
+  {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
+      },
+    ],
+  },
   // {
   //   test: /\.jsx?$/,
   //   exclude: /node_modules/,
@@ -43,18 +55,6 @@ const rules = [
   //     },
   //   ],
   // },
-  {
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    use: [
-      {
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-        },
-      },
-    ],
-  },
 ]
 
 const plugins = [
@@ -69,11 +69,6 @@ const plugins = [
     mobile: true,
   }),
 ]
-
-if (devMode) {
-  // const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin') // eslint-disable-line global-require
-  // plugins.push(new FriendlyErrorsWebpackPlugin())
-}
 
 const clientConfig = {
   mode: process.env.NODE_ENV || 'development',
@@ -101,13 +96,20 @@ const clientConfig = {
   },
 }
 
-if (devMode) {
-  const webpackServeWaitpage = require('webpack-serve-waitpage')
-  clientConfig.serve = {
-    add(app, middleware, options) {
-      app.use(webpackServeWaitpage(options))
-    },
-  }
+const serverConfig = {
+  mode: process.env.NODE_ENV || 'development',
+  entry: { server: './src/server/index' },
+  target: 'node',
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+  output: {
+    filename: '[name].js',
+    path: outPath,
+  },
+  module: {
+    rules,
+  },
 }
 
-module.exports = [clientConfig]
+module.exports = [clientConfig, serverConfig]

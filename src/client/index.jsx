@@ -13,6 +13,3 @@ document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(Init, root)
 })
 const env = process.env.NODE_ENV || 'development'
-if (env === 'development') {
-  require('webpack-serve-overlay') // eslint-disable-line global-require
-}
