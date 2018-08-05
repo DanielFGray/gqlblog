@@ -3,6 +3,7 @@
 import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import nodeExternals from 'webpack-node-externals'
 
 const devMode = process.env.NODE_ENV !== 'production'
 
@@ -97,6 +98,7 @@ const serverConfig = {
   mode: process.env.NODE_ENV || 'development',
   entry: { server: './src/server/index' },
   target: 'node',
+  externals: [nodeExternals()],
   resolve: {
     extensions: ['.js', '.jsx'],
   },

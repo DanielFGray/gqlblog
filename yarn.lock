@@ -7465,6 +7465,10 @@ webpack-log@^1.0.1, webpack-log@^1.1.1, webpack-log@^1.1.2, webpack-log@^1.2.0:
     loglevelnext "^1.0.1"
     uuid "^3.1.0"
 
+webpack-node-externals@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/webpack-node-externals/-/webpack-node-externals-1.7.2.tgz#6e1ee79ac67c070402ba700ef033a9b8d52ac4e3"
+
 webpack-serve-overlay@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/webpack-serve-overlay/-/webpack-serve-overlay-0.2.2.tgz#f67857d07b5cb751c84731c531199a32a325b94c"
