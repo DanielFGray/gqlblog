@@ -4,7 +4,7 @@ import GetJson from './GetJson'
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
 const Main = () => (
-  <GetJson url="https://randomuser.me">
+  <GetJson url="https://randomuser.me/api">
     {({ error, reload, ...x }) => {
       if (error) {
         console.error(error)
