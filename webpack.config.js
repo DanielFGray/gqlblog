@@ -29,20 +29,20 @@ const rules = [
       'postcss-loader',
     ],
   },
-  // {
-  //   test: /\.jsx?$/,
-  //   exclude: /node_modules/,
-  //   enforce: 'pre',
-  //   use: [
-  //     {
-  //       loader: 'eslint-loader',
-  //       options: {
-  //         cache: true,
-  //         failOnError: false,
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
+    enforce: 'pre',
+    use: [
+      {
+        loader: 'eslint-loader',
+        options: {
+          cache: true,
+          failOnError: false,
+        },
+      },
+    ],
+  },
   {
     test: /\.jsx?$/,
     exclude: /node_modules/,
