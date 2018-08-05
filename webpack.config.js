@@ -32,6 +32,20 @@ const rules = [
   {
     test: /\.jsx?$/,
     exclude: /node_modules/,
+    enforce: 'pre',
+    use: [
+      {
+        loader: 'eslint-loader',
+        options: {
+          cache: true,
+          failOnError: false,
+        },
+      },
+    ],
+  },
+  {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
     use: [
       {
         loader: 'babel-loader',
@@ -41,20 +55,6 @@ const rules = [
       },
     ],
   },
-  // {
-  //   test: /\.jsx?$/,
-  //   exclude: /node_modules/,
-  //   enforce: 'pre',
-  //   use: [
-  //     {
-  //       loader: 'eslint-loader',
-  //       options: {
-  //         cache: true,
-  //         failOnError: false,
-  //       },
-  //     },
-  //   ],
-  // },
 ]
 
 const plugins = [
@@ -70,6 +70,12 @@ const plugins = [
   }),
 ]
 
+const stats = {
+  chunks: false,
+  modules: false,
+  colors: true,
+}
+
 const clientConfig = {
   mode: process.env.NODE_ENV || 'development',
   entry: { main: './src/client/index' },
@@ -84,16 +90,7 @@ const clientConfig = {
     rules,
   },
   plugins,
-  devServer: {
-    contentBase: outPath,
-    publicPath: '/',
-    compress: true,
-    lazy: true,
-    port: process.env.PORT || 9001,
-    allowedHosts: [
-      'danielfgray.com',
-    ],
-  },
+  stats,
 }
 
 const serverConfig = {
@@ -110,6 +107,7 @@ const serverConfig = {
   module: {
     rules,
   },
+  stats,
 }
 
 module.exports = [clientConfig, serverConfig]
