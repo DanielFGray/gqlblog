@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const outDir = path.resolve('public')
-console.log(outDir)
 
 app.use(express.static(outDir))
 
