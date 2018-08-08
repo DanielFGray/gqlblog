@@ -7,7 +7,7 @@ const nodeExternals = require('webpack-node-externals')
 
 const devMode = process.env.NODE_ENV !== 'production'
 
-const outPath = path.resolve(__dirname, 'public')
+const outPath = path.resolve('dist')
 
 const rules = [
   {
@@ -85,7 +85,7 @@ const clientConfig = {
   },
   output: {
     filename: '[name].[hash].js',
-    path: outPath,
+    path: path.join(outPath, 'public'),
   },
   module: {
     rules,

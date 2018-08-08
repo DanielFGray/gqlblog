@@ -11,7 +11,7 @@ app.use(morgan('common'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const outDir = path.resolve('public')
+const outDir = path.resolve(path.join('dist', 'public'))
 
 app.use(express.static(outDir))
 
