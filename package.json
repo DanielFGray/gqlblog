@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "rm -fr public; concurrently 'nodemon -w \"./{webpack.config.js,.babelrc}\" -x \"webpack -d --watch --progress\"' 'nodemon -w \"./public/server.js\" -x \"node ./public/server.js\"'",
+    "start": "rm -fr public; concurrently --names=webpack,express --prefix '{name}:' 'nodemon -w \"./{webpack.config.js,.babelrc}\" -x \"webpack -d --watch --progress\"' 'nodemon -w \"./public/server.js\" -x \"node ./public/server.js\"'",
     "build": "rm -fr public; NODE_ENV=production webpack -p",
     "test": "concurrently --names=css,js -r 'stylelint \"./src/**/*.sss\"' 'eslint --cache src --ext=.js,.jsx'"
   },
