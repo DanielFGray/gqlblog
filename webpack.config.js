@@ -101,7 +101,7 @@ const clientConfig = {
   },
   output: {
     filename: '[name].[hash].js',
-    path: outputDir,
+    path: publicDir,
   },
   module: {
     rules,
@@ -120,32 +120,12 @@ const serverConfig = {
   },
   output: {
     filename: '[name].js',
-    path: publicDir,
+    path: outputDir,
   },
   module: {
     rules,
   },
   stats,
-}
-
-if (devMode) {
-  const webpackServeWaitpage = require('webpack-serve-waitpage')
-  const history = require('connect-history-api-fallback')
-  const convert = require('koa-connect')
-  clientConfig.serve = {
-    port: process.env.PORT || 8765,
-    host: process.env.HOST || 'localhost',
-    devMiddleware: {
-      content: outputDir
-      stats,
-    },
-    add(app, middleware, options) {
-      app.use(convert(history({
-        /* https://github.com/bripkens/connect-history-api-fallback#options */
-      })))
-      app.use(webpackServeWaitpage(options))
-    },
-  }
 }
 
 module.exports = [clientConfig, serverConfig]

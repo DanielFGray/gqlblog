@@ -1,3 +1,2 @@
-clientOutputDir: dist/public
-serverOutputDir: dist
+outputDir: dist
 appBase: /
