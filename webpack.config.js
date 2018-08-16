@@ -1,12 +1,26 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
+const fs = require('fs')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { DefinePlugin } = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { safeLoad: yaml } = require('js-yaml')
 
-const devMode = process.env.NODE_ENV !== 'production'
+const nodeEnv = process.env.NODE_ENV || 'development'
+const devMode = nodeEnv.startsWith('dev')
+const appMountId = 'root'
 
-const outPath = path.resolve(__dirname, 'public')
+const config = yaml(fs.readFileSync('config.yaml', 'utf8'))
+const outputDir = path.resolve(path.join(__dirname, config.outputDir))
+
+const appBase = devMode ? '/' : config.appBase
+
+const constants = {
+  __MOUNT: JSON.stringify(appMountId),
+  __APPBASE: JSON.stringify(appBase),
+  __DEV: devMode,
+}
 
 const rules = [
   {
@@ -68,12 +82,8 @@ const plugins = [
     appMountId: 'root',
     mobile: true,
   }),
+  new DefinePlugin(constants),
 ]
-
-if (devMode) {
-  // const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin') // eslint-disable-line global-require
-  // plugins.push(new FriendlyErrorsWebpackPlugin())
-}
 
 const stats = {
   chunks: false,
@@ -89,7 +99,7 @@ const clientConfig = {
   },
   output: {
     filename: '[name].[hash].js',
-    path: outPath,
+    path: outputDir,
   },
   module: {
     rules,
@@ -109,10 +119,9 @@ if (devMode) {
       stats,
     },
     add(app, middleware, options) {
-      const historyOptions = {
-        // ... see: https://github.com/bripkens/connect-history-api-fallback#options
-      }
-      app.use(convert(history(historyOptions)))
+      app.use(convert(history({
+        /* https://github.com/bripkens/connect-history-api-fallback#options */
+      })))
       app.use(webpackServeWaitpage(options))
     },
   }
