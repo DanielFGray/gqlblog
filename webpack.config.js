@@ -1,13 +1,28 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
+const fs = require('fs')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { DefinePlugin } = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
+const { safeLoad: yaml } = require('js-yaml')
 
-const devMode = process.env.NODE_ENV !== 'production'
+const nodeEnv = process.env.NODE_ENV || 'development'
+const devMode = nodeEnv.startsWith('dev')
+const appMountId = 'root'
 
-const outPath = path.resolve(__dirname, 'public')
+const config = yaml(fs.readFileSync('config.yaml', 'utf8'))
+const outputDir = path.resolve(path.join(__dirname, config.outputDir))
+const publicDir = path.join(outputDir, 'public')
+
+const appBase = devMode ? '/' : config.appBase
+
+const constants = {
+  __MOUNT: JSON.stringify(appMountId),
+  __APPBASE: JSON.stringify(appBase),
+  __DEV: devMode,
+}
 
 const rules = [
   {
@@ -69,6 +84,7 @@ const plugins = [
     appMountId: 'root',
     mobile: true,
   }),
+  new DefinePlugin(constants),
 ]
 
 const stats = {
@@ -85,7 +101,7 @@ const clientConfig = {
   },
   output: {
     filename: '[name].[hash].js',
-    path: outPath,
+    path: publicDir,
   },
   module: {
     rules,
@@ -104,7 +120,7 @@ const serverConfig = {
   },
   output: {
     filename: '[name].js',
-    path: outPath,
+    path: outputDir,
   },
   module: {
     rules,

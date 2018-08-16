@@ -3,6 +3,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 public
+dist
 node_modules/
 .eslintcache
 .node_repl_history
