@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "rm -fr public; nodemon -w \"./{webpack.config.js,.babelrc}\" -x webpack-serve",
+    "start": "nodemon -w \"./{webpack.config.js,.babelrc}\" -x webpack-serve",
     "build": "rm -fr public; NODE_ENV=production webpack -p",
     "test": "concurrently --names=css,js -r 'stylelint \"./src/**/*.sss\"' 'eslint --cache src --ext=.js,.jsx'"
   },
