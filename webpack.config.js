@@ -1,20 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
-const fs = require('fs')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { DefinePlugin } = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
-const { safeLoad: yaml } = require('js-yaml')
+const config = require('./config.js')
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 const devMode = nodeEnv.startsWith('dev')
 const appMountId = 'root'
-
-const config = yaml(fs.readFileSync('config.yaml', 'utf8'))
-const outputDir = path.resolve(path.join(__dirname, config.outputDir))
-const publicDir = path.join(outputDir, 'public')
 
 const appBase = devMode ? '/' : config.appBase
 
@@ -43,20 +38,6 @@ const rules = [
         : MiniCssExtractPlugin.loader,
       'css-loader',
       'postcss-loader',
-    ],
-  },
-  {
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    enforce: 'pre',
-    use: [
-      {
-        loader: 'eslint-loader',
-        options: {
-          cache: true,
-          failOnError: false,
-        },
-      },
     ],
   },
   {
@@ -94,14 +75,14 @@ const stats = {
 }
 
 const clientConfig = {
-  mode: process.env.NODE_ENV || 'development',
+  mode: nodeEnv,
   entry: { main: './src/client/index' },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   output: {
     filename: '[name].[hash].js',
-    path: publicDir,
+    path: config.publicDir,
   },
   module: {
     rules,
@@ -111,7 +92,7 @@ const clientConfig = {
 }
 
 const serverConfig = {
-  mode: process.env.NODE_ENV || 'development',
+  mode: nodeEnv,
   entry: { server: './src/server/index' },
   target: 'node',
   externals: [nodeExternals()],
@@ -120,7 +101,7 @@ const serverConfig = {
   },
   output: {
     filename: '[name].js',
-    path: outputDir,
+    path: config.outputDir,
   },
   module: {
     rules,
