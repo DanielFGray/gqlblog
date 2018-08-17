@@ -631,10 +631,6 @@
     "@babel/plugin-transform-react-jsx-self" "7.0.0-rc.1"
     "@babel/plugin-transform-react-jsx-source" "7.0.0-rc.1"
 
-"@babel/preset-stage-1@^7.0.0-rc.1":
-  version "7.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@babel/preset-stage-1/-/preset-stage-1-7.0.0-rc.1.tgz#4e1a86f0e16b775168ff419a90711eca54643908"
-
 "@babel/template@7.0.0-beta.44":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.44.tgz#f8832f4fdcee5d59bf515e595fc5106c529b394f"
