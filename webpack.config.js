@@ -55,9 +55,6 @@ const rules = [
 ]
 
 const plugins = [
-  new MiniCssExtractPlugin({
-    filename: devMode ? '[name].css' : '[name].[hash].css',
-  }),
   new HtmlWebpackPlugin({
     template: 'src/client/html.ejs',
     inject: false,

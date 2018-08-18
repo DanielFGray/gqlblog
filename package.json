@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently --names=webpack,express --prefix '{name}:' 'nodemon -w \"./{webpack.config.js,.babelrc}\" -x \"webpack -d --watch --progress\"' 'nodemon -w \"./public/server.js\" -x \"node ./public/server.js\"'",
-    "build": "rm -fr public; NODE_ENV=production webpack -p",
+    "start": "concurrently --names=webpack,express --prefix '{name}:' 'nodemon -w \"./{webpack.config.js,.babelrc}\" -x \"webpack -d --watch --progress\"' 'nodemon -w \"./dist/server.js\" -x \"node ./dist/server.js\"'",
+    "build": "rm -fr dist; NODE_ENV=production webpack -p",
     "test": "concurrently --names=css,js -r 'stylelint \"./src/**/*.sss\"' 'eslint --cache src --ext=.js,.jsx'"
   },
   "keywords": [],
@@ -55,9 +55,6 @@
     "stylelint-config-standard": "^18.2.0",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
-    "webpack-node-externals": "^1.7.2",
-    "webpack-serve": "^2.0.2",
-    "webpack-serve-overlay": "^0.3.0",
-    "webpack-serve-waitpage": "^1.0.2"
+    "webpack-node-externals": "^1.7.2"
   }
 }

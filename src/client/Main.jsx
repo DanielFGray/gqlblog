@@ -3,9 +3,9 @@ import GetJson from './GetJson'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
-const Main = () => (
+const Main = ({ router, rootData }) => (
   <GetJson url="/api/v1">
-    {({ error, reload, data, loading }) => {
+    {({ error, loading, reload, data }) => {
       if (error) {
         console.error(error)
       }
@@ -17,7 +17,7 @@ const Main = () => (
             </button>
           </div>
           <div>
-            {Stringify({ error, loading, data })}
+            {Stringify({ loading, rootData, data, router })}
           </div>
         </div>
       )
