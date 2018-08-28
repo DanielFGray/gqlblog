@@ -22,9 +22,6 @@ if (unknown.length > 0) {
 const Html = ({ data, children }) => (
   <html lang="en">
     <head>
-      {helmet.title.toComponent()}
-      {helmet.meta.toComponent()}
-      {helmet.link.toComponent()}
       <meta charSet="UTF-8" />
       <meta
         name="viewport"

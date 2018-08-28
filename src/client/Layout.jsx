@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Nav from './Nav'
-Import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { appTitle } from '../../config'
 
 export default ({ children }) => (
