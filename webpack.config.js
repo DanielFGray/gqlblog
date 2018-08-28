@@ -1,15 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { DefinePlugin } = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WebpackAssetsManifest = require('webpack-assets-manifest')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
 const config = require('./config.js')
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 const devMode = nodeEnv.startsWith('dev')
-const appMountId = 'root'
+const { appMountId } = config
 
 const appBase = devMode ? '/' : config.appBase
 
@@ -17,11 +17,12 @@ const constants = {
   __MOUNT: JSON.stringify(appMountId),
   __APPBASE: JSON.stringify(appBase),
   __DEV: devMode,
+  __BROWSER: true,
 }
 
 const rules = [
   {
-    test: /node_modules[\\/].*\.css$/,
+    test: /node_modules[\\     /].*\.css$/,
     use: [
       devMode
         ? 'style-loader'
@@ -54,17 +55,6 @@ const rules = [
   },
 ]
 
-const plugins = [
-  new HtmlWebpackPlugin({
-    template: 'src/client/html.ejs',
-    inject: false,
-    title: '[insert title]',
-    appMountId: 'root',
-    mobile: true,
-  }),
-  new DefinePlugin(constants),
-]
-
 const stats = {
   chunks: false,
   modules: false,
@@ -84,7 +74,20 @@ const clientConfig = {
   module: {
     rules,
   },
-  plugins,
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/client/html.ejs',
+      inject: false,
+      title: config.appTitle,
+      appMountId,
+      mobile: true,
+    }),
+    new DefinePlugin(constants),
+    new WebpackAssetsManifest({
+      // https://github.com/webdeveric/webpack-assets-manifest/#readme
+      output: '../manifest.json',
+    }),
+  ],
   stats,
 }
 
@@ -103,7 +106,11 @@ const serverConfig = {
   module: {
     rules,
   },
+  plugins: [
+    new DefinePlugin({ ...constants, __BROWSER: false }),
+  ],
   stats,
 }
 
-module.exports = [clientConfig, serverConfig]
+module.exports = [clientConfig]
+// module.exports = [clientConfig, serverConfig]

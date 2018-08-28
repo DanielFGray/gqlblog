@@ -3,15 +3,14 @@ module.exports = {
     ['@babel/preset-env', {
       targets: {
         browsers: ['last 2 versions'],
+        node: 'current',
       },
       loose: true,
-      modules: false
+      useBuiltIns: 'usage',
     }],
-    '@babel/preset-flow',
     '@babel/preset-react',
   ],
   plugins: [
-    ['lodash', { id: ['lodash', 'ramda', 'recompose'] }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'smart' }],
     // '@babel/plugin-proposal-throw-expressions',
@@ -21,7 +20,10 @@ module.exports = {
   ],
   env: {
     production: {
-      plugins: ['transform-react-remove-prop-types'],
+      plugins: [
+        ['lodash', { id: ['lodash', 'ramda', 'recompose'] }],
+        // 'transform-react-remove-prop-types'
+      ],
     },
   },
 }

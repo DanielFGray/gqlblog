@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import GetJson from './GetJson'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
