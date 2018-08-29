@@ -1,14 +1,18 @@
 import * as React from 'react'
-import Nav from './Nav'
 import { Helmet } from 'react-helmet'
+// import Nav from './Nav'
 import { appTitle } from '../../config'
 
-export default ({ children }) => (
+const Layout = ({ children }) => (
   <div>
-    <Helmet>
+    <Helmet
+      defaultTitle={appTitle}
+      titleTemplate={`${appTitle} | %s`}
+    >
       <title>{appTitle}</title>
     </Helmet>
-    <Nav />
+    {/* <Nav /> */}
     {children}
   </div>
 )
+export default Layout

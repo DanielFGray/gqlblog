@@ -14,11 +14,8 @@ const Init = props => (
   </Layout>
 )
 
-const root = document.getElementById(__MOUNT)
-
 document.addEventListener('DOMContentLoaded', () => {
-  /* eslint-disable no-underscore-dangle */
-  const initData = JSON.parse(document.getElementById('initialData').getAttribute('data-json'))
-  const props = typeof initData === 'object' ? initData : {}
-  ReactDOM.hydrate(<Init {...props} />, root)
+  const json = JSON.parse(window.__INIT_DATA)
+  const props = typeof json === 'object' ? json : {}
+  ReactDOM.hydrate(<Init rootProps={props} />, document.getElementById(__MOUNT))
 })

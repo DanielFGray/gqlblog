@@ -22,11 +22,9 @@ const constants = {
 
 const rules = [
   {
-    test: /node_modules[\\     /].*\.css$/,
+    test: /node_modules[\\/].*\.css$/,
     use: [
-      devMode
-        ? 'style-loader'
-        : MiniCssExtractPlugin.loader,
+      MiniCssExtractPlugin.loader,
       'css-loader',
     ],
   },
@@ -34,9 +32,7 @@ const rules = [
     exclude: /node_modules/,
     test: /\.(s|c)ss$/,
     use: [
-      devMode
-        ? 'style-loader'
-        : MiniCssExtractPlugin.loader,
+      MiniCssExtractPlugin.loader,
       'css-loader',
       'postcss-loader',
     ],
@@ -68,20 +64,20 @@ const clientConfig = {
     extensions: ['.js', '.jsx'],
   },
   output: {
-    filename: '[name].[hash].js',
+    filename: devMode ? '[name].js' : '[name].[hash].js',
     path: config.publicDir,
   },
   module: {
     rules,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: 'src/client/html.ejs',
-      inject: false,
-      title: config.appTitle,
-      appMountId,
-      mobile: true,
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: 'src/client/html.ejs',
+    //   inject: false,
+    //   title: config.appTitle,
+    //   appMountId,
+    //   mobile: true,
+    // }),
     new DefinePlugin(constants),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
@@ -112,5 +108,4 @@ const serverConfig = {
   stats,
 }
 
-module.exports = [clientConfig]
-// module.exports = [clientConfig, serverConfig]
+module.exports = devMode ? clientConfig : [clientConfig, serverConfig]

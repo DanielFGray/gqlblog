@@ -5,10 +5,15 @@ export default class GetJson extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
+    initData: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  }
+
+  static defaultProps = {
+    initData: null,
   }
 
   state = {
-    data: null,
+    data: this.props.initData,
     error: null,
     loading: true,
   }
@@ -30,6 +35,7 @@ export default class GetJson extends React.Component {
     const { children } = this.props
     const reload = this.fetch
     return children({
+      seed: Math.random(),
       data,
       reload,
       error,

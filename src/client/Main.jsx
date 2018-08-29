@@ -3,22 +3,28 @@ import GetJson from './GetJson'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
-const Main = ({ router, rootData }) => (
-  <GetJson url="/api/v1">
-    {({ error, loading, reload, data }) => {
-      if (error) {
-        console.error(error)
-      }
+const Main = ({ rootProps, ...props }) => (
+  <GetJson url="/api/v1" initData={rootProps}>
+    {({
+      error,
+      loading,
+      reload,
+      data,
+    }) => {
+      if (error !== null) console.error(error)
       return (
         <div>
           <div>
-            <button onClick={reload}>
+            <button type="button" onClick={reload}>
               Reload
             </button>
           </div>
-          <div>
-            {Stringify({ loading, rootData, data, router })}
-          </div>
+          {Stringify({
+            seed: Math.random(),
+            loading,
+            data,
+            ...props,
+          })}
         </div>
       )
     }}
