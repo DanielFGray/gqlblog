@@ -5,7 +5,6 @@ import StaticRouter from 'react-router-dom/StaticRouter'
 import { renderRoutes } from 'react-router-config'
 import Html from './Html'
 import routes from '../routes'
-import Main from '../client/Main'
 import { appBase } from '../../config'
 
 const router = Router()

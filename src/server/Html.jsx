@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { Helmet } from "react-helmet"
+import { Helmet } from 'react-helmet'
 import { renderToString } from 'react-dom/server'
 import { thread, partition } from '../utils'
 import Layout from '../client/Layout'
-import config from '../../config'
 import manifest from '../../dist/manifest.json'
-import { appTitle } from '../../config'
+import * as config from '../../config'
 
 const appBase = config.appBase.endsWith('/') ? config.appBase : `${config.appBase}/`
 const { appMountId } = config
@@ -22,8 +21,6 @@ const [scripts, styles, unknown] = thread(
 if (unknown.length > 0) {
   console.log('unknown webpack assets!', unknown)
 }
-
-console.log({appMountId})
 
 const Html = ({ data, children }) => {
   const app = (<div id={appMountId}><Layout>{children}</Layout></div>)

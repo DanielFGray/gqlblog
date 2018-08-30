@@ -1,20 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
-const { DefinePlugin } = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const WebpackAssetsManifest = require('webpack-assets-manifest')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const nodeExternals = require('webpack-node-externals')
-const config = require('./config.js')
+import { DefinePlugin } from 'webpack'
+// import HtmlWebpackPlugin from 'html-webpack-plugin'
+import WebpackAssetsManifest from 'webpack-assets-manifest'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import nodeExternals from 'webpack-node-externals'
+import * as config from './config.js'
 
-const nodeEnv = process.env.NODE_ENV || 'development'
-const devMode = nodeEnv.startsWith('dev')
-const { appMountId } = config
-
+const { nodeEnv, devMode } = config
 const appBase = devMode ? '/' : config.appBase
 
 const constants = {
-  __MOUNT: JSON.stringify(appMountId),
+  __MOUNT: JSON.stringify(config.appMountId),
   __APPBASE: JSON.stringify(appBase),
   __DEV: devMode,
   __BROWSER: true,
@@ -24,7 +21,7 @@ const rules = [
   {
     test: /node_modules[\\/].*\.css$/,
     use: [
-      MiniCssExtractPlugin.loader,
+      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
       'css-loader',
     ],
   },
@@ -32,7 +29,7 @@ const rules = [
     exclude: /node_modules/,
     test: /\.(s|c)ss$/,
     use: [
-      MiniCssExtractPlugin.loader,
+      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
       'css-loader',
       'postcss-loader',
     ],
@@ -75,13 +72,13 @@ const clientConfig = {
     //   template: 'src/client/html.ejs',
     //   inject: false,
     //   title: config.appTitle,
-    //   appMountId,
+    //   appMountId: config.appMountId,
     //   mobile: true,
     // }),
     new DefinePlugin(constants),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
-      output: '../manifest.json',
+      output: './manifest.json',
     }),
   ],
   stats,
@@ -108,4 +105,4 @@ const serverConfig = {
   stats,
 }
 
-module.exports = devMode ? clientConfig : [clientConfig, serverConfig]
+export default devMode ? clientConfig : [clientConfig, serverConfig]

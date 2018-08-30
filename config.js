@@ -1,14 +1,11 @@
-const path = require('path')
+import path from 'path'
 
-const outputDir = path.resolve('./dist')
-const publicDir = path.join(outputDir, 'public')
-
-module.exports = {
-  appTitle: '[insert title]',
-  outputDir,
-  publicDir,
-  appBase: '/',
-  appMountId: 'root',
-  port: process.env.PORT || 8765,
-  host: process.env.HOST || 'localhost',
-}
+export const outputDir = path.resolve('./dist')
+export const publicDir = path.resolve('./public')
+export const appTitle = '[insert title]'
+export const appBase = '/'
+export const appMountId = 'root'
+export const port = process.env.PORT || 8765
+export const host = process.env.HOST || 'localhost'
+export const nodeEnv = process.env.NODE_ENV || 'development'
+export const devMode = nodeEnv.startsWith('dev')
