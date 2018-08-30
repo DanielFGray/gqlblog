@@ -14,7 +14,9 @@ app.use(morgan('common'))
 app.use('/static', express.static(publicDir))
 app.use(appBase, routes)
 
-if (devMode) require('./dev') // eslint-disable-line global-require
+if (devMode) {
+  require('./dev').default(app) // eslint-disable-line global-require
+}
 
 app.listen(port, host, () => console.log(`
   server now running on http://${host}:${port}`))

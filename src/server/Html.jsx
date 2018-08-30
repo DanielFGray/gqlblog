@@ -4,10 +4,9 @@ import { renderToString } from 'react-dom/server'
 import { thread, partition } from '../utils'
 import Layout from '../client/Layout'
 import manifest from '../../dist/manifest.json'
-import * as config from '../../config'
+import { appMountId, appBase as base } from '../../config'
 
-const appBase = config.appBase.endsWith('/') ? config.appBase : `${config.appBase}/`
-const { appMountId } = config
+const appBase = base.endsWith('/') ? base : `${base}/`
 
 const [scripts, styles, unknown] = thread(
   manifest,

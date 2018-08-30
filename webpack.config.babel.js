@@ -1,18 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
+import path from 'path'
 import { DefinePlugin } from 'webpack'
 // import HtmlWebpackPlugin from 'html-webpack-plugin'
 import WebpackAssetsManifest from 'webpack-assets-manifest'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import nodeExternals from 'webpack-node-externals'
-import * as config from './config.js'
-
-const { nodeEnv, devMode } = config
-const appBase = devMode ? '/' : config.appBase
+import {
+  appBase, appMountId, nodeEnv, devMode, outputDir, publicDir,
+} from './config'
 
 const constants = {
-  __MOUNT: JSON.stringify(config.appMountId),
-  __APPBASE: JSON.stringify(appBase),
+  __MOUNT: JSON.stringify(appMountId),
+  __APPBASE: JSON.stringify(devMode ? '/' : appBase),
   __DEV: devMode,
   __BROWSER: true,
 }
@@ -62,7 +62,7 @@ const clientConfig = {
   },
   output: {
     filename: devMode ? '[name].js' : '[name].[hash].js',
-    path: config.publicDir,
+    path: publicDir,
   },
   module: {
     rules,
@@ -71,14 +71,15 @@ const clientConfig = {
     // new HtmlWebpackPlugin({
     //   template: 'src/client/html.ejs',
     //   inject: false,
-    //   title: config.appTitle,
-    //   appMountId: config.appMountId,
+    //   title: appTitle,
+    //   appMountId: appMountId,
     //   mobile: true,
     // }),
     new DefinePlugin(constants),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
-      output: './manifest.json',
+      output: path.join(outputDir, './manifest.json'),
+      writeToDisk: true,
     }),
   ],
   stats,
@@ -86,7 +87,7 @@ const clientConfig = {
 
 const serverConfig = {
   mode: nodeEnv,
-  entry: { server: './src/server/index' },
+  entry: { index: './src/server/index' },
   target: 'node',
   externals: [nodeExternals()],
   resolve: {
@@ -94,7 +95,7 @@ const serverConfig = {
   },
   output: {
     filename: '[name].js',
-    path: config.outputDir,
+    path: outputDir,
   },
   module: {
     rules,
@@ -105,4 +106,8 @@ const serverConfig = {
   stats,
 }
 
-export default devMode ? clientConfig : [clientConfig, serverConfig]
+if (! devMode) {
+  clientConfig.plugins.push(new MiniCssExtractPlugin())
+}
+
+export default [clientConfig, serverConfig]

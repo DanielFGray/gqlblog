@@ -1,10 +1,9 @@
 /* eslint react/jsx-filename-extension: off */
 import { Router } from 'express'
 import * as React from 'react'
-import StaticRouter from 'react-router-dom/StaticRouter'
-import { renderRoutes } from 'react-router-config'
+import { StaticRouter } from 'react-router'
 import Html from './Html'
-import routes from '../routes'
+import Routes from '../client/Routes'
 import { appBase } from '../../config'
 
 const router = Router()
@@ -26,18 +25,18 @@ router.get('/', (req, res) => {
     const context = data
     const app = (
       <StaticRouter basename={appBase} location={req.url} context={context}>
-        {renderRoutes(routes)}
+        <Routes data={data} />
       </StaticRouter>
     )
     try {
-      const x = Html({ data, children: app })
+      const html = Html({ data, children: app })
       if (context.url) {
         res.writeHead(302, {
           Location: context.url,
         })
         res.end()
       } else {
-        res.end(x)
+        res.end(html)
       }
     } catch (e) {
       console.error(e)

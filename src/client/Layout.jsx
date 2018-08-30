@@ -8,9 +8,7 @@ const Layout = ({ children }) => (
     <Helmet
       defaultTitle={appTitle}
       titleTemplate={`${appTitle} | %s`}
-    >
-      <title>{appTitle}</title>
-    </Helmet>
+    />
     {/* <Nav /> */}
     {children}
   </div>
