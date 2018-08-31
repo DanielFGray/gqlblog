@@ -110,4 +110,4 @@ if (! devMode) {
   clientConfig.plugins.push(new MiniCssExtractPlugin())
 }
 
-export default [clientConfig, serverConfig]
+export default devMode ? clientConfig : [clientConfig, serverConfig]
