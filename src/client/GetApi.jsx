@@ -1,7 +1,7 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 
-export default class GetJson extends React.Component {
+export default class GetApi extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
@@ -19,14 +19,22 @@ export default class GetJson extends React.Component {
   }
 
   componentDidMount() {
-    this.fetch()
+    if (! this.props.autoFetch) {
+      this.fetch()
+    }
   }
 
   fetch = () => {
     this.setState({ loading: true })
     fetch(this.props.url)
       .then(x => x.json())
-      .then(data => this.setState({ data, loading: false, error: null }))
+      .then(data => {
+        if (data.status === 'ok') {
+          this.setState({ data, loading: false, error: null })
+        } else {
+          throw new Error(data.message)
+        }
+      })
       .catch(e => this.setState({ error: e, loading: false }))
   }
 

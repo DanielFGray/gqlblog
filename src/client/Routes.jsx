@@ -7,7 +7,7 @@ const Routes = props => (
     <Switch>
       {routes.map(({ path, exact, component: C }) => (
         <Route
-          key={path}
+          key={path || 'notfound'}
           path={path}
           exact={exact}
           render={router => <C {...router} {...props} />}

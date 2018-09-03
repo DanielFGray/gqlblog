@@ -2,7 +2,6 @@
 public
 dist
 node_modules/
-dist
 .eslintcache
 .node_repl_history
 .tern-port

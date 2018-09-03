@@ -7,11 +7,11 @@ import Layout from './Layout'
 import './style.css'
 
 const Init = props => (
-  <Layout>
-    <Router basename={__APPBASE}>
+  <Router basename={__APPBASE}>
+    <Layout>
       <Routes {...props} />
-    </Router>
-  </Layout>
+    </Layout>
+  </Router>
 )
 
 document.addEventListener('DOMContentLoaded', () => {

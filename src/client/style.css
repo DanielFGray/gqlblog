@@ -11,6 +11,7 @@ body {
   font-size: 1.8rem;
   line-height: 1.618;
   max-width: 38em;
+  min-height: 100vh;
   margin: auto;
   color: #4a4a4a;
   background-color: #f9f9f9;

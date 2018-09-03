@@ -1,16 +1,20 @@
+/* global __APPTITLE:false */
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-// import Nav from './Nav'
-import { appTitle } from '../../config'
+import Nav from './Nav'
+import Footer from './Footer'
 
 const Layout = ({ children }) => (
-  <div>
+  <div className="layout">
     <Helmet
-      defaultTitle={appTitle}
-      titleTemplate={`${appTitle} | %s`}
+      defaultTitle={__APPTITLE}
+      titleTemplate={`${__APPTITLE} | %s`}
     />
-    {/* <Nav /> */}
-    {children}
+    <Nav />
+    <div className="main">
+      {children}
+    </div>
+    <Footer />
   </div>
 )
 export default Layout

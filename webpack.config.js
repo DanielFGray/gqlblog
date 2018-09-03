@@ -1,39 +1,51 @@
+
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
-import path from 'path'
-import { DefinePlugin } from 'webpack'
-// import HtmlWebpackPlugin from 'html-webpack-plugin'
-import WebpackAssetsManifest from 'webpack-assets-manifest'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import nodeExternals from 'webpack-node-externals'
-import {
-  appBase, appMountId, nodeEnv, devMode, outputDir, publicDir,
-} from './config'
+const path = require('path')
+const { DefinePlugin } = require('webpack')
+const WebpackAssetsManifest = require('webpack-assets-manifest')
+// const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const nodeExternals = require('webpack-node-externals')
+const {
+  appBase,
+  appMountId,
+  appTitle,
+  devMode,
+  nodeEnv,
+  outputDir,
+  publicDir,
+} = require('./config')
 
 const constants = {
   __MOUNT: JSON.stringify(appMountId),
   __APPBASE: JSON.stringify(devMode ? '/' : appBase),
   __DEV: devMode,
   __BROWSER: true,
+  __APPTITLE: JSON.stringify(appTitle),
 }
 
-const rules = [
+const cssLoaders = [
   {
     test: /node_modules[\\/].*\.css$/,
     use: [
-      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+      MiniCssExtractPlugin.loader,
       'css-loader',
     ],
   },
   {
     exclude: /node_modules/,
-    test: /\.(s|c)ss$/,
+    test: /\.(sc|[sc])ss$/,
     use: [
-      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+      MiniCssExtractPlugin.loader,
       'css-loader',
       'postcss-loader',
     ],
   },
+]
+
+const babelLoader = [
   {
     test: /\.jsx?$/,
     exclude: /node_modules/,
@@ -45,7 +57,7 @@ const rules = [
         },
       },
     ],
-  },
+  }
 ]
 
 const stats = {
@@ -55,26 +67,22 @@ const stats = {
 }
 
 const clientConfig = {
+  name: 'client',
   mode: nodeEnv,
   entry: { main: './src/client/index' },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   output: {
-    filename: devMode ? '[name].js' : '[name].[hash].js',
     path: publicDir,
+    filename: devMode ? '[name].js' : '[name]-[hash].js',
+    chunkFilename: '[id]-[chunkhash].js',
   },
   module: {
-    rules,
+    rules: [ ...babelLoader, ...cssLoaders ],
   },
   plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: 'src/client/html.ejs',
-    //   inject: false,
-    //   title: appTitle,
-    //   appMountId: appMountId,
-    //   mobile: true,
-    // }),
+    new MiniCssExtractPlugin(),
     new DefinePlugin(constants),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
@@ -86,10 +94,15 @@ const clientConfig = {
 }
 
 const serverConfig = {
+  name: 'server',
   mode: nodeEnv,
-  entry: { index: './src/server/index' },
+  entry: { index: './src/index' },
   target: 'node',
-  externals: [nodeExternals()],
+  externals: [
+    /config\.js$/,
+    /manifest\.json$/,
+    nodeExternals(),
+  ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
@@ -98,7 +111,7 @@ const serverConfig = {
     path: outputDir,
   },
   module: {
-    rules,
+    rules: babelLoader,
   },
   plugins: [
     new DefinePlugin({ ...constants, __BROWSER: false }),
@@ -107,7 +120,10 @@ const serverConfig = {
 }
 
 if (! devMode) {
-  clientConfig.plugins.push(new MiniCssExtractPlugin())
+  clientConfig.plugins.push(
+    // new BabelMinifyWebpackPlugin(),
+    new CleanWebpackPlugin(['dist', 'public']),
+  )
 }
 
-export default devMode ? clientConfig : [clientConfig, serverConfig]
+module.exports = [clientConfig, serverConfig]

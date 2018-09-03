@@ -1,34 +1,40 @@
 import * as React from 'react'
-import GetJson from './GetJson'
+import { Helmet } from 'react-helmet'
+import GetApi from './GetApi'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
 const Main = ({ rootProps, ...props }) => (
-  <GetJson url="/api/v1" initData={rootProps}>
-    {({
-      error,
-      loading,
-      reload,
-      data,
-    }) => {
-      if (error !== null) console.error(error)
-      return (
-        <div>
+  <>
+    <Helmet>
+      <title>Home</title>
+    </Helmet>
+    <GetApi url="/api/v1" autoFetch={false} initData={{ body: rootProps }}>
+      {({
+        error,
+        loading,
+        reload,
+        data: { body: data }
+      }) => {
+        if (error !== null) console.error(error)
+        return (
           <div>
-            <button type="button" onClick={reload}>
-              Reload
-            </button>
+            <div>
+              <button type="button" onClick={reload}>
+                Reload
+              </button>
+            </div>
+            {Stringify({
+              seed: Math.random(),
+              loading,
+              data,
+              ...props,
+            })}
           </div>
-          {Stringify({
-            seed: Math.random(),
-            loading,
-            data,
-            ...props,
-          })}
-        </div>
-      )
-    }}
-  </GetJson>
+        )
+      }}
+    </GetApi>
+  </>
 )
 
 export default Main
