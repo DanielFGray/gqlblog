@@ -1,65 +1,68 @@
-/* global __APPBASE:false __MOUNT:false */
+/* global __non_webpack_require__:false __APPBASE:false __MOUNT:false */
 /* eslint react/no-danger: off */
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
-import { renderToString, renderToStaticMarkup } from 'react-dom/server'
+import { endsWith } from 'ramda'
+import { partition } from './utils'
+
+const manifest = __non_webpack_require__('./manifest.json')
+
+const [styles, scripts] = partition([
+  endsWith('.css'),
+  endsWith('.js'),
+], Object.values(manifest))
 
 const appBase = __APPBASE === '/' ? '' : __APPBASE
 
 const Html = ({
-  styles = [],
-  scripts = [],
   data,
-  children,
-}) => {
-  const html = renderToString(children)
-  const helmet = Helmet.rewind()
-
-  return renderToStaticMarkup(
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta
-          httpEquiv="x-ua-compatible"
-          content="ie=edge,chrome=1"
+  html,
+  helmet,
+}) => (
+  <html lang="en">
+    <head>
+      <meta charSet="utf-8" />
+      <meta
+        httpEquiv="x-ua-compatible"
+        content="ie=edge,chrome=1"
+      />
+      {helmet.title.toComponent()}
+      {helmet.meta.toComponent()}
+      <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+      />
+      {helmet.link.toComponent()}
+      {styles.map(css => (
+        <link
+          key={css}
+          rel="stylesheet"
+          type="text/css"
+          href={`${appBase}/${css}`}
         />
-        {helmet.title.toComponent()}
-        {helmet.meta.toComponent()}
-        <meta
-          name="viewport"
-          content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
-        />
-        {helmet.link.toComponent()}
-        {styles.map(css => (
-          <link
-            key={css}
-            rel="stylesheet"
-            href={`${appBase}/${css}`}
-          />
-        ))}
-      </head>
-      <body>
-        <div
-          id={__MOUNT}
-          dangerouslySetInnerHTML={{
-            __html: html,
-          }}
-        />
+      ))}
+    </head>
+    <body>
+      <div
+        id={__MOUNT}
+        dangerouslySetInnerHTML={{
+          __html: html,
+        }}
+      />
+      <script
+        type="/text/javascript"
+        dangerouslySetInnerHTML={{
+          __html: `window.__INIT_DATA = ${JSON.stringify(data)}`,
+        }}
+      />
+      {scripts.map(js => (
         <script
-          dangerouslySetInnerHTML={{
-            __html: `window.__INIT_DATA = ${JSON.stringify(data)}`,
-          }}
+          key={js}
+          type="text/javascript"
+          src={`${appBase}/${js}`}
         />
-        {scripts.map(js => (
-          <script
-            key={js}
-            src={`${appBase}/${js}`}
-          />
-        ))}
-      </body>
-    </html>,
-  )
-}
-
+      ))}
+    </body>
+  </html>
+)
 
 export default Html
