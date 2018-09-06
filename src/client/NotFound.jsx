@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const NotFound = ({ router: { location: { pathname } } }) => (
+const NotFound = ({ location: { pathname } }) => (
   <p>
     {`${pathname} does not exist`}
   </p>

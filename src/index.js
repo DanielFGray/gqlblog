@@ -1,73 +1,101 @@
 /* global __non_webpack_require__:false */
 /* eslint-disable no-console */
+import Koa from 'koa'
+import Router from 'koa-router'
+import bodyParser from 'koa-body'
+import send from 'koa-send'
+import koaHelmet from 'koa-helmet'
+import { Helmet } from 'react-helmet'
 import * as React from 'react'
 import { StaticRouter } from 'react-router'
-import express from 'express'
-import morgan from 'morgan'
-import bodyParser from 'body-parser'
-import expressHelmet from 'helmet'
-import { Helmet } from 'react-helmet'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import Html from './Html'
 import Routes from './client/Routes'
 import Layout from './client/Layout'
-
-const config = __non_webpack_require__('../config')
 
 const {
   appBase,
   host,
   port,
   publicDir,
-} = config
+} = __non_webpack_require__('../config')
 
-const app = express()
+const app = new Koa()
+const router = new Router()
 
-app.use(morgan('dev'))
-app.use(expressHelmet())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.static(publicDir))
+app.use(koaHelmet())
+app.use(bodyParser())
 
 const getData = () => Promise.resolve({ list: [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }] })
 
-app.get('/api/v1', async (req, res) => {
-  const body = await getData()
-  res.json({ status: 'ok', body })
+app.use(async (ctx, next) => {
+  await next()
+  const rt = ctx.response.get('X-Response-Time')
+  console.log(`${ctx.method} ${ctx.url} - ${rt}`)
 })
 
-app.get('/api*', (req, res) => {
-  res.status(500)
-    .json({ status: 'error', body: 'not implemented' })
+app.use(async (ctx, next) => {
+  const start = Date.now()
+  await next()
+  const ms = Date.now() - start
+  ctx.set('X-Response-Time', `${ms}ms`)
 })
 
-app.get('/', (req, res) => {
-  getData().then(data => {
-    const context = { ...data, query: req.query || {} }
-    const children = (
-      <StaticRouter basename={appBase} location={req.url} context={context}>
-        <Layout>
-          <Routes data={data} />
-        </Layout>
-      </StaticRouter>
-    )
-    let html = renderToString(children)
-    const helmet = Helmet.rewind()
-    html = renderToStaticMarkup(Html({ data, helmet, html }))
-    if (context.url) {
-      res.writeHead(302, {
-        Location: context.url,
-      })
-      res.end()
-    } else {
-      res.end(html)
+app.use(async (ctx, next) => {
+  try {
+    if (ctx.path !== '/') {
+      return await send(ctx, ctx.path, { root: publicDir })
     }
-  })
-    .catch(e => {
-      console.error(e)
-      res.status(501)
-        .json(e)
-    })
+  } catch (e) {
+    /* fallthrough */
+  }
+  return next()
 })
+
+router.get('/robots.txt', async ctx => {
+  ctx.set('Content-Type', 'text/plain')
+  ctx.body = [
+    'User-agent: *',
+    'Disallow: /n/',
+    'Disallow: /proxy/',
+    'Disallow: /search/',
+    'Disallow: /integration/',
+  ].join('\n')
+})
+
+router.get('/api/v1', async ctx => {
+  const body = await getData()
+  ctx.json = { status: 'ok', body }
+})
+
+router.get('/api*', async ctx => {
+  ctx.status = 500
+  ctx.set('Content-Type', 'application/json')
+  ctx.body = { status: 'error', body: 'not implemented' }
+})
+
+router.get(['/', '/*'], async ctx => {
+  const data = await getData()
+  const context = { ...data, query: ctx.query || {} }
+  const children = (
+    <StaticRouter basename={appBase} location={ctx.url} context={context}>
+      <Layout>
+        <Routes data={data} />
+      </Layout>
+    </StaticRouter>
+  )
+  let html = renderToString(children)
+  const helmet = Helmet.rewind()
+  html = renderToStaticMarkup(Html({ data, helmet, html }))
+  if (context.url) {
+    ctx.redirect(context.url)
+  } else {
+    ctx.body = html
+  }
+})
+
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 app.listen(port, host, () => console.log(`
   server now running on http://${host}:${port}`))
