@@ -3,13 +3,15 @@ import PropTypes from 'prop-types'
 
 export default class GetApi extends React.Component {
   static propTypes = {
-    url: PropTypes.string.isRequired,
+    // url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
+    autoFetch: PropTypes.bool,
     initData: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   }
 
   static defaultProps = {
     initData: null,
+    autoFetch: true,
   }
 
   state = {
@@ -19,20 +21,20 @@ export default class GetApi extends React.Component {
   }
 
   componentDidMount() {
-    if (! this.props.autoFetch) {
+    if (this.props.autoFetch) {
       this.fetch()
     }
   }
 
   fetch = () => {
     this.setState({ loading: true })
-    fetch(this.props.url)
+    fetch(`/api/v1${this.props.url || ''}`)
       .then(x => x.json())
-      .then(data => {
-        if (data.status === 'ok') {
-          this.setState({ data, loading: false, error: null })
+      .then(res => {
+        if (res.status === 'ok') {
+          this.setState({ data: res.body, loading: false, error: null })
         } else {
-          throw new Error(data.message)
+          throw new Error(res.body)
         }
       })
       .catch(e => this.setState({ error: e, loading: false }))
@@ -40,12 +42,10 @@ export default class GetApi extends React.Component {
 
   render() {
     const { data, error, loading } = this.state
-    const { children } = this.props
-    const reload = this.fetch
-    return children({
+    return this.props.children({
       seed: Math.random(),
+      reload: this.fetch,
       data,
-      reload,
       error,
       loading,
     })

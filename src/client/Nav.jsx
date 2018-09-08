@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 // https://reacttraining.com/react-router/web/api/NavLink
 
 const links = [
-  { label: 'Home', path: '/' },
+  { label: 'Home', path: '' },
 ]
 
 const Nav = () => (

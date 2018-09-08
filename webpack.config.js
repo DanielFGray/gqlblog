@@ -1,4 +1,3 @@
-
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
 const path = require('path')
@@ -8,6 +7,7 @@ const WebpackAssetsManifest = require('webpack-assets-manifest')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
+
 const {
   appBase,
   appMountId,
@@ -20,7 +20,7 @@ const {
 
 const constants = {
   __MOUNT: JSON.stringify(appMountId),
-  __APPBASE: JSON.stringify(devMode ? '/' : appBase),
+  __APPBASE: JSON.stringify( appBase),
   __DEV: devMode,
   __BROWSER: true,
   __APPTITLE: JSON.stringify(appTitle),

@@ -11,8 +11,6 @@ const [styles, scripts] = partition([
   endsWith('.js'),
 ], Object.values(manifest))
 
-const appBase = __APPBASE === '/' ? '' : __APPBASE
-
 const Html = ({
   data,
   html,
@@ -37,7 +35,7 @@ const Html = ({
           key={css}
           rel="stylesheet"
           type="text/css"
-          href={`${appBase}/${css}`}
+          href={`${__APPBASE}/${css}`}
         />
       ))}
     </head>
@@ -49,7 +47,7 @@ const Html = ({
         }}
       />
       <script
-        type="/text/javascript"
+        type="text/javascript"
         dangerouslySetInnerHTML={{
           __html: `window.__INIT_DATA = ${JSON.stringify(data)}`,
         }}
@@ -58,7 +56,7 @@ const Html = ({
         <script
           key={js}
           type="text/javascript"
-          src={`${appBase}/${js}`}
+          src={`${__APPBASE}/${js}`}
         />
       ))}
     </body>

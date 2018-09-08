@@ -15,7 +15,6 @@ const Init = props => (
 )
 
 document.addEventListener('DOMContentLoaded', () => {
-  const initData = window.__INIT_DATA // eslint-disable-line no-underscore-dangle
-  const props = typeof initData === 'object' ? initData : {}
-  ReactDOM.hydrate(<Init rootProps={props} />, document.getElementById(__MOUNT))
+  // const initData = window.__INIT_DATA // eslint-disable-line no-underscore-dangle
+  // ReactDOM.hydrate(<Init initData={initData} />, document.getElementById(__MOUNT))
 })

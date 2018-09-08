@@ -1,7 +1,7 @@
 const path = require('path')
 
 const appTitle = '[insert title]'
-const appBase = '/'
+const appBase = ''
 const appMountId = 'root'
 const outputDir = path.resolve('./dist')
 const publicDir = path.resolve('./public')

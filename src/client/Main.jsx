@@ -4,17 +4,17 @@ import GetApi from './GetApi'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
-const Main = ({ rootProps, ...props }) => (
+const Main = ({ initData, ...props }) => (
   <>
     <Helmet>
       <title>Home</title>
     </Helmet>
-    <GetApi url="/api/v1" autoFetch={false} initData={{ body: rootProps }}>
+    <GetApi autoFetch={false} initData={initData}>
       {({
         error,
         loading,
         reload,
-        data: { body: data }
+        data,
       }) => {
         if (error !== null) console.error(error)
         return (
