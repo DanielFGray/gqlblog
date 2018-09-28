@@ -5,13 +5,7 @@ import Router from 'koa-router'
 import bodyParser from 'koa-body'
 import send from 'koa-send'
 import koaHelmet from 'koa-helmet'
-import { Helmet } from 'react-helmet'
-import * as React from 'react'
-import { StaticRouter } from 'react-router'
-import { renderToString, renderToStaticMarkup } from 'react-dom/server'
-import Html from './Html'
-import Routes from './client/Routes'
-import Layout from './client/Layout'
+import SSR from './SSR'
 
 const {
   appBase,
@@ -20,89 +14,69 @@ const {
   publicDir,
 } = __non_webpack_require__('../config')
 
-const app = new Koa()
-
-app.use(koaHelmet())
-app.use(bodyParser())
-
-const getData = () => Promise.resolve({ list: [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }] })
-
-app.use(async (ctx, next) => {
-  await next()
-  const rt = ctx.response.get('X-Response-Time')
-  console.log(`${ctx.method} ${ctx.url} ${ctx.status} - ${rt}`)
+const data = () => ({
+  list: [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }],
+  seed: Math.random(),
 })
 
-app.use(async (ctx, next) => {
-  const start = Date.now()
-  await next()
-  const ms = Date.now() - start
-  ctx.set('X-Response-Time', `${ms}ms`)
-})
+const router = new Router()
 
-app.use(async (ctx, next) => {
-  try {
-    if (ctx.path !== '/') {
-      return await send(ctx, ctx.path, { root: publicDir })
-    }
-  } catch (e) {
-    /* fallthrough */
-  }
-  return next()
-})
-
-const api = new Router()
   .get('/api/v1', async ctx => {
-    const body = await getData()
-    ctx.json = { status: 'ok', body }
+    ctx.body = { status: 'ok', body: data() }
   })
 
   .all('/api*', async ctx => {
     ctx.status = 500
-    ctx.set('Content-Type', 'application/json')
     ctx.body = { status: 'error', body: 'not implemented' }
   })
 
-const ssr = new Router()
+  .get(['/', '/*'], SSR({ data, appBase }))
 
-  .get('/robots.txt', async ctx => {
-    ctx.set('Content-Type', 'text/plain')
-    ctx.body = [
-      'User-agent: *',
-      'Disallow: /search/',
-    ].join('\n')
+const app = new Koa()
+
+  .use(koaHelmet())
+  .use(bodyParser())
+
+  .use(async (ctx, next) => {
+    await next()
+    const rt = ctx.response.get('X-Response-Time')
+    console.log(`${ctx.method} ${ctx.url} ${ctx.status} - ${rt}`)
   })
 
-  .get(['/', '/*'], async ctx => {
-    const data = await getData()
-    const context = { ...data, query: ctx.query || {} }
-    const children = (
-      <StaticRouter basename={appBase} location={ctx.url} context={context}>
-        <Layout>
-          <Routes data={data} />
-        </Layout>
-      </StaticRouter>
-    )
-    let html = renderToString(children)
-    const helmet = Helmet.rewind()
-    html = renderToStaticMarkup(Html({ data, helmet, html }))
-    if (context.url) {
-      ctx.redirect(context.url)
-    } else {
-      ctx.body = `<!doctype html>${html}`
+  .use(async (ctx, next) => {
+    const start = Date.now()
+    await next()
+    const ms = Date.now() - start
+    ctx.set('X-Response-Time', `${ms}ms`)
+  })
+
+  .use(async (ctx, next) => {
+    if (ctx.path.startsWith('/api')) {
+      ctx.set('Content-Type', 'application/json')
     }
+    return next()
   })
 
-app.use(api.routes())
-  .use(ssr.routes())
-  .use(api.allowedMethods())
-  .use(ssr.allowedMethods())
+  .use(async (ctx, next) => {
+    try {
+      if (ctx.path !== '/') {
+        return await send(ctx, ctx.path, { root: publicDir })
+      }
+    } catch (e) { /* fallthrough */ }
+    return next()
+  })
 
-app.listen(port, host, () => console.log(`
-  server now running on http://${host}:${port}`))
+  .use(router.routes())
+  .use(router.allowedMethods())
 
-process.on('uncaughtException', console.error)
+  .listen(port, host, () => console.log(`
+    server now running on http://${host}:${port}`))
+
 process.on('exit', () => console.log('exiting!'))
 process.on('SIGINT', () => console.log('interrupted!'))
+process.on('uncaughtException', e => {
+  console.error(e)
+  process.exit(1)
+})
 
 export default app
