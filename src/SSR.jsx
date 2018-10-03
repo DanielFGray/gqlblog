@@ -22,12 +22,22 @@ export default ({ appBase, data }) => async ctx => {
       </HelmetProvider>
     </StaticRouter>
   )
-  const appString = renderToString(App)
-  const { helmet } = helmetCtx
-  const html = renderToStaticMarkup(Html({ data, helmet, html: appString }))
-  if (routerCtx.url) {
-    ctx.redirect(routerCtx.url)
-  } else {
-    ctx.body = `<!doctype html>${html}`
+  try {
+    const html = renderToString(App)
+    const { helmet } = helmetCtx
+    const body = renderToStaticMarkup(Html({ data, helmet, html }))
+    if (routerCtx.status) {
+      ctx.status = routerCtx.status
+    }
+    if (routerCtx.url) {
+      ctx.redirect(routerCtx.url)
+    } else {
+      ctx.body = `<!doctype html>${body}`
+    }
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = 'Error'
+    console.error(e)
+    process.exit(1)
   }
 }
