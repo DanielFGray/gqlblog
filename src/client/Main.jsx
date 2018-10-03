@@ -4,12 +4,12 @@ import GetApi from './GetApi'
 
 const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
 
-const Main = ({ initData, ...props }) => (
+const Main = props => (
   <>
     <Helmet>
       <title>Home</title>
     </Helmet>
-    <GetApi autoFetch={false} initData={initData}>
+    <GetApi url="/" autoFetch={false} initData={props.initData}>
       {({
         error,
         loading,
@@ -28,7 +28,7 @@ const Main = ({ initData, ...props }) => (
               seed: Math.random(),
               loading,
               data,
-              ...props,
+              props,
             })}
           </div>
         )

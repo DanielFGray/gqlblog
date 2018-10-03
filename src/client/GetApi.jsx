@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 export default class GetApi extends React.Component {
   static propTypes = {
-    // url: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     autoFetch: PropTypes.bool,
     initData: PropTypes.any, // eslint-disable-line react/forbid-prop-types

@@ -20,6 +20,9 @@ const data = () => ({
 })
 
 const router = new Router()
+  .all('/ping', async ctx => {
+    ctx.body = 'pong'
+  })
 
   .get('/api/v1', async ctx => {
     ctx.body = { status: 'ok', body: data() }

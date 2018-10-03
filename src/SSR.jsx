@@ -7,6 +7,9 @@ import Routes from './client/Routes'
 import Layout from './client/Layout'
 
 export default ({ appBase, data }) => async ctx => {
+  if (typeof data === 'function') {
+    data = data() // eslint-disable-line no-param-reassign
+  }
   const routerCtx = {}
   const helmetCtx = {}
   const App = (
