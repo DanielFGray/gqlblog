@@ -1,4 +1,3 @@
-/* global __non_webpack_require__:false */
 /* eslint-disable no-console */
 import Koa from 'koa'
 import Router from 'koa-router'
@@ -6,6 +5,7 @@ import bodyParser from 'koa-body'
 import send from 'koa-send'
 import koaHelmet from 'koa-helmet'
 import SSR from './SSR'
+import api from './api'
 
 const {
   appBase,
@@ -14,26 +14,8 @@ const {
   publicDir,
 } = __non_webpack_require__('../config')
 
-const data = () => ({
-  list: [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }],
-  seed: Math.random(),
-})
-
-const router = new Router()
-  .all('/ping', async ctx => {
-    ctx.body = 'pong'
-  })
-
-  .get('/api/v1', async ctx => {
-    ctx.body = { status: 'ok', body: data() }
-  })
-
-  .all('/api*', async ctx => {
-    ctx.status = 500
-    ctx.body = { status: 'error', body: 'not implemented' }
-  })
-
-  .get(['/', '/*'], SSR({ data, appBase }))
+const ssr = new Router()
+  .get('/*', SSR({ appBase, api }))
 
 const app = new Koa()
 
@@ -69,8 +51,9 @@ const app = new Koa()
     return next()
   })
 
-  .use(router.routes())
-  .use(router.allowedMethods())
+  .use(api.allowedMethods())
+  .use(api.routes())
+  .use(ssr.routes())
 
   .listen(port, host, () => console.log(`
     server now running on http://${host}:${port}`))

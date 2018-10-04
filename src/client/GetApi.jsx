@@ -1,3 +1,5 @@
+/* global __HOST:false __PORT:false */
+import superagent from 'superagent'
 import * as React from 'react'
 import PropTypes from 'prop-types'
 
@@ -22,29 +24,31 @@ export default class GetApi extends React.Component {
 
   componentDidMount() {
     if (this.props.autoFetch) {
-      this.fetch()
+      this.makeRequest()
     }
   }
 
-  fetch = () => {
+  fetchData = () => superagent.get(`http://${__HOST}:${__PORT}/api/v1${this.props.url}`)
+    .then(x => x.body)
+
+  makeRequest = () => {
     this.setState({ loading: true })
-    fetch(`/api/v1${this.props.url || ''}`)
-      .then(x => x.json())
-      .then(res => {
-        if (res.status === 'ok') {
-          this.setState({ data: res.body, loading: false, error: null })
-        } else {
-          throw new Error(res.body)
-        }
+    this.fetchData()
+      .then(({ status, body }) => {
+        if (status === 'ok') {
+          this.setState({ data: body, loading: false, error: null })
+        } else throw new Error(body)
       })
-      .catch(e => this.setState({ error: e, loading: false }))
+      .catch(e => {
+        this.setState({ error: e.message, loading: false })
+        console.log(e)
+      })
   }
 
   render() {
     const { data, error, loading } = this.state
     return this.props.children({
-      seed: Math.random(),
-      reload: this.fetch,
+      refresh: this.fetchData,
       data,
       error,
       loading,

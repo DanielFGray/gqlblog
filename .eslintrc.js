@@ -1,3 +1,13 @@
+const R = require('ramda')
+const config = require('./config')
+const globals = R.pipe(
+    Object.keys,
+    R.map(k => [`__${k.toUpperCase()}`, false]),
+    R.fromPairs,
+    R.assoc('__non_webpack_require__', false),
+  )(config)
+console.log({ globals })
+
 module.exports = {
   parser: 'babel-eslint',
   extends: [
@@ -23,4 +33,5 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/prop-types': 'off',
   },
+  globals,
 }

@@ -2,17 +2,16 @@ import * as React from 'react'
 import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
 import { HelmetProvider } from 'react-helmet-async'
+import { pluck } from 'ramda'
 import Html from './Html'
 import Routes from './client/Routes'
 import Layout from './client/Layout'
+import { getPromisesFromTree } from './getDataFromTree'
 
-export default ({ appBase, data }) => async ctx => {
-  if (typeof data === 'function') {
-    data = data() // eslint-disable-line no-param-reassign
-  }
+export default ({ appBase }) => async ctx => {
   const routerCtx = {}
   const helmetCtx = {}
-  const App = (
+  const App = data => (
     <StaticRouter
       basename={appBase}
       location={ctx.url}
@@ -26,7 +25,12 @@ export default ({ appBase, data }) => async ctx => {
     </StaticRouter>
   )
   try {
-    const html = renderToString(App)
+    const data = await Promise.all(
+      getPromisesFromTree({ rootElement: App() })
+        .map(({ promise, ...x }) => promise))
+      .then(pluck('body'))
+    console.log(data)
+    const html = renderToString(App(data))
     const { helmet } = helmetCtx
     const body = renderToStaticMarkup(Html({ data, helmet, html }))
     if (routerCtx.status) {

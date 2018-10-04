@@ -9,21 +9,23 @@ const Main = props => (
     <Helmet>
       <title>Home</title>
     </Helmet>
-    <GetApi url="/" autoFetch={false} initData={props.initData}>
+    <GetApi
+      url="/"
+      autoFetch={false}
+      initData={props.initData}
+    >
       {({
         error,
         loading,
-        reload,
+        refresh,
         data,
       }) => {
         if (error !== null) console.error(error)
         return (
           <div>
-            <div>
-              <button type="button" onClick={reload}>
-                Reload
-              </button>
-            </div>
+            <button type="button" onClick={refresh}>
+              Reload
+            </button>
             {Stringify({
               seed: Math.random(),
               loading,

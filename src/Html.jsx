@@ -1,4 +1,3 @@
-/* global __non_webpack_require__:false __APPBASE:false __MOUNT:false */
 /* eslint react/no-danger: off */
 import * as React from 'react'
 import { endsWith } from 'ramda'
@@ -46,12 +45,14 @@ const Html = ({
           __html: html,
         }}
       />
-      <script
-        type="text/javascript"
-        dangerouslySetInnerHTML={{
-          __html: `window.__INIT_DATA = ${JSON.stringify(data)}`,
-        }}
-      />
+      {data && (
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `window.__INIT_DATA = ${JSON.stringify(data)}`,
+          }}
+        />
+      )}
       {scripts.map(js => (
         <script
           key={js}
