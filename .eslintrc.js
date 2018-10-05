@@ -1,12 +1,8 @@
-const R = require('ramda')
 const config = require('./config')
-const globals = R.pipe(
-    Object.keys,
-    R.map(k => [`__${k.toUpperCase()}`, false]),
-    R.fromPairs,
-    R.assoc('__non_webpack_require__', false),
-  )(config)
-console.log({ globals })
+
+const globals = Object.entries(config)
+  .map(([k]) => [`__${k}`, false])
+  .reduce((p, [k, v]) => ({ ...p, [k]: v }), { '__non_webpack_require__': false })
 
 module.exports = {
   parser: 'babel-eslint',
@@ -16,6 +12,7 @@ module.exports = {
   env: {
     browser: true,
   },
+  globals,
   rules: {
     semi: ['error', 'never'],
     indent: ['error', 2, { flatTernaryExpressions: true  }],
@@ -33,5 +30,4 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/prop-types': 'off',
   },
-  globals,
 }

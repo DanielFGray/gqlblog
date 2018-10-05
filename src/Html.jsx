@@ -34,13 +34,13 @@ const Html = ({
           key={css}
           rel="stylesheet"
           type="text/css"
-          href={`${__APPBASE}/${css}`}
+          href={`${__appBase}/${css}`}
         />
       ))}
     </head>
     <body>
       <div
-        id={__MOUNT}
+        id={__mount}
         dangerouslySetInnerHTML={{
           __html: html,
         }}
@@ -57,7 +57,7 @@ const Html = ({
         <script
           key={js}
           type="text/javascript"
-          src={`${__APPBASE}/${js}`}
+          src={`${__appBase}/${js}`}
         />
       ))}
     </body>

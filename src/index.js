@@ -44,6 +44,16 @@ const app = new Koa()
 
   .use(async (ctx, next) => {
     try {
+      await next()
+    } catch (err) {
+      ctx.status = err.status || 500
+      ctx.body = err.message
+      ctx.app.emit('error', err, ctx)
+    }
+  })
+
+  .use(async (ctx, next) => {
+    try {
       if (ctx.path !== '/') {
         return await send(ctx, ctx.path, { root: publicDir })
       }

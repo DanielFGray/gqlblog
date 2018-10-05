@@ -10,7 +10,7 @@
     "prod:watch": "webpack -p --progress --watch",
     "prod": "NODE_ENV=production webpack -p",
     "lint:css": "stylelint './src/**/*.css'",
-    "lint:js": "eslint --cache src --ext=.js,.jsx",
+    "lint:js": "eslint --cache --ext=.js,.jsx",
     "lint": "npm-run-all -p lint:css lint:js"
   },
   "keywords": [],
@@ -23,6 +23,7 @@
     "koa-helmet": "^4.0.0",
     "koa-router": "^7.4.0",
     "koa-send": "^5.0.0",
+    "node-fetch": "^2.2.0",
     "objection": "^1.3.0",
     "ramda": "^0.25.0",
     "react": "^16.5.2",

@@ -1,8 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
 const path = require('path')
-const R = require('ramda')
-const { DefinePlugin } = require('webpack')
+const { ProvidePlugin, DefinePlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 // const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -10,11 +9,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
 const config = require('./config')
 
-const constants = R.pipe(
-  Object.entries,
-  R.map(([k, v]) => [`__${k.toUpperCase()}`, JSON.stringify(v)]),
-  R.fromPairs,
-)(config)
+const constants = Object.entries(config)
+  .map(([k, v]) => [`__${k}`, JSON.stringify(v)])
+  .reduce((p, [k, v]) => ({ ...p, [k]: v }), {})
 
 const cssLoaders = [
   {
@@ -72,7 +69,10 @@ const clientConfig = {
     rules: [...babelLoader, ...cssLoaders],
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name]-[hash].css',
+      chunkFilename: '[id]-[chunkhash].css',
+    }),
     new DefinePlugin({ ...constants, __BROWSER: true }),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
@@ -105,6 +105,9 @@ const serverConfig = {
   },
   plugins: [
     new DefinePlugin({ ...constants, __BROWSER: false }),
+    new ProvidePlugin({
+      fetch: 'node-fetch',
+    }),
   ],
   stats,
 }

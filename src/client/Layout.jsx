@@ -6,8 +6,8 @@ import Footer from './Footer'
 const Layout = ({ children }) => (
   <div className="layout">
     <Helmet
-      defaultTitle={__APPTITLE}
-      titleTemplate={`${__APPTITLE} | %s`}
+      defaultTitle={__appTitle}
+      titleTemplate={`${__appTitle} | %s`}
     />
     <Nav />
     <div className="main">
@@ -16,4 +16,5 @@ const Layout = ({ children }) => (
     <Footer />
   </div>
 )
+
 export default Layout

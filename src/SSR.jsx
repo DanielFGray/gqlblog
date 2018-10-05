@@ -27,7 +27,11 @@ export default ({ appBase }) => async ctx => {
   try {
     const data = await Promise.all(
       getPromisesFromTree({ rootElement: App() })
-        .map(({ promise, ...x }) => promise))
+        .map(({ promise, ...x }) => {
+          console.log(x)
+          return promise
+        }),
+    )
       .then(pluck('body'))
     console.log(data)
     const html = renderToString(App(data))

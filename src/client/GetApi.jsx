@@ -1,9 +1,7 @@
-/* global __HOST:false __PORT:false */
-import superagent from 'superagent'
 import * as React from 'react'
 import PropTypes from 'prop-types'
 
-export default class GetApi extends React.Component {
+class GetApi extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
@@ -28,8 +26,8 @@ export default class GetApi extends React.Component {
     }
   }
 
-  fetchData = () => superagent.get(`http://${__HOST}:${__PORT}/api/v1${this.props.url}`)
-    .then(x => x.body)
+  fetchData = () => fetch(`${__fullUrl}api/v1${this.props.url}`)
+    .then(x => x.json())
 
   makeRequest = () => {
     this.setState({ loading: true })
@@ -55,3 +53,5 @@ export default class GetApi extends React.Component {
     })
   }
 }
+
+export default GetApi
