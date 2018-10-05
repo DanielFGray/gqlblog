@@ -15,9 +15,9 @@ class GetApi extends React.Component {
   }
 
   state = {
-    data: this.props.initData,
+    data: this.props.initData ? this.props.initData[this.props.url] : null,
     error: null,
-    loading: true,
+    loading: this.props.autoFetch,
   }
 
   componentDidMount() {
@@ -26,7 +26,7 @@ class GetApi extends React.Component {
     }
   }
 
-  fetchData = () => fetch(`${__fullUrl}api/v1${this.props.url}`)
+  fetchData = () => fetch(`${__fullUrl}api${this.props.url}`)
     .then(x => x.json())
 
   makeRequest = () => {
@@ -46,7 +46,7 @@ class GetApi extends React.Component {
   render() {
     const { data, error, loading } = this.state
     return this.props.children({
-      refresh: this.fetchData,
+      refresh: this.makeRequest,
       data,
       error,
       loading,

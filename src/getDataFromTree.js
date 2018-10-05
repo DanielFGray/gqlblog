@@ -6,7 +6,6 @@ const isReactElement = element => Boolean(element.type)
 const isComponentClass = Comp => Comp.prototype
   && (Comp.prototype.render || Comp.prototype.isReactComponent)
 const providesChildContext = instance => Boolean(instance.getChildContext)
-const hasFetchDataFunction = instance => typeof instance.fetchData === 'function'
 const isPromise = promise => typeof promise.then === 'function'
 
 // Recurse a React Element tree, running visitor on each element.
@@ -147,26 +146,27 @@ export function walkTree(
   // TODO: Portals?
 }
 
-export const getPromisesFromTree = ({ rootElement, rootContext, rootNewContext }) => {
+export const getPromisesFromTree = ({
+  rootElement,
+  rootContext,
+  rootNewContext,
+  instanceMethod = 'fetchData',
+}) => {
   const promises = []
 
   walkTree(
     rootElement,
     rootContext,
     (_, instance, newContext, context, childContext) => {
-      if (instance && hasFetchDataFunction(instance)) {
-        const promise = instance.fetchData()
-        if (isPromise(promise)) {
-          promises.push({
-            promise,
-            context: childContext || context,
-            instance,
-            newContext,
-          })
-          return false
-        }
+      if (instance && typeof instance[instanceMethod] === 'function') {
+        promises.push({
+          promise: instance[instanceMethod],
+          context: childContext || context,
+          instance,
+          newContext,
+        })
+        return false
       }
-      return undefined
     },
     rootNewContext,
   )

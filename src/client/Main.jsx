@@ -1,8 +1,7 @@
 import * as React from 'react'
 import Helmet from 'react-helmet-async'
 import GetApi from './GetApi'
-
-const Stringify = data => <pre>{JSON.stringify(data, null, 2)}</pre>
+import Stringify from './Stringify'
 
 const Main = props => (
   <>
@@ -10,7 +9,7 @@ const Main = props => (
       <title>Home</title>
     </Helmet>
     <GetApi
-      url="/"
+      url="/v1/messages"
       autoFetch={false}
       initData={props.initData}
     >

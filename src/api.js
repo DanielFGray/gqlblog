@@ -2,12 +2,12 @@ import Router from 'koa-router'
 import db from './db'
 
 const api = new Router()
-  .get('/api/v1', async ctx => {
+  .get('/api/v1/messages', async ctx => {
     const body = await db('messages').select()
     ctx.body = { status: 'ok', body }
   })
 
-  .post('/api/v1', async ctx => {
+  .post('/api/v1/messages', async ctx => {
     const body = await db('messages').insert(ctx.request.body)
       .then(() => db('messages').select())
     ctx.body = { status: 'ok', body }
