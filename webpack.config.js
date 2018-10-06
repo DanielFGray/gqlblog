@@ -73,7 +73,7 @@ const clientConfig = {
       filename: config.devMode ? '[name].css' : '[name]-[hash].css',
       chunkFilename: config.devMode ? '[name].css' : '[id]-[chunkhash].css',
     }),
-    new DefinePlugin({ ...constants, __BROWSER: true }),
+    new DefinePlugin({ ...constants, __browser: true }),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
       output: path.join(config.outputDir, './manifest.json'),
@@ -104,7 +104,7 @@ const serverConfig = {
     rules: babelLoader,
   },
   plugins: [
-    new DefinePlugin({ ...constants, __BROWSER: false }),
+    new DefinePlugin({ ...constants, __browser: false }),
     new ProvidePlugin({
       fetch: 'node-fetch',
     }),

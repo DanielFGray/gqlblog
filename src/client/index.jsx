@@ -7,8 +7,8 @@ import Layout from './Layout'
 import { Provider } from '../createContext'
 import './style.css'
 
-const Init = ({ initData }) => (
-  <Provider value={initData}>
+const Init = data => (
+  <Provider value={data}>
     <Router basename={__appBase}>
       <HelmetProvider>
         <Layout>
@@ -22,7 +22,7 @@ const Init = ({ initData }) => (
 if (document) {
   document.addEventListener('DOMContentLoaded', () => {
     const initData = window.__INIT_DATA // eslint-disable-line no-underscore-dangle
-    ReactDOM.hydrate(<Init initData={initData} />, document.getElementById(__mount))
+    ReactDOM.hydrate(Init(initData), document.getElementById(__mount))
   })
 }
 
