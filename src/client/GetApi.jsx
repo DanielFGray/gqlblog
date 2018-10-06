@@ -1,21 +1,21 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
+import { pathOr } from 'ramda'
+import { Consumer } from '../createContext'
 
 class GetApi extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     autoFetch: PropTypes.bool,
-    initData: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   }
 
   static defaultProps = {
-    initData: null,
     autoFetch: true,
   }
 
   state = {
-    data: this.props.initData ? this.props.initData[this.props.url] : null,
+    data: pathOr(null, ['ctx', this.props.url], this.props),
     error: null,
     loading: this.props.autoFetch,
   }
@@ -54,4 +54,8 @@ class GetApi extends React.Component {
   }
 }
 
-export default GetApi
+export default props => (
+  <Consumer>
+    {ctx => <GetApi {...props} ctx={ctx} />}
+  </Consumer>
+)

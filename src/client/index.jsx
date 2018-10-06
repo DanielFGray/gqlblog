@@ -4,16 +4,19 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Routes from './Routes'
 import Layout from './Layout'
+import { Provider } from '../createContext'
 import './style.css'
 
-const Init = props => (
-  <Router basename={__appBase}>
-    <HelmetProvider>
-      <Layout>
-        <Routes {...props} />
-      </Layout>
-    </HelmetProvider>
-  </Router>
+const Init = ({ initData }) => (
+  <Provider value={initData}>
+    <Router basename={__appBase}>
+      <HelmetProvider>
+        <Layout>
+          <Routes />
+        </Layout>
+      </HelmetProvider>
+    </Router>
+  </Provider>
 )
 
 if (document) {

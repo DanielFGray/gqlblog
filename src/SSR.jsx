@@ -7,34 +7,35 @@ import Html from './Html'
 import Routes from './client/Routes'
 import Layout from './client/Layout'
 import { getPromisesFromTree } from './getDataFromTree'
+import { Provider } from './createContext'
 
 export default ({ appBase }) => async ctx => {
   const routerCtx = {}
   const helmetCtx = {}
-  const apiCtx = {}
-  const App = data => (
-    <StaticRouter
-      basename={appBase}
-      location={ctx.url}
-      context={routerCtx}
-    >
-      <HelmetProvider context={helmetCtx}>
-        <Layout>
-          <Routes initData={data} />
-        </Layout>
-      </HelmetProvider>
-    </StaticRouter>
+  const App = fetchData => (
+    <Provider value={fetchData}>
+      <StaticRouter
+        basename={appBase}
+        location={ctx.url}
+        context={routerCtx}
+      >
+        <HelmetProvider context={helmetCtx}>
+          <Layout>
+            <Routes />
+          </Layout>
+        </HelmetProvider>
+      </StaticRouter>
+    </Provider>
   )
   try {
-    const errors = []
     const data = await Promise.all(
-      getPromisesFromTree({ rootElement: App(), rootContext: apiCtx })
+      getPromisesFromTree({ rootElement: App() })
         .map(({ promise, instance }) => Promise.all([`${instance.props.url}`, promise()
           .then(({ status, body }) => {
             if (status === 'ok') return body
             throw new Error(`${status}: ${JSON.stringify(body)}`)
           })
-          .catch(e => errors.push(e.message))])),
+        ])),
     ).then(fromPairs)
     const html = renderToString(App(data))
     const { helmet } = helmetCtx

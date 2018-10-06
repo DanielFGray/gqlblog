@@ -63,15 +63,15 @@ const clientConfig = {
   output: {
     path: config.publicDir,
     filename: config.devMode ? '[name].js' : '[name]-[hash].js',
-    chunkFilename: '[id]-[chunkhash].js',
+    chunkFilename: config.devMode ? '[name].js' : '[id]-[chunkhash].js',
   },
   module: {
     rules: [...babelLoader, ...cssLoaders],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name]-[hash].css',
-      chunkFilename: '[id]-[chunkhash].css',
+      filename: config.devMode ? '[name].css' : '[name]-[hash].css',
+      chunkFilename: config.devMode ? '[name].css' : '[id]-[chunkhash].css',
     }),
     new DefinePlugin({ ...constants, __BROWSER: true }),
     new WebpackAssetsManifest({
