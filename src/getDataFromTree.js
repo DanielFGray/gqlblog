@@ -1,17 +1,19 @@
+/* eslint-disable no-underscore-dangle */
 // shamelessly stolen from react-apollo
 import * as React from 'react'
+import { renderToString } from 'react-dom/server'
+import { graphql } from 'graphql'
 
 const getProps = element => element.props || element.attributes
 const isReactElement = element => Boolean(element.type)
 const isComponentClass = Comp => Comp.prototype
   && (Comp.prototype.render || Comp.prototype.isReactComponent)
 const providesChildContext = instance => Boolean(instance.getChildContext)
-const isPromise = promise => typeof promise.then === 'function'
 
 // Recurse a React Element tree, running visitor on each element.
 // If visitor returns `false`, don't call the element's render function
 // or recurse into its child elements.
-export function walkTree(
+export default function walkTree(
   element,
   context,
   visitor,
@@ -148,68 +150,42 @@ export function walkTree(
 
 export const getPromisesFromTree = ({
   rootElement,
-  rootContext,
+  rootContext = {},
   rootNewContext,
-  instanceMethod = 'fetchData',
 }) => {
-  const promises = []
+  const matches = []
 
   walkTree(
     rootElement,
     rootContext,
     (_, instance, newContext, context, childContext) => {
-      if (instance && typeof instance[instanceMethod] === 'function') {
-        promises.push({
-          promise: instance[instanceMethod],
+      if (instance && instance.props.query && instance.gql === instance.props.query) {
+        matches.push({
           context: childContext || context,
           instance,
           newContext,
         })
         return false
       }
+      return undefined
     },
     rootNewContext,
   )
 
-  return promises
+  return matches
 }
 
-export const getDataAndErrorsFromTree = (
-  rootElement,
-  rootContext,
-  storeError,
-  rootNewContext = new Map(),
-) => {
-  const promises = getPromisesFromTree({ rootElement, rootContext, rootNewContext })
-
-  if (! promises.length) {
-    return Promise.resolve()
-  }
-
-  return Promise.all(promises.map(({ promise, context, instance, newContext }) => promise
-    .then(_ => getDataAndErrorsFromTree(instance.render(), context, storeError, newContext))
-    .catch(e => storeError(e))))
-}
-
-const processErrors = errors => {
-  switch (errors.length) {
-  case 0:
-    break
-  case 1:
-    throw errors.pop()
-  default:
-    const wrapperError = new Error(
-      `${errors.length} errors were thrown when executing your fetchData functions.`,
-    )
-    wrapperError.queryErrors = errors
-    throw wrapperError
-  }
-}
-
-export function getDataFromTree(rootElement, rootContext = {}) {
+export const renderToStringWithData = ({ app, schema }) => {
   const errors = []
-  const storeError = error => errors.push(error)
-
-  return getDataAndErrorsFromTree(rootElement, rootContext, storeError)
-    .then(_ => processErrors(errors))
+  return Promise.all(
+    getPromisesFromTree({ rootElement: app() })
+      .map(({ instance }) => graphql(schema, instance.props.query)
+        .then(({ errors: errs, data: d }) => {
+          if (errs) {
+            errs.forEach(e => errors.push(e))
+            return []
+          }
+          return { source: instance.props.query, data: d }
+        })),
+  ).then(data => ({ html: renderToString(app(data)), data, errors }))
 }

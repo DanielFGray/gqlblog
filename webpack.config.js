@@ -11,7 +11,7 @@ const config = require('./config')
 
 const constants = Object.entries(config)
   .map(([k, v]) => [`__${k}`, JSON.stringify(v)])
-  .reduce((p, [k, v]) => ({ ...p, [k]: v }), {})
+  .reduce((p, [k, v]) => Object.assign(p, { [k]: v }), {})
 
 const cssLoaders = [
   {

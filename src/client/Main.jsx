@@ -3,16 +3,21 @@ import Helmet from 'react-helmet-async'
 import GetApi from './GetApi'
 import Stringify from './Stringify'
 
-const Main = props => (
-  <>
+const query = `
+  query MessageList {
+    MessageList {
+      id
+      message
+    }
+  }`
+
+const Main = () => (
+  <div>
     <Helmet>
       <title>Home</title>
     </Helmet>
-    <GetApi
-      url="/v1/messages"
-      autoFetch={false}
-      initData={props.initData}
-    >
+    <h3>Home</h3>
+    <GetApi query={query} autoFetch={false}>
       {({
         error,
         loading,
@@ -25,17 +30,13 @@ const Main = props => (
             <button type="button" onClick={refresh}>
               Reload
             </button>
-            {Stringify({
-              seed: Math.random(),
-              loading,
-              data,
-              props,
-            })}
+            {loading && <div>loading...</div>}
+            {Stringify(data)}
           </div>
         )
       }}
     </GetApi>
-  </>
+  </div>
 )
 
 export default Main

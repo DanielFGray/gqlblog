@@ -15,9 +15,24 @@ export const thread = (a, ...as) => (
 
 export const overPath = curry((lens, fn, x) => over(lensPath(lens), fn, x))
 
-export const partition = curry((predicates, foldable) => foldable
-  .reduce((previous, item) => {
-    let i = predicates.findIndex(p => p(item))
-    if (i < 0) i = previous.length - 1
-    return overPath([i], x => x.concat([item]), previous)
-  }, predicates.map(() => []).concat([[]])))
+export const findOr = curry((alt, fn, list) => {
+  let idx = 0
+  const len = list.length
+  while (idx < len) {
+    if (fn(list[idx])) {
+      return list[idx]
+    }
+    idx += 1
+  }
+  return alt
+})
+
+export const partition = curry((predicates, foldable) => {
+  const ps = [].concat(predicates)
+  return foldable
+    .reduce((prev, item) => {
+      let i = ps.findIndex(p => p(item))
+      if (i < 0) i = prev.length - 1
+      return overPath([i], x => x.concat([item]), prev)
+    }, ps.map(() => []).concat([[]]))
+})

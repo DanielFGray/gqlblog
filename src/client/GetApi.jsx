@@ -1,11 +1,21 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { pathOr } from 'ramda'
+import { findOr } from '../utils'
 import { Consumer } from '../createContext'
+
+const fetchGraphQL = query => fetch('/graphql', {
+  method: 'POST',
+  body: JSON.stringify({ query }),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+})
+  .then(x => x.json())
 
 class GetApi extends React.Component {
   static propTypes = {
-    url: PropTypes.string.isRequired,
+    query: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     autoFetch: PropTypes.bool,
   }
@@ -14,10 +24,25 @@ class GetApi extends React.Component {
     autoFetch: true,
   }
 
-  state = {
-    data: pathOr(null, ['ctx', this.props.url], this.props),
-    error: null,
-    loading: this.props.autoFetch,
+  gql = this.props.query
+
+  constructor(props) {
+    super(props)
+    let data = null
+    let errors = null
+    if (this.props.ctx instanceof Array) {
+      const d = findOr(null, ({ source }) => source === this.props.query, this.props.ctx)
+      if (d.errors) {
+        errors = d.errors // eslint-disable-line prefer-destructuring
+      } else if (d.data) {
+        data = d.data // eslint-disable-line prefer-destructuring
+      }
+    }
+    this.state = {
+      data,
+      errors,
+      loading: false,
+    }
   }
 
   componentDidMount() {
@@ -26,29 +51,27 @@ class GetApi extends React.Component {
     }
   }
 
-  fetchData = () => fetch(`${__fullUrl}api${this.props.url}`)
-    .then(x => x.json())
-
   makeRequest = () => {
     this.setState({ loading: true })
-    this.fetchData()
-      .then(({ status, body }) => {
-        if (status === 'ok') {
-          this.setState({ data: body, loading: false, error: null })
-        } else throw new Error(body)
+    fetchGraphQL(this.props.query)
+      .then(({ data, errors }) => {
+        if (errors) {
+          return this.setState({ errors, loading: false })
+        }
+        return this.setState({ data, loading: false, errors: null })
       })
       .catch(e => {
-        this.setState({ error: e.message, loading: false })
-        console.log(e)
+        this.setState({ errors: [e.message], loading: false })
+        console.log(e) // eslint-disable-line no-console
       })
   }
 
   render() {
-    const { data, error, loading } = this.state
+    const { data, errors, loading } = this.state
     return this.props.children({
       refresh: this.makeRequest,
       data,
-      error,
+      errors,
       loading,
     })
   }

@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 import Koa from 'koa'
 import Router from 'koa-router'
-import bodyParser from 'koa-body'
 import send from 'koa-send'
 import koaHelmet from 'koa-helmet'
+import { makeExecutableSchema } from 'graphql-tools'
+import { ApolloServer } from 'apollo-server-koa'
 import SSR from './SSR'
-import api from './api'
+import typeDefs from './typeDefs'
+import resolvers from './resolvers'
 
 const {
   appBase,
@@ -14,13 +16,14 @@ const {
   publicDir,
 } = __non_webpack_require__('../config')
 
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+const apolloServer = new ApolloServer({ schema })
+
 const ssr = new Router()
-  .get('/*', SSR({ appBase, api }))
+  .all('/*', SSR({ appBase, schema }))
 
 const app = new Koa()
-
   .use(koaHelmet())
-  .use(bodyParser())
 
   .use(async (ctx, next) => {
     await next()
@@ -36,13 +39,6 @@ const app = new Koa()
   })
 
   .use(async (ctx, next) => {
-    if (ctx.path.startsWith('/api')) {
-      ctx.set('Content-Type', 'application/json')
-    }
-    return next()
-  })
-
-  .use(async (ctx, next) => {
     try {
       await next()
     } catch (err) {
@@ -52,6 +48,9 @@ const app = new Koa()
     }
   })
 
+apolloServer.applyMiddleware({ app })
+
+app
   .use(async (ctx, next) => {
     try {
       if (ctx.path !== '/') {
@@ -61,8 +60,7 @@ const app = new Koa()
     return next()
   })
 
-  .use(api.allowedMethods())
-  .use(api.routes())
+  .use(ssr.allowedMethods())
   .use(ssr.routes())
 
   .listen(port, host, () => console.log(`
