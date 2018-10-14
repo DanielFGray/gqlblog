@@ -11,8 +11,8 @@ import { Provider } from './createContext'
 export default ({ appBase, schema }) => async ctx => {
   const routerCtx = {}
   const helmetCtx = {}
-  const app = props => (
-    <Provider value={props}>
+  const app = initData => (
+    <Provider value={{ initData: new Map(initData) }}>
       <StaticRouter
         basename={appBase}
         location={ctx.url}
@@ -27,11 +27,7 @@ export default ({ appBase, schema }) => async ctx => {
     </Provider>
   )
   try {
-    const { errors, data, html } = await renderToStringWithData({ app, schema })
-    if (errors.length) {
-      data.errors = errors
-      console.error(errors)
-    }
+    const { data, html } = await renderToStringWithData({ app, schema })
     if (routerCtx.status) {
       ctx.status = routerCtx.status
     }

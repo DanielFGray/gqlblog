@@ -19,12 +19,12 @@ const Main = () => (
     <h3>Home</h3>
     <GetApi query={query} autoFetch={false}>
       {({
-        error,
+        errors,
         loading,
         refresh,
         data,
       }) => {
-        if (error !== null) console.error(error)
+        if (errors !== null) errors.forEach(console.error)
         return (
           <div>
             <button type="button" onClick={refresh}>

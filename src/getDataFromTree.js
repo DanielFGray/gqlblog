@@ -175,17 +175,8 @@ export const getPromisesFromTree = ({
   return matches
 }
 
-export const renderToStringWithData = ({ app, schema }) => {
-  const errors = []
-  return Promise.all(
-    getPromisesFromTree({ rootElement: app() })
-      .map(({ instance }) => graphql(schema, instance.props.query)
-        .then(({ errors: errs, data: d }) => {
-          if (errs) {
-            errs.forEach(e => errors.push(e))
-            return []
-          }
-          return { source: instance.props.query, data: d }
-        })),
-  ).then(data => ({ html: renderToString(app(data)), data, errors }))
-}
+export const renderToStringWithData = ({ app, schema }) => Promise.all(
+  getPromisesFromTree({ rootElement: app() })
+    .map(({ instance }) => graphql(schema, instance.gql)
+      .then(result => [instance.gql, result])),
+).then(data => ({ html: renderToString(app(data)), data }))

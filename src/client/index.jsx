@@ -7,8 +7,8 @@ import Layout from './Layout'
 import { Provider } from '../createContext'
 import './style.css'
 
-const Init = data => (
-  <Provider value={data}>
+const Init = initData => (
+  <Provider value={{ initData: new Map(initData) }}>
     <Router basename={__appBase}>
       <HelmetProvider>
         <Layout>

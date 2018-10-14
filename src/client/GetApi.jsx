@@ -1,6 +1,5 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { findOr } from '../utils'
 import { Consumer } from '../createContext'
 
 const fetchGraphQL = query => fetch('/graphql', {
@@ -18,10 +17,12 @@ class GetApi extends React.Component {
     query: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     autoFetch: PropTypes.bool,
+    ctx: PropTypes.object,
   }
 
   static defaultProps = {
     autoFetch: true,
+    ctx: {},
   }
 
   gql = this.props.query
@@ -30,14 +31,16 @@ class GetApi extends React.Component {
     super(props)
     let data = null
     let errors = null
-    if (this.props.ctx instanceof Array) {
-      const d = findOr(null, ({ source }) => source === this.props.query, this.props.ctx)
-      if (d.errors) {
-        errors = d.errors // eslint-disable-line prefer-destructuring
-      } else if (d.data) {
-        data = d.data // eslint-disable-line prefer-destructuring
+    const { initData } = this.props.ctx
+    if (initData.has(this.props.query)) {
+      const q = initData.get(this.props.query)
+      if (q.errors) {
+        errors = q.errors
+      } else {
+        data = q.data
       }
     }
+
     this.state = {
       data,
       errors,
