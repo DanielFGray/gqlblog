@@ -7,7 +7,7 @@ const WebpackAssetsManifest = require('webpack-assets-manifest')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
-const config = require('./config')
+const config = require('./config.js')
 
 const constants = Object.entries(config)
   .map(([k, v]) => [`__${k}`, JSON.stringify(v)])

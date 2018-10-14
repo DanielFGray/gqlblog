@@ -21,8 +21,8 @@ const Init = initData => (
 
 if (document) {
   document.addEventListener('DOMContentLoaded', () => {
-    const initData = window.__INIT_DATA // eslint-disable-line no-underscore-dangle
-    ReactDOM.hydrate(Init(initData), document.getElementById(__mount))
+    // eslint-disable-next-line no-underscore-dangle
+    ReactDOM.hydrate(Init(window.__INIT_DATA), document.getElementById(__mount))
   })
 }
 

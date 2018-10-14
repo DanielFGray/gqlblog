@@ -7,7 +7,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    MessageList(start: Int): [Message]
+    MessageList: [Message]
   }
 
   type Mutation {
