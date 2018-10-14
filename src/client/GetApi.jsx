@@ -2,9 +2,9 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { Consumer } from '../createContext'
 
-const fetchGraphQL = query => fetch('/graphql', {
+const fetchGraphQL = ({ query, variables }) => fetch('/graphql', {
   method: 'POST',
-  body: JSON.stringify({ query }),
+  body: JSON.stringify({ query, variables }),
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -17,12 +17,14 @@ class GetApi extends React.Component {
     query: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     autoFetch: PropTypes.bool,
-    ctx: PropTypes.object,
+    variables: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    ctx: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   }
 
   static defaultProps = {
     autoFetch: true,
     ctx: {},
+    variables: {},
   }
 
   gql = this.props.query
@@ -35,9 +37,9 @@ class GetApi extends React.Component {
     if (initData.has(this.props.query)) {
       const q = initData.get(this.props.query)
       if (q.errors) {
-        errors = q.errors
-      } else {
-        data = q.data
+        errors = q.errors // eslint-disable-line prefer-destructuring
+      } else if (q.data) {
+        data = q.data // eslint-disable-line prefer-destructuring
       }
     }
 
@@ -49,14 +51,15 @@ class GetApi extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.autoFetch) {
+    if (this.props.autoFetch || this.props.data === null) {
       this.makeRequest()
     }
   }
 
   makeRequest = () => {
     this.setState({ loading: true })
-    fetchGraphQL(this.props.query)
+    const { query, variables } = this.props
+    fetchGraphQL({ query, variables })
       .then(({ data, errors }) => {
         if (errors) {
           return this.setState({ errors, loading: false })

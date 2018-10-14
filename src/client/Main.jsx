@@ -4,8 +4,8 @@ import GetApi from './GetApi'
 import Stringify from './Stringify'
 
 const query = `
-  query MessageList {
-    MessageList {
+  query ($start: Int) {
+    MessageList(start: $start) {
       id
       message
     }
@@ -17,7 +17,7 @@ const Main = () => (
       <title>Home</title>
     </Helmet>
     <h3>Home</h3>
-    <GetApi query={query} autoFetch={false}>
+    <GetApi query={query} autoFetch={false} variables={{ start: Date.now() }}>
       {({
         errors,
         loading,
@@ -31,7 +31,7 @@ const Main = () => (
               Reload
             </button>
             {loading && <div>loading...</div>}
-            {Stringify(data)}
+            {Stringify({ data, errors })}
           </div>
         )
       }}

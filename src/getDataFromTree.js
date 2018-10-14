@@ -177,6 +177,6 @@ export const getPromisesFromTree = ({
 
 export const renderToStringWithData = ({ app, schema }) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
-    .map(({ instance }) => graphql(schema, instance.gql)
+    .map(({ instance }) => graphql(schema, instance.gql, {}, {}, instance.props.variables)
       .then(result => [instance.gql, result])),
 ).then(data => ({ html: renderToString(app(data)), data }))

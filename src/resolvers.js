@@ -3,11 +3,12 @@ import db from './db'
 const resolvers = {
   Query: {
     // foo: async (root, { variables }) => {},
-    MessageList: () => db('messages').select(),
+    MessageList: (root, { start }) => db('messages').select()
+      .then(x => ({ ...x, duration: Date.now() - start })),
   },
-  // Mutation: {
-  //   MessageAdd: () => db('messages').insert(),
-  // },
+  Mutation: {
+    MessageAdd: (root, { message }) => db('messages').insert({ message }),
+  },
 }
 
 export default resolvers

@@ -7,8 +7,12 @@ const typeDefs = gql`
   }
 
   type Query {
-    MessageList: [Message]
-  }`
+    MessageList(start: Int): [Message]
+  }
 
+  type Mutation {
+    MessageAdd(message: String!): [Message]
+  }
+`
 
 export default typeDefs
