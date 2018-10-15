@@ -12,6 +12,8 @@ const typeDefs = gql`
 
   type Mutation {
     MessageAdd(message: String!): [Message]
+    MessagePatch(message: String! id: Int!): [Message]
+    MessageDel(id: Int!): [Message]
   }
 `
 

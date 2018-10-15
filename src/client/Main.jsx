@@ -1,15 +1,45 @@
 import * as React from 'react'
 import Helmet from 'react-helmet-async'
-import GetApi from './GetApi'
+import Query from './GetApi'
+import Mutation from './Mutation'
 import Stringify from './Stringify'
 
-const query = `
+const gqlMessageList = `
   query {
     MessageList {
       id
       message
     }
-  }`
+  }
+`
+
+const gqlMessagePatch = `
+mutation ($message: String! $id: Int!) {
+  MessagePatch(message: $message id: $id) {
+    message
+    id
+  }
+}
+`
+
+const gqlMessageDel = `
+  mutation ($id: Int!) {
+    MessageDel(id: $id) {
+      message
+      id
+    }
+  }
+`
+
+const Item = ({ id, del, patch, message }) => (
+  <div key={id}>
+    {message}
+    {' '}
+    <button onClick={del}>Trash</button>
+    {' '}
+    <button onClick={patch}>Pencil</button>
+  </div>
+)
 
 const Main = () => (
   <div>
@@ -17,7 +47,7 @@ const Main = () => (
       <title>Home</title>
     </Helmet>
     <h3>Home</h3>
-    <GetApi {...{ query, autoFetch: false }}>
+    <Query query={gqlMessageList}>
       {({
         errors,
         loading,
@@ -31,11 +61,19 @@ const Main = () => (
               Reload
             </button>
             {loading && <div>loading...</div>}
-            {Stringify({ data, errors })}
+            <Mutation query={gqlMessagePatch}>
+              {patch => (
+                <Mutation query={gqlMessageDel}>
+                  {del => data.MessageList.map(({ id, ...x }) => (
+                    <Item {...{ key: id, id, del, patch, ...x }} />
+                  ))}
+                </Mutation>
+              )}
+            </Mutation>
           </div>
         )
       }}
-    </GetApi>
+    </Query>
   </div>
 )
 

@@ -22,7 +22,7 @@ class GetApi extends React.Component {
   }
 
   static defaultProps = {
-    autoFetch: true,
+    autoFetch: false,
     ctx: {},
     variables: {},
   }
