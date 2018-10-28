@@ -1,5 +1,6 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
+import equals from 'fast-deep-equal'
 import { Consumer } from '../createContext'
 
 const fetchGraphQL = ({ query, variables }) => fetch('/graphql', {
@@ -12,17 +13,15 @@ const fetchGraphQL = ({ query, variables }) => fetch('/graphql', {
 })
   .then(x => x.json())
 
-class GetApi extends React.Component {
+class Query extends React.Component {
   static propTypes = {
-    query: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     children: PropTypes.func.isRequired,
-    autoFetch: PropTypes.bool,
     variables: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     ctx: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   }
 
   static defaultProps = {
-    autoFetch: false,
     ctx: {},
     variables: {},
   }
@@ -35,19 +34,15 @@ class GetApi extends React.Component {
     let errors = null
     const { initData } = this.props.ctx
     if (initData.has(this.props.query)) {
-      const q = initData.get(this.props.query)
-      if (q.errors) {
-        errors = q.errors // eslint-disable-line prefer-destructuring
-      } else if (q.data) {
-        data = q.data // eslint-disable-line prefer-destructuring
+      const [res, vars] = initData.get(this.props.query)
+      if (res.errors) {
+        errors = res.errors // eslint-disable-line prefer-destructuring
+      } else if (res.data && equals(vars, this.props.variables)) {
+        data = res.data // eslint-disable-line prefer-destructuring
       }
     }
 
-    this.state = {
-      data,
-      errors,
-      loading: false,
-    }
+    this.state = { data, errors, loading: false }
   }
 
   componentDidMount() {
@@ -61,9 +56,7 @@ class GetApi extends React.Component {
     const { query, variables } = this.props
     fetchGraphQL({ query, variables })
       .then(({ data, errors }) => {
-        if (errors) {
-          return this.setState({ errors, loading: false })
-        }
+        if (errors) return this.setState({ errors, loading: false })
         return this.setState({ data, loading: false, errors: null })
       })
       .catch(e => {
@@ -85,6 +78,6 @@ class GetApi extends React.Component {
 
 export default props => (
   <Consumer>
-    {ctx => <GetApi {...props} ctx={ctx} />}
+    {ctx => <Query {...props} {...{ ctx }} />}
   </Consumer>
 )

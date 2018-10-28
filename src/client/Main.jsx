@@ -1,77 +1,27 @@
 import * as React from 'react'
-import Helmet from 'react-helmet-async'
-import Query from './GetApi'
-import Mutation from './Mutation'
-import Stringify from './Stringify'
+import gql from 'graphql-tag'
+import Query from './Query'
+import { Post } from './BlogPost'
 
-const gqlMessageList = `
-  query {
-    MessageList {
-      id
-      message
-    }
+const BlogList = gql`
+query {
+  BlogList {
+    title
+    category
+    date
+    tags
+    file
   }
-`
-
-const gqlMessagePatch = `
-mutation ($message: String! $id: Int!) {
-  MessagePatch(message: $message id: $id) {
-    message
-    id
-  }
-}
-`
-
-const gqlMessageDel = `
-  mutation ($id: Int!) {
-    MessageDel(id: $id) {
-      message
-      id
-    }
-  }
-`
-
-const Item = ({ id, del, patch, message }) => (
-  <div key={id}>
-    {message}
-    {' '}
-    <button onClick={del}>Trash</button>
-    {' '}
-    <button onClick={patch}>Pencil</button>
-  </div>
-)
+}`
 
 const Main = () => (
-  <div>
-    <Helmet>
-      <title>Home</title>
-    </Helmet>
-    <h3>Home</h3>
-    <Query query={gqlMessageList}>
-      {({
-        errors,
-        loading,
-        refresh,
-        data,
-      }) => {
-        if (errors !== null) errors.forEach(console.error)
-        return (
-          <div>
-            <button type="button" onClick={refresh}>
-              Reload
-            </button>
-            {loading && <div>loading...</div>}
-            <Mutation query={gqlMessagePatch}>
-              {patch => (
-                <Mutation query={gqlMessageDel}>
-                  {del => data.MessageList.map(({ id, ...x }) => (
-                    <Item {...{ key: id, id, del, patch, ...x }} />
-                  ))}
-                </Mutation>
-              )}
-            </Mutation>
-          </div>
-        )
+  <div className="blog">
+    <Query query={BlogList}>
+      {({ errors, loading, data }) => {
+        if (errors !== null) errors.forEach(e => console.error(e))
+        if (loading) return 'loading'
+        if (data && data.BlogList) return data.BlogList.map(e => <Post {...e} />)
+        return ''
       }}
     </Query>
   </div>

@@ -28,6 +28,7 @@ export default ({ appBase, schema }) => async ctx => {
   )
   try {
     const { data, html } = await renderToStringWithData({ app, schema })
+    console.log({ data })
     if (routerCtx.status) {
       ctx.status = routerCtx.status
     }

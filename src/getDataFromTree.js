@@ -159,7 +159,7 @@ export const getPromisesFromTree = ({
     rootElement,
     rootContext,
     (_, instance, newContext, context, childContext) => {
-      if (instance && instance.props.query && instance.gql === instance.props.query) {
+      if (instance && typeof instance.gql === 'object') {
         matches.push({
           context: childContext || context,
           instance,
@@ -177,6 +177,10 @@ export const getPromisesFromTree = ({
 
 export const renderToStringWithData = ({ app, schema }) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
-    .map(({ instance }) => graphql(schema, instance.gql, {}, {}, instance.props.variables)
-      .then(result => [instance.gql, result])),
+    .map(({ instance }) => {
+      const { props: { variables } } = instance
+      const { gql: { loc: { source: { body } } } } = instance
+      return graphql(schema, body, {}, {}, variables)
+        .then(result => [body, [result, variables]])
+    }),
 ).then(data => ({ html: renderToString(app(data)), data }))
