@@ -6,6 +6,7 @@ module.exports = {
       browsers: 'last 2 versions',
     }),
     require('postcss-fixes')({ preset: 'recommended' }),
+    require('postcss-nesting')(),
   ],
   env: {
     production: {

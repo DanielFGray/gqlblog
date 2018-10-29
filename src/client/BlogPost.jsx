@@ -1,4 +1,5 @@
 import React from 'react'
+import Helmet from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
 import gql from 'graphql-tag'
@@ -14,22 +15,24 @@ export const Post = ({
 }) => {
   const dateObj = new Date(date)
   return (
-    <div className="item" key={date}>
+    <div className="blog" key={date}>
       <h2 className="title">
-        <Link to={`/blog/${file}`}>{title}</Link>
+        <Link to={`/${file}`}>{title}</Link>
       </h2>
       <div className="category">
         {'category: '}
-        <Link to={`/blog/${category}`}>{category}</Link>
+        <Link to={`/${category}`}>{category}</Link>
       </div>
       <div className="date">
-        <a title={dateObj.toLocaleDateString()}>{ago(dateObj)}</a>
+        <a title={dateObj.toLocaleDateString()}>
+          {ago(dateObj)}
+        </a>
       </div>
       <ul className="tags">
         {'tagged: '}
         {tags.map(e => (
           <li key={e} className="tag">
-            <Link to={`/blog/tags/${e}`}>{e}</Link>
+            <Link to={`/tags/${e}`}>{e}</Link>
           </li>
         ))}
       </ul>
@@ -56,19 +59,18 @@ const query = gql`
 `
 
 const BlogPost = ({ match }) => (
-  <div>
+  <div className="blogContainer">
     <Query query={query} variables={match.params}>
-      {({
-        errors,
-        loading,
-        data,
-      }) => {
-        if (errors !== null) errors.forEach(console.error)
-        if (loading || ! data || ! data.BlogPost) return null
+      {({ errors, loading, data }) => {
+        if (errors !== null) errors.forEach(e => console.error(e))
+        if (loading || ! data || ! data.BlogPost) return 'loading...'
         return (
-          <div className="blog">
+          <>
+            <Helmet>
+              <title>{data.BlogPost.title}</title>
+            </Helmet>
             {Post(data.BlogPost)}
-          </div>
+          </>
         )
       }}
     </Query>

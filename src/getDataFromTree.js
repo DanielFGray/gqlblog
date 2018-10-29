@@ -4,21 +4,26 @@ import * as React from 'react'
 import { renderToString } from 'react-dom/server'
 import { graphql } from 'graphql'
 
-const getProps = element => element.props || element.attributes
-const isReactElement = element => Boolean(element.type)
-const isComponentClass = Comp => Comp.prototype
-  && (Comp.prototype.render || Comp.prototype.isReactComponent)
-const providesChildContext = instance => Boolean(instance.getChildContext)
+function getProps(element) {
+  return element.props || element.attributes
+}
+
+function isReactElement(element) {
+  return !! element.type
+}
+
+function isComponentClass(Comp) {
+  return Comp.prototype && (Comp.prototype.render || Comp.prototype.isReactComponent)
+}
+
+function providesChildContext(instance) {
+  return !! instance.getChildContext
+}
 
 // Recurse a React Element tree, running visitor on each element.
 // If visitor returns `false`, don't call the element's render function
 // or recurse into its child elements.
-export default function walkTree(
-  element,
-  context,
-  visitor,
-  newContext = new Map(),
-) {
+export function walkTree(element, context, visitor, newContext = new Map()) {
   if (! element) {
     return
   }
@@ -40,8 +45,6 @@ export default function walkTree(
       if (isComponentClass(Comp)) {
         const instance = new Comp(props, context)
         // In case the user doesn't pass these to super in the constructor.
-        // Note: `Component.props` are now readonly in `@types/react`, so
-        // we're using `defineProperty` as a workaround (for now).
         Object.defineProperty(instance, 'props', {
           value: instance.props || props,
         })
@@ -106,8 +109,8 @@ export default function walkTree(
       let child
       if (element.type._context) {
         // A provider - sets the context value before rendering children
-        // this needs to clone the map because this value should only apply to
-        // children of the provider
+        // this needs to clone the map because this value should only apply
+        // to children of the provider
         newContext = new Map(newContext)
         newContext.set(element.type, element.props.value)
         child = element.props.children
@@ -178,8 +181,8 @@ export const getPromisesFromTree = ({
 export const renderToStringWithData = ({ app, schema }) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
     .map(({ instance }) => {
-      const { props: { variables } } = instance
-      const { gql: { loc: { source: { body } } } } = instance
+      const { variables } = instance.props
+      const { body } = instance.gql.loc.source
       return graphql(schema, body, {}, {}, variables)
         .then(result => [body, [result, variables]])
     }),

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { StaticRouter } from 'react-router'
+import { StaticRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Html from './Html'
 import Routes from './client/Routes'
@@ -28,7 +28,6 @@ export default ({ appBase, schema }) => async ctx => {
   )
   try {
     const { data, html } = await renderToStringWithData({ app, schema })
-    console.log({ data })
     if (routerCtx.status) {
       ctx.status = routerCtx.status
     }

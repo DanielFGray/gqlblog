@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import Routes from './Routes'
 import Layout from './Layout'
 import { Provider } from '../createContext'
+import 'normalize.css'
 import './style.css'
 
 const Init = initData => (

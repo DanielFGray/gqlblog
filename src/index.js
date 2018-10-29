@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Koa from 'koa'
 import koaHelmet from 'koa-helmet'
 import { ApolloServer } from 'apollo-server-koa'
@@ -19,10 +18,12 @@ const {
 } = __non_webpack_require__('../config')
 
 const app = new Koa()
-  .use(koaHelmet)
+
+app
+  // .use(koaHelmet)
+  .use(errHandler)
   .use(logger)
   .use(timer)
-  .use(errHandler)
 
 const apolloServer = new ApolloServer({ schema })
 apolloServer.applyMiddleware({ app })

@@ -1,10 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 
 const path = require('path')
-const { ProvidePlugin, DefinePlugin } = require('webpack')
+const { DefinePlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 // const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
 const config = require('./config.js')
@@ -23,10 +22,11 @@ const cssLoaders = [
   },
   {
     exclude: /node_modules/,
-    test: /\.(sc|[sc])ss$/,
+    test: /\.css$/,
     use: [
       MiniCssExtractPlugin.loader,
       'css-loader',
+      // { loader: 'css-loader', options: { importLoaders: 1 } },
       'postcss-loader',
     ],
   },
@@ -105,18 +105,8 @@ const serverConfig = {
   },
   plugins: [
     new DefinePlugin({ ...constants, __browser: false }),
-    new ProvidePlugin({
-      fetch: 'node-fetch',
-    }),
   ],
   stats,
-}
-
-if (! config.devMode) {
-  clientConfig.plugins.push(
-    // new BabelMinifyWebpackPlugin(),
-    new CleanWebpackPlugin(['dist', 'public']),
-  )
 }
 
 module.exports = [clientConfig, serverConfig]

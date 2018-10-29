@@ -1,4 +1,3 @@
-// @flow
 // const fs = require('fs')
 // const path = require('path')
 import prism from 'prismjs'
@@ -7,7 +6,7 @@ import Marked from 'marked'
 
 const renderer = new Marked.Renderer()
 renderer.code = function renderCode(code, header) {
-  const unknown = `<pre class="language-">${code}</pre>`
+  const unknown = `<code><pre class="language-">${code}</pre></code>`
   if (! header) return unknown
   const lang = header.toLowerCase()
   let c = code
@@ -23,7 +22,7 @@ renderer.code = function renderCode(code, header) {
     }
   }
   const langClass = `${this.options.langPrefix}${lang}`
-  return `<pre class="${langClass}">${c}</pre>`
+  return `<code><pre class="${langClass}">${c}</pre></code>`
 }
 
 renderer.heading = function headings(text, level) {

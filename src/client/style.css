@@ -2,9 +2,9 @@
   --hue: 220;
   --hue: 220;
   --primary-color: hsl(var(--hue), 50%, 50%);
-  --color-bg: #131313;
-  --color-bg-alt: #333;
-  --color-text: #eee;
+  --color-bg: #eee;
+  --color-bg-alt: #ccc;
+  --color-text: #131313;
 }
 
 * {
@@ -24,7 +24,7 @@ body {
   margin: auto;
   color: var(--color-text);
   background-color: var(--color-bg);
-  padding: 13px;
+  padding: 10px;
 }
 
 @media (max-width: 684px) {
@@ -44,7 +44,7 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6 {overflow
   line-height: 1.1;
   font-weight: 700;
   overflow-wrap: break-word;
@@ -63,17 +63,17 @@ h6 { font-size: 1em; }
 pre {
   display: block;
   padding: 1em;
-  overflow-x: auto;
 }
 
 code {
+  font-family: monospace;
   white-space: pre-wrap;
 }
 
-pre > code {
+code > pre {
   padding: 0;
-  background-color: transparent;
   white-space: pre;
+  overflow-x: auto;
 }
 
 textarea,
@@ -92,5 +92,54 @@ input[type] {
   &:focus {
     border: 1px solid var(--text-color);
     outline: 0;
+  }
+}
+
+.blogContainer {
+  display: grid;
+  padding: 0;
+
+  & .blog {
+    background: var(--color-bg-alt);
+    display: grid;
+    padding: 5px;
+    margin-bottom: 5px;
+    grid-template-columns: 1fr;
+    grid-template-areas: "title category" "date tags" "content content";
+    font-size: smaller;
+  }
+
+  & .title {
+    grid-area: title;
+    font-size: larger;
+    font-weight: bold;
+  }
+
+  & .category {
+    grid-area: category;
+    justify-self: end;
+  }
+
+  & .date {
+    grid-area: date;
+  }
+
+  & .tags {
+    grid-area: tags;
+    justify-self: end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+  }
+
+  & .tags .tag {
+    display: inline;
+    text-align: right;
+    padding: 0 5px;
+  }
+
+  & .content {
+    grid-area: content;
   }
 }

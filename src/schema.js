@@ -1,11 +1,11 @@
 import { makeExecutableSchema } from 'graphql-tools'
 import gql from 'graphql-tag'
-import md from './mdown'
+import blog from './blog'
 
 export const resolvers = {
   Query: {
-    BlogList: () => md.list(),
-    BlogPost: (root, { file }) => md.get(file),
+    BlogList: () => blog.list(),
+    BlogPost: (root, { file }) => blog.get(file),
   },
 }
 

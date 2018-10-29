@@ -1,10 +1,9 @@
 import fs from 'fs-extra'
-import flyd from 'flyd'
 import chokidar from 'chokidar'
 import matter from 'gray-matter'
-import markdown from './markdown'
+import markdown from './mdown'
 
-const files = new Map()
+const files = {}
 
 const fname = f => f.replace(/^.*[\\/](.*?).md$/, '$1')
 
@@ -16,25 +15,14 @@ const file2markdown = file => fs.readFile(file)
     content: markdown(content),
     date: (new Date(data.date)).getTime(),
   }))
+  .then(x => { files[x.file] = x })
 
-const file$ = flyd.stream()
-const watcher = chokidar.watch('./content/**/*.md')
-watcher.on('add', f => file$(f))
-watcher.on('change', f => file$(f))
-watcher.on('unlink', f => files.delete(fname(f)))
-
-file$
-  .map(file2markdown)
-  .pipe(flyd.flattenPromise)
-  .map(x => files.set(x.file, x))
+chokidar.watch('./content/**/*.md')
+  .on('add', f => file2markdown(f))
+  .on('change', f => file2markdown(f))
+  .on('unlink', f => files.delete(fname(f)))
 
 export default {
-  get: f => files.get(f),
-  list: _ => {
-    const list = []
-    for (const x of files.values()) {
-      list.push(x)
-    }
-    return list
-  },
+  get: f => files[f],
+  list: _ => Object.values(files),
 }

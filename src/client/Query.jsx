@@ -33,8 +33,9 @@ class Query extends React.Component {
     let data = null
     let errors = null
     const { initData } = this.props.ctx
-    if (initData.has(this.props.query)) {
-      const [res, vars] = initData.get(this.props.query)
+    const { body } = this.props.query.loc.source
+    if (initData.has(body)) {
+      const [res, vars] = initData.get(body)
       if (res.errors) {
         errors = res.errors // eslint-disable-line prefer-destructuring
       } else if (res.data && equals(vars, this.props.variables)) {
@@ -46,15 +47,18 @@ class Query extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.autoFetch || this.props.data === null) {
+    console.log('mounting')
+    if (this.state.data === null) {
       this.makeRequest()
     }
   }
 
   makeRequest = () => {
+    console.log('firing')
     this.setState({ loading: true })
-    const { query, variables } = this.props
-    fetchGraphQL({ query, variables })
+    const { variables } = this.props
+    const { body } = this.props.query.loc.source
+    fetchGraphQL({ query: body, variables })
       .then(({ data, errors }) => {
         if (errors) return this.setState({ errors, loading: false })
         return this.setState({ data, loading: false, errors: null })

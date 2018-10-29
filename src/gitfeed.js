@@ -24,6 +24,7 @@ const on = curry((f, g, a, b) => f(g(a))(g(b)))
 const eqBy = curry((f, a, b) => on(equals, f, a, b))
 const mergeBy = curry((p, a, b) => on(merge, propOr({}, p), a, b))
 const last = x => x.slice(-1)[0]
+const first = x => x[0]
 const writeFile = Observable.bindNodeCallback(fs.writeFile)
 const readFile = Observable.bindNodeCallback(fs.readFile)
 
