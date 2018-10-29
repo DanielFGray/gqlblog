@@ -1,9 +1,10 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 import equals from 'fast-deep-equal'
+import { fetchDedupe } from 'fetch-dedupe'
 import { Consumer } from '../createContext'
 
-const fetchGraphQL = ({ query, variables }) => fetch('/graphql', {
+const fetchGraphQL = ({ query, variables }) => fetchDedupe('/graphql', {
   method: 'POST',
   body: JSON.stringify({ query, variables }),
   headers: {
@@ -11,7 +12,7 @@ const fetchGraphQL = ({ query, variables }) => fetch('/graphql', {
     'Content-Type': 'application/json',
   },
 })
-  .then(x => x.json())
+  .then(x => x.data)
 
 class Query extends React.Component {
   static propTypes = {
@@ -47,14 +48,12 @@ class Query extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounting')
     if (this.state.data === null) {
       this.makeRequest()
     }
   }
 
   makeRequest = () => {
-    console.log('firing')
     this.setState({ loading: true })
     const { variables } = this.props
     const { body } = this.props.query.loc.source

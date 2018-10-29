@@ -3616,6 +3616,11 @@ fclone@^1.0.11:
   resolved "https://registry.yarnpkg.com/fclone/-/fclone-1.0.11.tgz#10e85da38bfea7fc599341c296ee1d77266ee640"
   integrity sha1-EOhdo4v+p/xZk0HClu4ddyZu5kA=
 
+fetch-dedupe@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/fetch-dedupe/-/fetch-dedupe-3.0.0.tgz#3703f4ace2a949d95bf2e28e69da97b27e845d8e"
+  integrity sha512-cZV4fPN8RwYIwjc9z6fqnAojs7w+wvaSYio0N0U11PnlCeVv3BB+1qO2rSXyjltua5kl18AMHvrASN5XyOIGKw==
+
 figures@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-2.0.0.tgz#3ab1a2d2a62c8bfb431a0c94cb797a2fce27c962"
