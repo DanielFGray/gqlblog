@@ -20,7 +20,7 @@ const {
 const app = new Koa()
 
 app
-  // .use(koaHelmet)
+  .use(koaHelmet())
   .use(errHandler)
   .use(logger)
   .use(timer)
