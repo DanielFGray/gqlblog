@@ -17,7 +17,7 @@ renderer.code = function renderCode(code, header) {
       __non_webpack_require__(component) // eslint-disable-line global-require,import/no-dynamic-require,max-len
       c = this.options.highlight(code, lang)
     } catch (e) {
-      console.error(e, code)
+      // console.error(e, code)
       return unknown
     }
   }

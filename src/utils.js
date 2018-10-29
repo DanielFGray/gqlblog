@@ -36,3 +36,38 @@ export const partition = curry((predicates, foldable) => {
       return overPath([i], x => x.concat([item]), prev)
     }, ps.map(() => []).concat([[]]))
 })
+
+export const urlTokens = str => {
+  const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+  const tokens = []
+  let last = 0
+  if (! str) return tokens
+  str.replace(regex, (m, ...args) => {
+    const index = args[args.length - 2]
+    tokens.push({
+      type: 'string',
+      value: str.slice(last, index),
+    })
+    tokens.push({
+      type: 'url',
+      value: m,
+    })
+    last = index + m.length
+  })
+  tokens.push({
+    type: 'string',
+    value: str.slice(last),
+  })
+  return tokens
+}
+
+export const Linkify = text => urlTokens(text)
+  .map(t => (
+    t.type === 'url'
+      ? (
+        <a href={t.value} target="_blank" rel="noopener noreferrer">
+          {t.value}
+        </a>
+      )
+      : t.value
+  ))
