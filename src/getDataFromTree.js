@@ -58,10 +58,11 @@ export function walkTree(element, context, visitor, newContext = new Map()) {
         // "properly", however we don't need to re-render as we only support
         // setState in componentWillMount, which happens *before* render).
         instance.setState = newState => {
+          let patch = newState
           if (typeof newState === 'function') {
-            newState = newState(instance.state, instance.props, instance.context)
+            patch = newState(instance.state, instance.props, instance.context)
           }
-          instance.state = Object.assign({}, instance.state, newState)
+          instance.state = Object.assign({}, instance.state, patch)
         }
 
         if (Comp.getDerivedStateFromProps) {
@@ -162,7 +163,7 @@ export const getPromisesFromTree = ({
     rootElement,
     rootContext,
     (_, instance, newContext, context, childContext) => {
-      if (instance && typeof instance.gql === 'object') {
+      if (instance && instance.gqlq) {
         matches.push({
           context: childContext || context,
           instance,
@@ -178,12 +179,15 @@ export const getPromisesFromTree = ({
   return matches
 }
 
-export const renderToStringWithData = ({ app, schema }) => Promise.all(
+export const renderToStringWithData = (app, { schema, context = {}, root = {} }) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
     .map(({ instance }) => {
       const { variables } = instance.props
-      const { body } = instance.gql.loc.source
-      return graphql(schema, body, {}, {}, variables)
-        .then(result => [body, [result, variables]])
+      const query = instance.gqlq
+      return graphql(schema, query, root, context, variables)
+        .then(data => [query, [variables, data]])
     }),
-).then(data => ({ html: renderToString(app(data)), data }))
+)
+  .then(x => x.reduce((p, [k, v]) => ({ ...p, [k]: p[k] ? [v].concat(p[k]) : [v] }), {}))
+  // .then(x => (console.log(x),x))
+  .then(data => ({ html: renderToString(app(data)), data }))

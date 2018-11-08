@@ -4,12 +4,12 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Routes from './Routes'
 import Layout from './Layout'
-import { Provider } from '../createContext'
+import Provider from './Provider'
 import 'normalize.css'
 import './style.css'
 
 const Init = initData => (
-  <Provider value={{ initData: new Map(initData) }}>
+  <Provider value={initData}>
     <Router basename={__appBase}>
       <HelmetProvider>
         <Layout>

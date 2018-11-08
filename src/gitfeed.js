@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import { Observable } from 'rxjs'
 import superagent from 'superagent'
-import dequals from 'fast-deep-equal'
 import {
   curry,
   flatten,
@@ -14,7 +13,6 @@ import {
   reverse,
   sortBy,
   uniqBy,
-  type,
 } from 'ramda'
 
 import secrets from '../secrets'
@@ -23,7 +21,6 @@ const cacheFile = path.resolve('./feedcache.json')
 let cache = []
 
 const on = curry((f, g, a, b) => f(g(a))(g(b)))
-const equals = curry(dequals)
 const mergeBy = curry((p, a, b) => on(merge, propOr({}, p), a, b))
 const writeFile = Observable.bindNodeCallback(fs.writeFile)
 const readFile = Observable.bindNodeCallback(fs.readFile)
@@ -33,11 +30,10 @@ const request = curry((a, b) => {
   const headers = mergeBy('headers', a, b)
   const data = mergeBy('data', a, b)
   const url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
-  const r = superagent(method, url).set(headers)
-  return Observable.defer(() => prop(method, {
-    get: () => r.query(data),
-    post: () => r.send(data),
-  })().then(prop('body')))
+  return Observable.defer(prop(method, {
+    get: () => superagent(method, url).set(headers).query(data),
+    post: () => superagent(method, url).set(headers).send(data),
+  })).map(prop('body'))
 })
 
 const gitlab = request({
@@ -106,23 +102,26 @@ const getRepos = () => Observable.of([])
     reverse,
   ))
 
-const t = 3 * 60 * 60 * 1000
+const t = 30 * 60 * 60 * 1000
 
-readFile(cacheFile, 'utf8')
-  .map(f => {
-    try {
-      return JSON.parse(f)
-    } catch(e) {return []}
-  })
-  .merge(Observable.timer(0, t).flatMap(getRepos))
-  .do(x => console.log(`${x.length} repos in cache`))
+const readCache = () => readFile(cacheFile, 'utf8')
+  .map(f => JSON.parse(f))
+
+const writeCache = data => Observable.of(data)
+  .map(x => JSON.stringify(x))
+  .flatMap(x => writeFile(cacheFile, x, 'utf8'))
+  .do(() => console.log('disk cache updated'))
+  .map(() => data)
+
+const pollRepos = () => Observable.timer(t, t)
+  .flatMap(getRepos)
+  .flatMap(writeCache)
+
+Observable.merge(pollRepos, readCache())
   .do(x => {
     cache = x
     console.log('in-memory cache updated')
   })
-  .flatMap(data => writeFile(cacheFile, JSON.stringify(data, null, 2), 'utf8')
-    .do(() => console.log('disk cache updated'))
-    .map(() => data))
   .subscribe(() => {}, e => {
     console.error(e)
     // process.exit(1)

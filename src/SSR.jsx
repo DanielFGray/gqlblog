@@ -6,13 +6,13 @@ import Html from './Html'
 import Routes from './client/Routes'
 import Layout from './client/Layout'
 import { renderToStringWithData } from './getDataFromTree'
-import { Provider } from './createContext'
+import Provider from './client/Provider'
 
 export default ({ appBase, schema }) => async ctx => {
   const routerCtx = {}
   const helmetCtx = {}
   const app = initData => (
-    <Provider value={{ initData: new Map(initData) }}>
+    <Provider value={initData}>
       <StaticRouter
         basename={appBase}
         location={ctx.url}
@@ -27,7 +27,7 @@ export default ({ appBase, schema }) => async ctx => {
     </Provider>
   )
   try {
-    const { data, html } = await renderToStringWithData({ app, schema })
+    const { data, html } = await renderToStringWithData(app, { schema })
     if (routerCtx.status) {
       ctx.status = routerCtx.status
     }

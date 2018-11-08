@@ -23,7 +23,7 @@ const BlogList = () => (
         if (errors !== null) errors.forEach(e => console.error(e))
         if (loading) return 'loading'
         if (data && data.BlogList) {
-          return sortBy(x => x.date, data.BlogList).map(e => <Post {...e} />)
+          return sortBy(x => x.date, data.BlogList).map(e => <Post key={e.file} {...e} />)
         }
         return null
       }}

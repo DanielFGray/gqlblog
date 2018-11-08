@@ -1274,7 +1274,7 @@ ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ajv@^6.1.0, ajv@^6.1.1, ajv@^6.5.3:
+ajv@^6.1.0, ajv@^6.5.3:
   version "6.5.4"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.5.4.tgz#247d5274110db653706b550fcc2b797ca28cfc59"
   integrity sha512-4Wyjt8+t6YszqaXnLDfMmG/8AlO5Zbcsy3ATHncCzjW/NoPzAId8AK6749Ybjmdt+kUY1gP60fCu46oDxPv/mg==
@@ -6193,15 +6193,6 @@ object.values@^1.0.4:
     es-abstract "^1.6.1"
     function-bind "^1.1.0"
     has "^1.0.1"
-
-objection@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/objection/-/objection-1.4.0.tgz#18ddcdc121ae9b5d1e8e88b10fd0a6c96134f422"
-  integrity sha512-JO5M6FqnNfw7uN4WhLABX0A1d65o2p4ILSiWRfbG3X3MAv70CH5C1rfBw7S8HvyUs2EDpCekIdkgZnAuT8sbaQ==
-  dependencies:
-    ajv "^6.1.1"
-    bluebird "^3.5.1"
-    lodash "^4.17.4"
 
 on-finished@^2.3.0:
   version "2.3.0"

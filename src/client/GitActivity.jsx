@@ -5,10 +5,10 @@ import Query from './Query'
 import { urlTokens } from '../utils'
 
 const Linkify = text => urlTokens(text)
-  .map(t => (
+  .map((t, i) => (
     t.type === 'url'
       ? (
-        <a href={t.value} target="_blank" rel="noopener noreferrer">
+        <a href={t.value} target="_blank" rel="noopener noreferrer" key={i}>
           {t.value}
         </a>
       )

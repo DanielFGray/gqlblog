@@ -36,7 +36,6 @@
     "koa-send": "^5.0.0",
     "marked": "^0.5.1",
     "normalize.css": "^8.0.0",
-    "objection": "^1.4.0",
     "prismjs": "^1.15.0",
     "ramda": "^0.25.0",
     "react": "16.5",
