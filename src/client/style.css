@@ -57,6 +57,7 @@ h6 { font-size: 1em; }
 pre {
   display: block;
   padding: 1em;
+  overflow-x: auto;
 }
 
 code {
@@ -67,7 +68,6 @@ code {
 code > pre {
   padding: 0;
   white-space: pre;
-  overflow-x: auto;
 }
 
 textarea,
