@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs-extra'
 import path from 'path'
 import { Observable } from 'rxjs'
 import superagent from 'superagent'
@@ -22,8 +22,6 @@ let cache = []
 
 const on = curry((f, g, a, b) => f(g(a))(g(b)))
 const mergeBy = curry((p, a, b) => on(merge, propOr({}, p), a, b))
-const writeFile = Observable.bindNodeCallback(fs.writeFile)
-const readFile = Observable.bindNodeCallback(fs.readFile)
 
 const request = curry((a, b) => {
   const method = propOr('get', 'method', b)
@@ -104,20 +102,30 @@ const getRepos = () => Observable.of([])
 
 const t = 30 * 60 * 60 * 1000
 
-const readCache = () => readFile(cacheFile, 'utf8')
-  .map(f => JSON.parse(f))
-
 const writeCache = data => Observable.of(data)
   .map(x => JSON.stringify(x))
-  .flatMap(x => writeFile(cacheFile, x, 'utf8'))
+  .flatMap(x => fs.writeFile(cacheFile, x, 'utf8'))
   .do(() => console.log('disk cache updated'))
   .map(() => data)
 
-const pollRepos = () => Observable.timer(t, t)
+const readCache = async () => {
+  let result = '[]'
+  try {
+    result = await fs.readFile(cacheFile, 'utf8')
+  } catch (e) {
+    console.log('cache missing! writing empty cache')
+    return writeCache([])
+      .toPromise()
+  }
+  return JSON.parse(result)
+}
+
+const pollRepos = length => Observable.timer(length > 0 ? t : 0, t)
   .flatMap(getRepos)
   .flatMap(writeCache)
 
-Observable.merge(pollRepos, readCache())
+Observable.from(readCache())
+  .mergeMap(c => pollRepos(c.length))
   .do(x => {
     cache = x
     console.log('in-memory cache updated')

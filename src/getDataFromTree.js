@@ -187,7 +187,8 @@ export const renderToStringWithData = (app, { schema, context = {}, root = {} })
       return graphql(schema, query, root, context, variables)
         .then(data => [query, [variables, data]])
     }),
-)
-  .then(x => x.reduce((p, [k, v]) => ({ ...p, [k]: p[k] ? [v].concat(p[k]) : [v] }), {}))
-  // .then(x => (console.log(x),x))
+).then(x => x.reduce((p, [k, v]) => ({
+  ...p,
+  [k]: p[k] ? [v].concat(p[k]) : [v]
+}), {}))
   .then(data => ({ html: renderToString(app(data)), data }))

@@ -4,8 +4,6 @@ import PropTypes from 'prop-types'
 import { fetchDedupe } from 'fetch-dedupe'
 import { Consumer } from '../createContext'
 
-const type = x => Object.prototype.toString(x).slice(8, -1)
-
 const fetchGraphQL = ({ query, variables }) => fetchDedupe('/graphql', {
   method: 'POST',
   body: JSON.stringify({ query, variables }),
@@ -54,7 +52,7 @@ class Query extends React.Component {
     }
   }
 
-  gqlq = type(this.props.query) === 'Object' // eslint-disable-line react/sort-comp
+  gqlq = typeof this.props.query === 'object' // eslint-disable-line react/sort-comp
     ? this.props.query.loc.source.body
     : this.props.query
 
