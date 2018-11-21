@@ -11,9 +11,9 @@ class MyProvider extends React.Component {
 
   update = ({ query, variables, data }) => {
     this.setState(s => ({
-      [query]: s[query]
+      [query]: (s[query]
         ? [...s[query], [variables, data]]
-        : [[variables, data]]
+        : [[variables, data]]),
     }))
   }
 

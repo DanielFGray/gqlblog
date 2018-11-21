@@ -57,9 +57,13 @@ class Query extends React.Component {
     : this.props.query
 
   makeRequest = () => {
-    this.setState({ loading: true })
     const { variables, ctx } = this.props
     const query = this.gqlq
+    const cache = ctx.get(query, variables)
+    if (cache) {
+      console.log('in cache and fetching anyway?')
+    }
+    this.setState({ loading: true })
     fetchGraphQL({ query, variables })
       .then(({ data, errors }) => {
         if (errors) return this.setState({ errors, loading: false })

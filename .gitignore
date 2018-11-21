@@ -7,3 +7,5 @@ node_modules/
 .tern-port
 *.sqlite3
 secrets.js
+feedcache.json
+content

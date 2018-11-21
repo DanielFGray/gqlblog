@@ -105,28 +105,28 @@ input[type] {
   display: grid;
   grid-template-areas: "title language" "description description" "updated extra";
 
-  & .title {
+  .title {
     font-size: larger;
     font-weight: bold;
     grid-area: title;
   }
 
-  & .language {
+  .language {
     grid-area: language;
     justify-self: end;
   }
 
-  & .extra {
+  .extra {
     text-align: right;
     grid-area: extra;
     justify-self: end;
   }
 
-  & .description {
+  .description {
     grid-area: description;
   }
 
-  & .updated {
+  .updated {
     grid-area: updated;
     /* justify-self: end; */
   }
@@ -136,7 +136,7 @@ input[type] {
   display: grid;
   padding: 0;
 
-  & .blog {
+  .blog {
     background: var(--color-bg-alt);
     display: grid;
     padding: 5px;
@@ -146,22 +146,22 @@ input[type] {
     font-size: smaller;
   }
 
-  & .title {
+  .title {
     grid-area: title;
     font-size: larger;
     font-weight: bold;
   }
 
-  & .category {
+  .category {
     grid-area: category;
     justify-self: end;
   }
 
-  & .date {
+  .date {
     grid-area: date;
   }
 
-  & .tags {
+  .tags {
     grid-area: tags;
     justify-self: end;
     list-style: none;
@@ -170,13 +170,13 @@ input[type] {
     display: inline;
   }
 
-  & .tags .tag {
+  .tags .tag {
     display: inline;
     text-align: right;
     padding: 0 5px;
   }
 
-  & .content {
+  .content {
     grid-area: content;
   }
 }
