@@ -5,6 +5,7 @@ module.exports = {
     require('postcss-preset-env')({ stage: 0 }),
     require('postcss-fixes')({ preset: 'recommended' }),
     require('postcss-advanced-variables')(),
+    require('postcss-nested')(),
     require('postcss-extend-rule')(),
     require('postcss-property-lookup')(),
   ],

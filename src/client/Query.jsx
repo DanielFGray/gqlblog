@@ -35,7 +35,8 @@ class Query extends React.Component {
     let data = null
     let errors = null
     let loading = true
-    const res = this.props.ctx.get(this.gqlq, this.props.variables)
+    const { variables, ctx } = this.props
+    const res = ctx.get(this.gqlq, variables)
     if (res && res.errors) {
       errors = res.errors // eslint-disable-line prefer-destructuring
       loading = false
@@ -57,9 +58,10 @@ class Query extends React.Component {
     : this.props.query
 
   makeRequest = () => {
-    this.setState({ loading: true })
-    const { variables, ctx } = this.props
     const query = this.gqlq
+    const { variables, ctx } = this.props
+    if (ctx.get(query, variables)) console.error('in cache and fetching anyway?!')
+    this.setState({ loading: true })
     fetchGraphQL({ query, variables })
       .then(({ data, errors }) => {
         if (errors) return this.setState({ errors, loading: false })
