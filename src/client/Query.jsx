@@ -63,7 +63,7 @@ class Query extends React.Component {
     fetchGraphQL({ query, variables })
       .then(({ data, errors }) => {
         if (errors) return this.setState({ errors, loading: false })
-        ctx.update(query, variables, data)
+        ctx.update({ query, variables, data })
         return this.setState({ data, loading: false, errors: null })
       })
       .catch(e => {

@@ -9,7 +9,13 @@ class MyProvider extends React.Component {
     value: {},
   }
 
-  update = patch => { this.setState(patch) }
+  update = ({ query, variables, data }) => {
+    this.setState(s => ({
+      [query]: s[query]
+        ? [...s[query], [variables, data]]
+        : [[variables, data]]
+    }))
+  }
 
   get = (query, variables) => {
     try {
