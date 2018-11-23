@@ -1,10 +1,11 @@
 import * as React from 'react'
 import equals from 'fast-deep-equal'
 import { fetchDedupe } from 'fetch-dedupe'
+import { over, lensPath } from 'ramda'
 import { Provider } from '../createContext'
 
 class MyProvider extends React.Component {
-  state = this.props.value
+  state = { queryCache: this.props.value }
 
   static defaultProps = {
     value: {},
@@ -12,17 +13,16 @@ class MyProvider extends React.Component {
 
   update = ({ query, variables, data }) => {
     this.setState(s => {
-      if (! s[query]) return { [query]: [[variables, data]] }
-      const inI = s[query].findIndex(([cache]) => equals(cache, variables))
-      if (inI < 0) return { [query]: s[query].concat([[variables, data]]) }
-      return null
-      // FIXME: overwrite cache? merge??
+      if (! s.queryCache[query]) return over(lensPath(['queryCache', query]), () => [[variables, data]], s)
+      const inI = s.queryCache[query].findIndex(([cache]) => equals(cache, variables))
+      if (inI < 0) return over(lensPath(['queryCache', query]), c => c.concat([[variables, data]]), s)
+      return over(lensPath(['queryCache', query, inI]), () => [variables, data], s)
     })
   }
 
   get = (query, variables) => {
     try {
-      return this.state[query].find(([cache]) => equals(cache, variables))[1]
+      return this.state.queryCache[query].find(([cache]) => equals(cache, variables))[1]
     } catch (e) {
       return { data: null, errors: null }
     }

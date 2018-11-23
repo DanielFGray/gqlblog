@@ -14,13 +14,13 @@ class Query extends React.PureComponent {
           const { variables } = this.props
           const query = this.gqlq
           const { data, errors } = ctx.get(query, variables)
-          const reload = () => ctx.fetchGraphQL({ query, variables })
+          const sendRequest = () => ctx.fetchGraphQL({ query, variables })
           let loading = false
           if (data === null && errors === null) {
-            reload()
+            sendRequest()
             loading = true
           }
-          return this.props.children({ loading, data, errors }, reload)
+          return this.props.children({ loading, data, errors }, sendRequest)
         }}
       </Consumer>
     )
