@@ -1,86 +1,44 @@
 /* eslint-disable react/forbid-prop-types */
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { fetchDedupe } from 'fetch-dedupe'
 import { Consumer } from '../createContext'
 
-const fetchGraphQL = ({ query, variables }) => fetchDedupe('/graphql', {
-  method: 'POST',
-  body: JSON.stringify({ query, variables }),
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-})
-  .then(x => x.data)
-
-class Query extends React.Component {
-  static propTypes = {
-    query: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.string,
-    ]).isRequired,
-    children: PropTypes.func.isRequired,
-    variables: PropTypes.object,
-    ctx: PropTypes.object,
-  }
-
-  static defaultProps = {
-    ctx: {},
-    variables: {},
-  }
-
-  constructor(props) {
-    super(props)
-    let data = null
-    let errors = null
-    let loading = true
-    const { variables, ctx } = this.props
-    const res = ctx.get(this.gqlq, variables)
-    if (res && res.errors) {
-      errors = res.errors // eslint-disable-line prefer-destructuring
-      loading = false
-    } else if (res && res.data) {
-      data = res.data // eslint-disable-line prefer-destructuring
-      loading = false
-    }
-    this.state = { data, errors, loading }
-  }
-
-  componentDidMount() {
-    if (! this.state.data) {
-      this.makeRequest()
-    }
-  }
-
-  gqlq = typeof this.props.query === 'object' // eslint-disable-line react/sort-comp
-    ? this.props.query.loc.source.body
-    : this.props.query
-
-  makeRequest = () => {
-    const query = this.gqlq
-    const { variables, ctx } = this.props
-    if (ctx.get(query, variables)) console.error('in cache and fetching anyway?!')
-    this.setState({ loading: true })
-    fetchGraphQL({ query, variables })
-      .then(({ data, errors }) => {
-        if (errors) return this.setState({ errors, loading: false })
-        ctx.update({ query, variables, data })
-        return this.setState({ data, loading: false, errors: null })
-      })
-      .catch(e => {
-        this.setState({ errors: [e.message], loading: false })
-        console.log(e) // eslint-disable-line no-console
-      })
-  }
+class Query extends React.PureComponent {
+  gqlq = typeof this.props.query === 'object'
+    ? this.props.query.loc.source.body : this.props.query
 
   render() {
-    return this.props.children(this.state, this.makeRequest)
+    return (
+      <Consumer>
+        {ctx => {
+          const { variables } = this.props
+          const query = this.gqlq
+          const { data, errors } = ctx.get(query, variables)
+          const reload = () => ctx.fetchGraphQL({ query, variables })
+          let loading = false
+          if (data === null && errors === null) {
+            reload()
+            loading = true
+          }
+          return this.props.children({ loading, data, errors }, reload)
+        }}
+      </Consumer>
+    )
   }
 }
 
-export default props => (
-  <Consumer>
-    {ctx => <Query {...props} ctx={ctx} />}
-  </Consumer>
-)
+Query.propTypes = {
+  query: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+  ]).isRequired,
+  children: PropTypes.func.isRequired,
+  variables: PropTypes.object,
+}
+
+Query.defaultProps = {
+  variables: {},
+}
+
+
+export default Query

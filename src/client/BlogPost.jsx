@@ -62,7 +62,7 @@ const BlogPost = ({ match }) => (
   <div className="blogContainer">
     <Query query={query} variables={match.params}>
       {({ errors, loading, data }) => {
-        if (errors !== null) errors.forEach(e => console.error(e))
+        if (errors) errors.forEach(e => console.error(e))
         if (loading || ! data || ! data.BlogPost) return 'loading...'
         return (
           <>

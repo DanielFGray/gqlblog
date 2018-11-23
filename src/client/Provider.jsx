@@ -1,5 +1,6 @@
 import * as React from 'react'
 import equals from 'fast-deep-equal'
+import { fetchDedupe } from 'fetch-dedupe'
 import { Provider } from '../createContext'
 
 class MyProvider extends React.Component {
@@ -10,26 +11,42 @@ class MyProvider extends React.Component {
   }
 
   update = ({ query, variables, data }) => {
-    this.setState(s => ({
-      [query]: (s[query]
-        ? [...s[query], [variables, data]]
-        : [[variables, data]]),
-    }))
+    this.setState(s => {
+      if (! s[query]) return { [query]: [[variables, data]] }
+      const inI = s[query].findIndex(([cache]) => equals(cache, variables))
+      if (inI < 0) return { [query]: s[query].concat([[variables, data]]) }
+      return null
+      // FIXME: overwrite cache? merge??
+    })
   }
 
   get = (query, variables) => {
     try {
-      return this.state[query]
-        .find(([vars]) => equals(vars, variables))[1]
+      return this.state[query].find(([cache]) => equals(cache, variables))[1]
     } catch (e) {
-      return undefined
+      return { data: null, errors: null }
     }
   }
 
+  fetchGraphQL = ({ query, variables }) => {
+    fetchDedupe('/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query, variables }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(x => x.data)
+      .then(data => {
+        this.update({ query, variables, data })
+      })
+  }
+
   render() {
-    const { update, get } = this
+    const { update, get, fetchGraphQL } = this
     return (
-      <Provider value={{ update, get }}>
+      <Provider value={{ update, get, fetchGraphQL }}>
         {this.props.children}
       </Provider>
     )

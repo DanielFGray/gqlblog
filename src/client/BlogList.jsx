@@ -20,7 +20,7 @@ const BlogList = () => (
     <h3>Blog posts</h3>
     <Query query={query}>
       {({ errors, loading, data }) => {
-        if (errors !== null) errors.forEach(e => console.error(e))
+        if (errors) errors.forEach(e => console.error(e))
         if (loading) return 'loading'
         if (data && data.BlogList) {
           return sortBy(x => x.date, data.BlogList).map(e => <Post key={e.file} {...e} />)

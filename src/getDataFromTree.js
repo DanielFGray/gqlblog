@@ -112,7 +112,7 @@ export function walkTree(element, context, visitor, newContext = new Map()) {
         // A provider - sets the context value before rendering children
         // this needs to clone the map because this value should only apply
         // to children of the provider
-        newContext = new Map(newContext)
+        newContext = new Map(newContext) // eslint-disable-line no-param-reassign
         newContext.set(element.type, element.props.value)
         child = element.props.children
       } else {
@@ -189,6 +189,6 @@ export const renderToStringWithData = (app, { schema, context = {}, root = {} })
     }),
 ).then(x => x.reduce((p, [k, v]) => ({
   ...p,
-  [k]: p[k] ? [v].concat(p[k]) : [v]
+  [k]: p[k] ? [v].concat(p[k]) : [v],
 }), {}))
   .then(data => ({ html: renderToString(app(data)), data }))
