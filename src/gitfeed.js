@@ -102,11 +102,8 @@ const getRepos = () => Observable.of([])
 
 const t = 30 * 60 * 60 * 1000
 
-const writeCache = data => Observable.of(data)
-  .map(x => JSON.stringify(x))
-  .flatMap(x => fs.writeFile(cacheFile, x, 'utf8'))
-  .do(() => console.log('disk cache updated'))
-  .map(() => data)
+const writeCache = data => fs.writeFile(cacheFile, JSON.stringify(data), 'utf8')
+  .then(() => data)
 
 const readCache = async () => {
   let result = '[]'
@@ -115,22 +112,19 @@ const readCache = async () => {
   } catch (e) {
     console.log('cache missing! writing empty cache')
     return writeCache([])
-      .toPromise()
   }
   return JSON.parse(result)
 }
 
-const pollRepos = length => Observable.timer(length > 0 ? t : 0, t)
-  .flatMap(getRepos)
-  .flatMap(writeCache)
-
-Observable.from(readCache())
-  .mergeMap(c => pollRepos(c.length))
-  .do(x => {
+Observable.fromPromise(readCache())
+  .flatMap(c => Observable.timer(c.length > 0 ? t : 0, t)
+    .flatMap(getRepos)
+    .flatMap(writeCache)
+    .startWith(c))
+  .subscribe(x => {
+    console.log('git feed updated')
     cache = x
-    console.log('in-memory cache updated')
-  })
-  .subscribe(() => {}, e => {
+  }, e => {
     console.error(e)
     // process.exit(1)
   })
