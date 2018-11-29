@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import ago from 's-ago'
+import Loading from './Loading'
 import Query from './Query'
 import { urlTokens } from '../utils'
 
@@ -65,8 +66,11 @@ export default () => (
     <h3>Git repos</h3>
     <Query query={query}>
       {({ data, errors, loading }) => {
-        if (loading) return 'loading'
-        if (errors) errors.forEach(e => console.log(e))
+        if (errors) {
+          console.error(errors)
+          return 'something went wrong :('
+        }
+        if (loading) return <Loading />
         return data && data.GitActivity.length
           ? (
             <ul className="repolist">

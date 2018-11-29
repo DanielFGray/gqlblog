@@ -200,3 +200,35 @@ input[type] {
     display: block;
   }
 }
+
+.spinner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    color: #999;
+    font-family: Consolas, Menlo, Monaco, monospace;
+    font-weight: bold;
+    font-size: 6em;
+    opacity: 0.8;
+  }
+
+  span {
+    display: inline-block;
+    animation: pulse 0.4s alternate infinite ease-in-out;
+  }
+
+  &:nth-child(odd) {
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes pulse {
+  to {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}
