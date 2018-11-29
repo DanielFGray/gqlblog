@@ -179,7 +179,12 @@ export const getPromisesFromTree = ({
   return matches
 }
 
-export const renderToStringWithData = (app, { schema, context = {}, root = {} }) => Promise.all(
+export const renderToStringWithData = (app, {
+  schema,
+  render = renderToString,
+  context = {},
+  root = {},
+}) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
     .map(({ instance }) => {
       const { variables } = instance.props
@@ -191,4 +196,4 @@ export const renderToStringWithData = (app, { schema, context = {}, root = {} })
   ...p,
   [k]: p[k] ? [v].concat(p[k]) : [v],
 }), {}))
-  .then(data => ({ html: renderToString(app(data)), data }))
+  .then(data => ({ html: render(app(data)), data }))

@@ -17,12 +17,16 @@ const file2markdown = file => fs.readFile(file)
   }))
   .then(x => { files[x.file] = x })
 
-chokidar.watch('./content/**/*.md')
-  .on('add', file2markdown)
-  .on('change', file2markdown)
-  .on('unlink', f => delete files[fname(f)])
+const main = () => {
+  chokidar.watch('./content/**/*.md')
+    .on('add', file2markdown)
+    .on('change', file2markdown)
+    .on('unlink', f => delete files[fname(f)])
 
-export default {
-  get: f => files[f],
-  list: _ => Object.values(files),
+  return {
+    get: f => files[f],
+    list: _ => Object.values(files),
+  }
 }
+
+export default main

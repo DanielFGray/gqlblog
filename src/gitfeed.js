@@ -116,17 +116,20 @@ const readCache = async () => {
   return JSON.parse(result)
 }
 
-Observable.fromPromise(readCache())
-  .flatMap(c => Observable.timer(c.length > 0 ? t : 0, t)
-    .flatMap(getRepos)
-    .flatMap(writeCache)
-    .startWith(c))
-  .subscribe(x => {
-    console.log('git feed updated')
-    cache = x
-  }, e => {
-    console.error(e)
-    // process.exit(1)
-  })
+const main = () => {
+  Observable.fromPromise(readCache())
+    .flatMap(c => Observable.timer(c.length > 0 ? t : 0, t)
+      .flatMap(getRepos)
+      .flatMap(writeCache)
+      .startWith(c))
+    .subscribe(x => {
+      console.log('git feed updated')
+      cache = x
+    }, e => {
+      console.error(e)
+      // process.exit(1)
+    })
+  return { list: () => cache }
+}
 
-export default { list: () => cache }
+export default main
