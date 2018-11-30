@@ -62,12 +62,12 @@ const query = gql`
 const BlogPost = ({ match }) => (
   <div className="blogContainer">
     <Query query={query} variables={match.params}>
-      {({ errors, loading, data }) => {
+      {({ errors, data }) => {
         if (errors) {
           console.error(errors)
           return 'something went wrong :('
         }
-        if (loading) return <Loading />
+        if (! (data && data.BlogPost)) return <Loading />
         return (
           <>
             <Helmet>

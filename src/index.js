@@ -35,7 +35,6 @@ app
     server now running on http://${host}:${port}`))
 
 process.on('exit', () => console.log('exiting!'))
-process.on('SIGINT', () => console.log('interrupted!'))
 process.on('uncaughtException', e => {
   console.error(e)
   process.exit(1)

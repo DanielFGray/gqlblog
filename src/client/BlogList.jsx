@@ -20,17 +20,14 @@ const BlogList = () => (
   <div className="blogContainer">
     <h3>Blog posts</h3>
     <Query query={query}>
-      {({ errors, loading, data }) => {
+      {({ errors, data }) => {
         if (errors) {
           console.error(errors)
           return 'something went wrong :('
         }
-        if (loading) return <Loading />
-        if (data && data.BlogList) {
-          return sortWith([descend(x => x.date)], data.BlogList)
-            .map(e => <Post key={e.file} {...e} />)
-        }
-        return null
+        if (! (data && data.BlogList)) return <Loading />
+        return sortWith([descend(x => x.date)], data.BlogList)
+          .map(e => <Post key={e.file} {...e} />)
       }}
     </Query>
   </div>

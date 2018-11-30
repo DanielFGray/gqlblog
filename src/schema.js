@@ -3,11 +3,14 @@ import gql from 'graphql-tag'
 import blog from './blog'
 import git from './gitfeed'
 
+const gitfeed = git()
+const blogfeed = blog()
+
 export const resolvers = {
   Query: {
-    BlogList: () => blog.list(),
-    BlogPost: (root, { file }) => blog.get(file),
-    GitActivity: () => git.list(),
+    BlogList: () => blogfeed.list(),
+    BlogPost: (root, { file }) => blogfeed.get(file),
+    GitActivity: () => gitfeed.list(),
   },
 }
 
@@ -32,7 +35,7 @@ export const typeDefs = gql`
     name: String!
     updated: Float!
     stars: Float!
-    issues: Float!
+    issues: Float
     forks: Float!
     description: String
     language: String

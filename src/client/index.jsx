@@ -6,6 +6,7 @@ import Routes from './Routes'
 import Layout from './Layout'
 import Provider from './Provider'
 import 'normalize.css'
+import 'prismjs/themes/prism-okaidia.css'
 import './style.css'
 
 const Init = initData => (
