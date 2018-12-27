@@ -59,9 +59,9 @@ const query = gql`
   }
 `
 
-const BlogPost = ({ match }) => (
+const BlogPost = ({ file }) => (
   <div className="blogContainer">
-    <Query query={query} variables={match.params}>
+    <Query query={query} variables={{ file }}>
       {({ errors, data }) => {
         if (errors) {
           console.error(errors)

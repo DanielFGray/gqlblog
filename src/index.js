@@ -34,7 +34,11 @@ app
   .listen(port, host, () => console.log(`
     server now running on http://${host}:${port}`))
 
-process.on('exit', () => console.log('exiting!'))
+process.on('exit', () => {
+  console.log('exiting!')
+  process.exit(1)
+})
+
 process.on('uncaughtException', e => {
   console.error(e)
   process.exit(1)

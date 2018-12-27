@@ -1,22 +1,13 @@
 import * as React from 'react'
-import gql from 'graphql-tag'
-import { sortWith, descend } from 'ramda'
+import { cond, sortWith, descend } from 'ramda'
 import Loading from './Loading'
 import Query from './Query'
 import { Post } from './BlogPost'
+import query from './BlogList.gql'
 
-const query = gql`
-  query {
-    BlogList {
-      title
-      category
-      date
-      tags
-      file
-    }
-  }`
+const pipe = (fns, x) => fns.reduce((a, f) => f(a), x)
 
-const BlogList = () => (
+const BlogList = ({ category, tag }) => (
   <div className="blogContainer">
     <h3>Blog posts</h3>
     <Query query={query}>
@@ -26,8 +17,12 @@ const BlogList = () => (
           return 'something went wrong :('
         }
         if (! (data && data.BlogList)) return <Loading />
-        return sortWith([descend(x => x.date)], data.BlogList)
-          .map(e => <Post key={e.file} {...e} />)
+        return pipe([
+          sortWith([descend(x => x.date)]),
+          x => (category ? x.filter(e => e.category === category) : x),
+          x => (tag ? x.filter(e => e.tags.includes(tag)) : x),
+          x => x.map(e => <Post key={e.file} {...e} />),
+        ], data.BlogList)
       }}
     </Query>
   </div>

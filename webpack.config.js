@@ -45,6 +45,19 @@ const babelLoader = [
       },
     ],
   },
+  {
+    test: /\.g(raph)?ql$/,
+    use: [
+      {
+        loader: 'webpack-graphql-loader',
+        options: {
+          // output: 'document',
+          output: 'string',
+          minify: true,
+        },
+      },
+    ],
+  },
 ]
 
 const stats = {

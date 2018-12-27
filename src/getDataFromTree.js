@@ -188,7 +188,7 @@ export const renderToStringWithData = (app, {
   getPromisesFromTree({ rootElement: app() })
     .map(({ instance }) => {
       const { variables } = instance.props
-      const query = instance.gqlq
+      const query = instance.gqlq()
       return graphql(schema, query, root, context, variables)
         .then(data => [query, [variables, data]])
     }),

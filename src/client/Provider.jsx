@@ -13,34 +13,37 @@ class MyProvider extends React.Component {
 
   update = ({ query, variables, data }) => {
     this.setState(s => {
-      if (! s.queryCache[query]) return over(lensPath(['queryCache', query]), () => [[variables, data]], s)
-      const inI = s.queryCache[query].findIndex(([cache]) => equals(cache, variables))
-      if (inI < 0) return over(lensPath(['queryCache', query]), c => c.concat([[variables, data]]), s)
-      return over(lensPath(['queryCache', query, inI]), () => [variables, data], s)
+      if (! s.queryCache[query]) {
+        return over(lensPath(['queryCache', query]), () => [[variables, data]], s)
+      }
+      const inIndex = s.queryCache[query].findIndex(([cache]) => equals(cache, variables))
+      if (inIndex < 0) {
+        return over(lensPath(['queryCache', query]), c => c.concat([[variables, data]]), s)
+      }
+      return over(lensPath(['queryCache', query, inIndex]), () => [variables, data], s)
     })
   }
 
-  get = (query, variables) => {
+  get = ({ query, variables }) => {
     try {
       return this.state.queryCache[query].find(([cache]) => equals(cache, variables))[1]
     } catch (e) {
-      return { data: null, errors: null }
+      return { data: undefined, errors: undefined }
     }
   }
 
   fetchGraphQL = ({ query, variables }) => {
     fetchDedupe('/graphql', {
-      method: 'POST',
-      body: JSON.stringify({ query, variables }),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(x => x.data)
-      .then(data => {
-        this.update({ query, variables, data })
+        method: 'POST',
+        body: JSON.stringify({ query, variables }),
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       })
+        .then(({ data }) => {
+          this.update({ query, variables, data })
+        })
   }
 
   render() {

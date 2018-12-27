@@ -5,12 +5,17 @@ import routes from '../routes'
 const Routes = props => (
   <div>
     <Switch>
-      {routes.map(({ path, exact, component: C }) => (
+      {routes.map(({ path, exact, component: C, render }) => (
         <Route
           key={path || 'notfound'}
           path={path}
           exact={exact}
-          render={router => <C {...router} {...props} />}
+          render={router => {
+            if (render) {
+              return render({ ...router, ...props })
+            }
+            return <C {...router} {...props} />
+          }}
         />
       ))}
     </Switch>
