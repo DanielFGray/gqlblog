@@ -1,0 +1,9 @@
+query BlogList {
+  BlogList {
+    title
+    category
+    date
+    tags
+    file
+  }
+}
