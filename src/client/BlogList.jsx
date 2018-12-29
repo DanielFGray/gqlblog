@@ -10,6 +10,8 @@ const pipe = (fns, x) => fns.reduce((a, f) => f(a), x)
 const BlogList = ({ category, tag }) => (
   <div className="blogContainer">
     <h3>Blog posts</h3>
+    {tag && <b>Tagged: {tag}</b>}
+    {category && <b>Category: {category}</b>}
     <Query query={query}>
       {({ errors, data }) => {
         if (errors) {
