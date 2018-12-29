@@ -22,6 +22,7 @@ const file2markdown = async path => {
     date: (new Date(data.date)).getTime(),
     readTime,
     words,
+    url: `/${data.category}/${file}`,
     excerpt: cheerio(content).first('p').text(),
   }
 }

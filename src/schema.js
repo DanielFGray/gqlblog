@@ -23,6 +23,7 @@ export const typeDefs = gql`
      words: Int
      readTime: String
      file: String
+     url: String
      content: String
      excerpt: String
   }

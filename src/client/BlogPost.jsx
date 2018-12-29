@@ -10,7 +10,7 @@ export const Post = ({
   date,
   title,
   category,
-  file,
+  url,
   tags,
   readTime,
   words,
@@ -21,7 +21,7 @@ export const Post = ({
   return (
     <div className="blog" key={date}>
       <h2 className="title">
-        <Link to={`/${file}`}>{title}</Link>
+        <Link to={url}>{title}</Link>
       </h2>
       <div className="category">
         {'category: '}

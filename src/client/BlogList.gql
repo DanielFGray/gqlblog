@@ -1,6 +1,7 @@
 query BlogList {
   BlogList {
     title
+    url
     category
     date
     tags

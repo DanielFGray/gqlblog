@@ -2,6 +2,7 @@ query ($file: String!) {
   BlogPost(file: $file) {
     title
     category
+    url
     date
     tags
     file
