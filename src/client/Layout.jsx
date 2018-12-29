@@ -30,7 +30,7 @@ const Layout = () => (
         const tagList = Array.from(data.BlogList.reduce((set, post) => {
           post.tags.forEach(t => set.add(t))
           return set
-        }, new Set))
+        }, new Set()))
         const categories = Object.keys(byCategories)
         const routes = [
           {
@@ -39,21 +39,21 @@ const Layout = () => (
             exact: true,
             component: Main,
           },
-          ...data.BlogList.map(({ category, file }) => ({
-             path: `/${category}/${file}`,
-             exact: true,
-             render: props => <BlogPost {...props} file={file} />,
+          ...data.BlogList.map(({ file, category }) => ({
+            path: `/${category}/${file}`,
+            exact: true,
+            render: props => <BlogPost {...props} file={file} />,
           })),
           ...categories.map(c => ({
-             path: `/${c}`,
-             label: c,
-             exact: true,
-             render: props => <BlogList {...props} category={c} />,
+            path: `/${c}`,
+            label: c,
+            exact: true,
+            render: props => <BlogList {...props} category={c} />,
           })),
           ...tagList.map(t => ({
-             path: `/tags/${t}`,
-             exact: true,
-             render: props => <BlogList {...props} tag={t} />,
+            path: `/tags/${t}`,
+            exact: true,
+            render: props => <BlogList {...props} tag={t} />,
           })),
           ...data.BlogList.map(({ file, category }) => ({
             path: `/${file}`,
@@ -69,14 +69,12 @@ const Layout = () => (
             <Nav {...{ routes }} />
             <div className="main">
               <Switch>
-                {routes.map(({ path, label, component: C, render, ...rest }) => (
+                {routes.map(({ path, label: _, component: C, render, ...rest }) => (
                   <Route
                     key={path || 'notfound'}
                     path={path}
                     {...rest}
-                    render={router => render
-                      ? render(router)
-                      : <C {...router} />}
+                    render={router => (render ? render(router) : <C {...router} />)}
                   />
                 ))}
               </Switch>

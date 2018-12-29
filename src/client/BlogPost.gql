@@ -1,11 +1,11 @@
-query BlogList {
-  BlogList {
+query ($file: String!) {
+  BlogPost(file: $file) {
     title
     category
     date
     tags
     file
-    excerpt
+    content
     words
     readTime
   }

@@ -20,8 +20,11 @@ export const typeDefs = gql`
      category: String
      tags: [String]
      date: Float
+     words: Int
+     readTime: String
      file: String
      content: String
+     excerpt: String
   }
 
   type Query {

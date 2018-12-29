@@ -27,8 +27,10 @@ class Query extends React.PureComponent {
           let loading = false
           if (data === undefined && errors === undefined && this.props.autoFetch) {
             try {
-              sendRequest()
-              loading = true
+              if (fetch) {
+                loading = true
+                sendRequest()
+              }
             } catch (e) {
               errors = e
             }

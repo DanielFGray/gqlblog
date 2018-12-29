@@ -25,6 +25,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   padding: 10px;
+  scroll-behavior: smooth;
 }
 
 @media (max-width: 382px) {
@@ -61,13 +62,21 @@ pre {
 }
 
 code {
+  background: #666;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #eee;
   font-family: monospace;
+  margin: 0 2px;
+  padding: 3px 5px;
   white-space: pre-wrap;
 }
 
-code > pre {
+pre > code {
   padding: 0;
+  margin: 0;
   white-space: pre;
+  box-shadow: 0 0 0;
 }
 
 textarea,
@@ -210,7 +219,7 @@ input[type] {
 
   > div {
     color: #999;
-    font-family: Consolas, Menlo, Monaco, monospace;
+    font-family: monospace;
     font-weight: bold;
     font-size: 6em;
     opacity: 0.8;

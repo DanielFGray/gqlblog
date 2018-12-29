@@ -1,9 +1,9 @@
 import React from 'react'
-import gql from 'graphql-tag'
 import ago from 's-ago'
 import Loading from './Loading'
 import Query from './Query'
 import { urlTokens } from '../utils'
+import query from './GitActivity.gql'
 
 const Linkify = text => urlTokens(text)
   .map((t, i) => (
@@ -16,25 +16,10 @@ const Linkify = text => urlTokens(text)
       : t.value
   ))
 
-const query = gql`
-  query {
-    GitActivity {
-      url
-      name
-      description
-      updated
-      stars
-      issues
-      forks
-      language
-    }
-  }
-`
-
 const prettyData = data => ['stars', 'issues', 'forks']
-  .map(x => ({ name: x, count: data[x] }))
+  .map(name => ({ name, count: data[name] }))
   .filter(x => x.count > 0)
-  .map(x => `${x.count} ${x.count === 1 ? x.name.replace(/s$/, '') : x.name}`)
+  .map(({ count, name }) => `${count} ${count === 1 ? name.replace(/s$/, '') : name}`)
   .join(', ')
 
 const FeedItem = ({
@@ -71,14 +56,14 @@ export default () => (
           return 'something went wrong :('
         }
         if (loading) return <Loading />
-        return data && data.GitActivity.length
-          ? (
-            <ul className="repolist">
-              {data.GitActivity.map(x => <FeedItem key={x.url} {...x} />)}
-            </ul>
-          ) : (
-            <p>{"I swear they're around here somewhere.."}</p>
-          )
+        if (! (data && data.GitActivity.length)) {
+          return <p>I swear they're around here somewhere..</p>
+        }
+        return (
+          <ul className="repolist">
+            {data.GitActivity.map(x => <FeedItem key={x.url} {...x} />)}
+          </ul>
+        )
       }}
     </Query>
   </div>

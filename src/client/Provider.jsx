@@ -34,16 +34,16 @@ class MyProvider extends React.Component {
 
   fetchGraphQL = ({ query, variables }) => {
     fetchDedupe('/graphql', {
-        method: 'POST',
-        body: JSON.stringify({ query, variables }),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
+      method: 'POST',
+      body: JSON.stringify({ query, variables }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(({ data }) => {
+        this.update({ query, variables, data })
       })
-        .then(({ data }) => {
-          this.update({ query, variables, data })
-        })
   }
 
   render() {

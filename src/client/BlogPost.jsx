@@ -2,9 +2,9 @@ import React from 'react'
 import Helmet from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
-import gql from 'graphql-tag'
 import Loading from './Loading'
 import Query from './Query'
+import query from './BlogPost.gql'
 
 export const Post = ({
   date,
@@ -12,6 +12,9 @@ export const Post = ({
   category,
   file,
   tags,
+  readTime,
+  words,
+  excerpt = '',
   content = '',
 }) => {
   const dateObj = new Date(date)
@@ -28,6 +31,10 @@ export const Post = ({
         <a title={dateObj.toLocaleDateString()}>
           {ago(dateObj)}
         </a>
+        {', '}
+        <a title={`${words} words`}>
+          {readTime}
+        </a>
       </div>
       <ul className="tags">
         {'tagged: '}
@@ -37,6 +44,7 @@ export const Post = ({
           </li>
         ))}
       </ul>
+      {excerpt && (<div className="content">{excerpt}</div>)}
       {content && (
         <div
           className="content"
@@ -45,19 +53,6 @@ export const Post = ({
     </div>
   )
 }
-
-const query = gql`
-  query ($file: String!) {
-    BlogPost(file: $file) {
-      title
-      category
-      date
-      tags
-      file
-      content
-    }
-  }
-`
 
 const BlogPost = ({ file }) => (
   <div className="blogContainer">

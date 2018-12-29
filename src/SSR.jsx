@@ -3,7 +3,6 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Html from './Html'
-import Routes from './client/Routes'
 import Layout from './client/Layout'
 import { renderToStringWithData } from './getDataFromTree'
 import Provider from './client/Provider'
@@ -19,9 +18,7 @@ export default ({ appBase, schema }) => async ctx => {
         context={routerCtx}
       >
         <HelmetProvider context={helmetCtx}>
-          <Layout>
-            <Routes />
-          </Layout>
+          <Layout />
         </HelmetProvider>
       </StaticRouter>
     </Provider>

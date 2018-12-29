@@ -1,21 +1,30 @@
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import matter from 'gray-matter'
+import cheerio from 'cheerio'
+import readingTime from 'reading-time'
 import markdown from './mdown'
 
 const files = {}
 
 const fname = f => f.replace(/^.*[\\/](.*?).md$/, '$1')
 
-const file2markdown = file => fs.readFile(file)
-  .then(matter)
-  .then(({ data, content }) => ({
+const file2markdown = async path => {
+  const { data, content: orig } = await fs.readFile(path)
+    .then(matter)
+  const content = markdown(orig)
+  const { words, text: readTime } = await readingTime(orig)
+  const file = fname(path)
+  files[file] = {
     ...data,
-    file: fname(file),
-    content: markdown(content),
+    content,
+    file,
     date: (new Date(data.date)).getTime(),
-  }))
-  .then(x => { files[x.file] = x })
+    readTime,
+    words,
+    excerpt: cheerio(content).first('p').text(),
+  }
+}
 
 const main = () => {
   chokidar.watch('./content/**/*.md')

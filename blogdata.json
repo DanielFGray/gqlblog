@@ -1,0 +1,21 @@
+[
+  {"title":"An Attempt At Explaining Category Theory ","category":"computers","date":1515045600000,"tags":["programming","javascript","fp"],"file":"category-intro"},
+  {"title":"Async Programming in Node.js","category":"computers","date":1528329600000,"tags":["javascript","nodejs","programming"],"file":"async-await"},
+  {"title":"Backporting packages in Debian","category":"computers","date":1382418000000,"tags":["debian","linux"],"file":"debian-backporting"},
+  {"title":"Bash Scripting","category":"computers","date":1487138400000,"tags":["linux","bash","programming","unfinished"],"file":"bash-scripting"},
+  {"title":"Beginning Drums","category":"music","date":1477458000000,"tags":["drums","rudiments","unfinished"],"file":"beginning-drums"},
+  {"title":"Creating a REST API in node.js","category":"computers","date":1492578000000,"tags":["express","knex","nodejs","javascript","programming"],"file":"rest-js"},
+  {"title":"Functional Programming: a small introduction","category":"computers","date":1484028000000,"tags":["programming","javascript","fp"],"file":"fp-intro"},
+  {"title":"Functional Programming: currying and partial application","category":"computers","date":1503464400000,"tags":["programming","javascript","fp"],"file":"fp-curry-pa"},
+  {"title":"Functional Programming: functional composition","category":"computers","date":1505538000000,"tags":["programming","javascript","fp"],"file":"fp-compose"},
+  {"title":"Fuzzy searching for MPD in Bash","category":"computers","date":1414904400000,"tags":["programming","linux","bash","mpd","fzf"],"file":"fzmp"},
+  {"title":"Getting started with Babel and Webpack","category":"computers","date":1528243200000,"tags":["javascript","nodejs","babel","webpack"],"file":"babel-webpack"},
+  {"title":"How I Made My Own Static-Site Generator","category":"computers","date":1497762000000,"tags":["programming","javascript","frp","nodejs"],"file":"my-ssg"},
+  {"title":"Killing the Display Manager","category":"computers","date":1475125200000,"tags":["linux","fzf"],"file":"kill-dm"},
+  {"title":"Learning Vim","category":"computers","date":1486015200000,"tags":["vim","unfinished"],"file":"vim-guide"},
+  {"title":"On permutations of rudiments","category":"music","date":1450072800000,"tags":["drums","rudiments","permutations"],"file":"rudimental-permutations"},
+  {"title":"Parsing Bash Config Files","category":"computers","date":1487656800000,"tags":["linux","bash","programming"],"file":"bash-config"},
+  {"title":"Vim beginner's customization guide","category":"computers","date":1438491600000,"tags":["vim"],"file":"vimrc-guide"},
+  {"title":"Why GitLab","category":"computers","date":1487224800000,"tags":["gitlab","github"],"file":"why-gitlab"},
+  {"title":"Why Use React?","category":"computers","date":1492405200000,"tags":["react","javascript","programming"],"file":"why-react"}
+]

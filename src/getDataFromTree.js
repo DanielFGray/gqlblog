@@ -163,12 +163,13 @@ export const getPromisesFromTree = ({
     rootElement,
     rootContext,
     (_, instance, newContext, context, childContext) => {
-      if (instance && instance.gqlq) {
-        matches.push({
-          context: childContext || context,
-          instance,
-          newContext,
-        })
+      if (instance && typeof instance.gqlq === 'function') {
+        matches.push(instance)
+        // matches.push({
+        //   context: childContext || context,
+        //   instance,
+        //   newContext,
+        // })
         return false
       }
       return undefined
@@ -186,14 +187,11 @@ export const renderToStringWithData = (app, {
   root = {},
 }) => Promise.all(
   getPromisesFromTree({ rootElement: app() })
-    .map(({ instance }) => {
-      const { variables } = instance.props
-      const query = instance.gqlq()
+    .map(({ props, gqlq }) => {
+      const { variables } = props
+      const query = gqlq()
       return graphql(schema, query, root, context, variables)
         .then(data => [query, [variables, data]])
     }),
-).then(x => x.reduce((p, [k, v]) => ({
-  ...p,
-  [k]: p[k] ? [v].concat(p[k]) : [v],
-}), {}))
+).then(x => x.reduce((p, [k, v]) => ({ ...p, [k]: p[k] ? [v].concat(p[k]) : [v] }), {}))
   .then(data => ({ html: render(app(data)), data }))

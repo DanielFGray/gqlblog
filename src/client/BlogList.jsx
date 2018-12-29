@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cond, sortWith, descend } from 'ramda'
+import { sortWith, descend } from 'ramda'
 import Loading from './Loading'
 import Query from './Query'
 import { Post } from './BlogPost'
