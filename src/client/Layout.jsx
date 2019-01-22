@@ -12,6 +12,7 @@ import { Query } from 'react-apollo'
 import query from './BlogList.gql'
 import BlogPost from './BlogPost'
 import BlogList from './BlogList'
+import GitActivity from './GitActivity'
 
 const Layout = () => (
   <div className="layout">
@@ -38,6 +39,11 @@ const Layout = () => (
             path: '/',
             exact: true,
             component: Main,
+          },
+          {
+            label: 'Projects',
+            path: '/projects',
+            component: GitActivity,
           },
           ...data.BlogList.map(({ file, category }) => ({
             path: `/${category}/${file}`,
