@@ -59,6 +59,7 @@ const Html = ({
       {scripts && scripts.map(js => (
         <script
           key={js}
+          defer
           type="text/javascript"
           src={`${__appBase}/${js}`}
         />
