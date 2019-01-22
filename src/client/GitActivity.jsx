@@ -1,7 +1,7 @@
 import React from 'react'
 import ago from 's-ago'
 import Loading from './Loading'
-import Query from './Query'
+import { Query } from 'react-apollo'
 import { urlTokens } from '../utils'
 import query from './GitActivity.gql'
 

@@ -4,6 +4,7 @@ const path = require('path')
 const { DefinePlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 // const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
 const config = require('./config.js')
@@ -22,11 +23,10 @@ const cssLoaders = [
   },
   {
     exclude: /node_modules/,
-    test: /\.css$/,
+    test: /\.(sc|[sc])ss$/,
     use: [
       MiniCssExtractPlugin.loader,
       'css-loader',
-      // { loader: 'css-loader', options: { importLoaders: 1 } },
       'postcss-loader',
     ],
   },
@@ -51,8 +51,8 @@ const babelLoader = [
       {
         loader: 'webpack-graphql-loader',
         options: {
-          // output: 'document',
           output: 'string',
+          output: 'document',
           minify: true,
         },
       },
@@ -117,7 +117,7 @@ const serverConfig = {
     rules: babelLoader,
   },
   plugins: [
-    new DefinePlugin({ ...constants, __browser: false }),
+    new DefinePlugin({ ...constants, __BROWSER: false }),
   ],
   stats,
 }

@@ -1,13 +1,17 @@
 module.exports = {
   presets: [
     ['@babel/preset-env', {
-      targets: { node: 'current' },
+      targets: {
+        browsers: ['last 2 versions'],
+        node: 'current',
+      },
       loose: true,
       useBuiltIns: 'usage',
     }],
     '@babel/preset-react',
   ],
   plugins: [
+    'babel-plugin-graphql-tag',
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
     // '@babel/plugin-proposal-throw-expressions',

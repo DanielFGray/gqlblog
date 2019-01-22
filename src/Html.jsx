@@ -15,30 +15,32 @@ const Html = ({
   html,
   helmet,
 }) => (
-  <html lang="en">
+  <html lang="en" {...helmet.htmlAttributes.toString()}>
     <head>
-      <meta charSet="utf-8" />
-      <meta
-        httpEquiv="x-ua-compatible"
-        content="ie=edge,chrome=1"
-      />
       {helmet.title.toComponent()}
+      <meta charSet="utf-8" />
+      <meta httpEquiv="Content-Language" content="en" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       {helmet.meta.toComponent()}
+      {helmet.style.toComponent()}
+      {helmet.link.toComponent()}
+      {helmet.noscript.toComponent()}
+      <meta charSet="utf-8" />
       <meta
         name="viewport"
         content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
       />
       {helmet.link.toComponent()}
-      {styles.map(css => (
+      {styles && styles.map(link => (
         <link
-          key={css}
+          key={link}
           rel="stylesheet"
           type="text/css"
-          href={`${__appBase}/${css}`}
+          href={`${__appBase}/${link}`}
         />
       ))}
     </head>
-    <body>
+    <body {...helmet.bodyAttributes.toComponent()}>
       <div
         id={__mount}
         dangerouslySetInnerHTML={{
@@ -53,7 +55,8 @@ const Html = ({
           }}
         />
       )}
-      {scripts.map(js => (
+      {helmet.script.toComponent()}
+      {scripts && scripts.map(js => (
         <script
           key={js}
           type="text/javascript"
