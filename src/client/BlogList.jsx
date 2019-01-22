@@ -1,17 +1,11 @@
 import * as React from 'react'
 import { sortWith, descend } from 'ramda'
-import posed, { PoseGroup } from 'react-pose'
-import Loading from './Loading'
 import { Query } from 'react-apollo'
+import Loading from './Loading'
 import { Post } from './BlogPost'
 import query from './BlogList.gql'
 
 const pipe = (fns, x) => fns.reduce((a, f) => f(a), x)
-
-const Container = posed.div({
-  enter: { staggerChildren: 170 },
-  exit: { staggerChildren: 90, staggerDirection: -1 },
-})
 
 const BlogList = ({ category, tag }) => (
   <div className="blogContainer">
@@ -25,18 +19,12 @@ const BlogList = ({ category, tag }) => (
           return 'something went wrong :('
         }
         if (! (data && data.BlogList)) return <Loading />
-        return (
-          <PoseGroup>
-            <Container key={''}>
-              {pipe([
-                sortWith([descend(x => x.date)]),
-                x => (category ? x.filter(e => e.category === category) : x),
-                x => (tag ? x.filter(e => e.tags.includes(tag)) : x),
-                x => x.map(e => <Post key={e.file} {...e} />),
-              ], data.BlogList)}
-            </Container>
-          </PoseGroup>
-        )
+        return pipe([
+          sortWith([descend(x => x.date)]),
+          x => (category ? x.filter(e => e.category === category) : x),
+          x => (tag ? x.filter(e => e.tags.includes(tag)) : x),
+          x => x.map(e => <Post key={e.file} {...e} />),
+        ], data.BlogList)
       }}
     </Query>
   </div>

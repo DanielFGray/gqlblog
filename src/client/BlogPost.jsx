@@ -2,15 +2,9 @@ import React from 'react'
 import Helmet from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
-import posed from 'react-pose'
-import Loading from './Loading'
 import { Query } from 'react-apollo'
+import Loading from './Loading'
 import query from './BlogPost.gql'
-
-const Div = posed.div({
-  enter: { opacity: 1 },
-  exit: { opacity: 0 },
-})
 
 export const Post = ({
   date,
@@ -26,7 +20,7 @@ export const Post = ({
 }) => {
   const dateObj = new Date(date)
   return (
-    <Div key={file}>
+    <div key={file}>
       <div className="blog">
         <h2 className="title">
           <Link to={url}>{title}</Link>
@@ -59,7 +53,7 @@ export const Post = ({
             dangerouslySetInnerHTML={{ __html: content /* eslint-disable-line react/no-danger */ }}
           />)}
       </div>
-    </Div>
+    </div>
   )
 }
 
