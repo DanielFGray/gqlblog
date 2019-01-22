@@ -241,3 +241,13 @@ input[type] {
     opacity: 0.5;
   }
 }
+
+.blog .toc {
+  float: right;
+  margin-top: 1em;
+
+  ul, ol {
+    padding-left: 1em;
+    margin: 0.5em 1em;
+  }
+}
