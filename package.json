@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "npm-run-all -p dev:watch run:watch",
-    "dev:watch": "webpack -d --progress --watch",
+    "dev:watch": "nodemon -w webpack.config.js -w babel.config.js -x 'webpack -d --progress --watch'",
     "run:watch": "nodemon -w dist -x 'node dist'",
+    "run:pm2": "pm2 -s delete gqlblog; pm2 -m --watch --env production start ./dist/index.js --name gqlblog",
     "prod:watch": "NODE_ENV=production webpack -p --progress --watch",
     "prod": "NODE_ENV=production webpack -p",
     "lint:css": "stylelint './src/**/*.css'",
