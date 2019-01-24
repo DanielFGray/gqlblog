@@ -33,7 +33,8 @@ export const Post = ({
           <a title={dateObj.toLocaleDateString()}>
             {ago(dateObj)}
           </a>
-          {', '}
+        </div>
+        <div className="readTime">
           <a title={`${words} words`}>
             {readTime}
           </a>

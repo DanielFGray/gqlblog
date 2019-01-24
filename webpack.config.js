@@ -4,8 +4,8 @@ const path = require('path')
 const { DefinePlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 // const BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const config = require('./config.js')
 
@@ -15,15 +15,16 @@ const constants = Object.entries(config)
 
 const cssLoaders = [
   {
-    test: /node_modules[\\/].*\.css$/,
+    test: /\.css$/,
+    include: /node_modules/,
     use: [
       MiniCssExtractPlugin.loader,
       'css-loader',
     ],
   },
   {
+    test: /\.css$/,
     exclude: /node_modules/,
-    test: /\.(sc|[sc])ss$/,
     use: [
       MiniCssExtractPlugin.loader,
       'css-loader',
@@ -51,9 +52,9 @@ const babelLoader = [
       {
         loader: 'webpack-graphql-loader',
         options: {
-          output: 'string',
+          // output: 'string',
+          // minify: true,
           output: 'document',
-          minify: true,
         },
       },
     ],
@@ -79,7 +80,10 @@ const clientConfig = {
     chunkFilename: config.devMode ? '[name].js' : '[id]-[chunkhash].js',
   },
   module: {
-    rules: [...babelLoader, ...cssLoaders],
+    rules: [
+      ...babelLoader,
+      ...cssLoaders,
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -92,6 +96,11 @@ const clientConfig = {
       output: path.join(config.outputDir, './manifest.json'),
       writeToDisk: true,
     }),
+    ...(
+      config.nodeEnv
+        ? [new OptimizeCssAssetsPlugin()]
+        : []
+    ),
   ],
   stats,
 }

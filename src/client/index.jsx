@@ -11,7 +11,6 @@ import 'normalize.css'
 import 'prismjs/themes/prism-okaidia.css'
 import './style.css'
 
-import Routes from './Routes'
 import Layout from './Layout'
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,9 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <ApolloProvider client={apolloClient}>
       <Router basename={__appBase}>
         <HelmetProvider>
-          <Layout>
-            <Routes />
-          </Layout>
+          <Layout />
         </HelmetProvider>
       </Router>
     </ApolloProvider>

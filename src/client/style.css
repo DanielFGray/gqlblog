@@ -1,14 +1,19 @@
 :root {
-  --hue: 220;
-  --hue: 220;
+  --hue: 210;
+  --hue: 210;
   --primary-color: hsl(var(--hue), 50%, 50%);
-  --color-bg: #eee;
-  --color-bg-alt: #ccc;
+  --color-bg: #ccc;
+  --color-bg-alt: #eee;
   --color-text: #131313;
 }
 
 * {
   box-sizing: border-box;
+}
+
+a:link,
+a:visited {
+  color: var(--primary-color);
 }
 
 html {
@@ -23,8 +28,7 @@ body {
   min-height: 100vh;
   margin: auto;
   color: var(--color-text);
-  background-color: var(--color-bg);
-  padding: 10px;
+  background-color: #333;
   scroll-behavior: smooth;
 }
 
@@ -98,6 +102,53 @@ input[type] {
   }
 }
 
+#root,
+.main {
+  background: var(--color-bg);
+  max-width: 38em;
+}
+
+header {
+  background: var(--primary-color);
+  color: #fff;
+
+  div {
+    font-size: larger;
+    font-weight: bold;
+    padding: 0.5em 1em;
+  }
+
+  a:link,
+  a:visited {
+    color: #fff;
+  }
+
+  nav {
+    width: 100%;
+    background: hsl(var(--hue), 50%, 60%);
+    padding: 0.5em 1em;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    li {
+      display: block;
+      margin: 0;
+    }
+  }
+
+  a.active {
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+
 .repolist {
   display: grid;
   grid-template-columns: repeat(2, 50%);
@@ -150,7 +201,6 @@ input[type] {
     display: grid;
     padding: 5px;
     margin-bottom: 5px;
-    grid-template-columns: 1fr;
     grid-template-areas: "title category" "date tags" "content content";
     font-size: smaller;
     max-width: 100%;
@@ -207,6 +257,10 @@ input[type] {
 
   .blogContainer .blog {
     display: block;
+  }
+
+  .blog .toc {
+    float: left;
   }
 }
 

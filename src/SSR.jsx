@@ -7,7 +7,6 @@ import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import Html from './Html'
-import Routes from './client/Routes'
 import Layout from './client/Layout'
 
 export default ({ appBase, schema }) => {
@@ -29,9 +28,7 @@ export default ({ appBase, schema }) => {
           context={routerCtx}
         >
           <HelmetProvider context={helmetCtx}>
-            <Layout>
-              <Routes />
-            </Layout>
+            <Layout />
           </HelmetProvider>
         </StaticRouter>
       </ApolloProvider>
