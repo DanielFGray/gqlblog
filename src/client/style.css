@@ -20,11 +20,12 @@ a:visited {
 
 html {
   font-family: system-ui, serif;
+  font-size: 62.5%;
 }
 
 body {
-  font-size: 1rem;
-  line-height: 2;
+  font-size: 1.8rem;
+  line-height: 1.618;
   max-width: 38em;
   min-height: 100vh;
   margin: auto;
@@ -136,6 +137,7 @@ header {
     width: 100%;
     background: hsl(var(--hue), 50%, 60%);
     padding: 0.5em 1em;
+    /* box-shadow: inset 1px 5px 10px -3px rgba(0, 0, 0, 0.75); */
   }
 
   ul {
@@ -163,7 +165,7 @@ header {
   grid-template-columns: repeat(2, 50fr);
   padding: 0;
   margin: 0;
-  grid-gap: 0.5em;
+  grid-gap: 5px;
 }
 
 .repo {
@@ -294,7 +296,7 @@ header {
 
 @media (max-width: 684px) {
   body {
-    font-size: 92%;
+    font-size: 1.53rem;
   }
 
   header {
