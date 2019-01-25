@@ -218,6 +218,14 @@ header {
       display: block;
       margin: 0;
     }
+
+    svg {
+      transition: 0.3s ease;
+    }
+
+    svg:hover {
+      transform: scale(1.1);
+    }
   }
 
   a:hover {
