@@ -1,3 +1,5 @@
+@import './font-awesome.css';
+
 :root {
   --hue: 210;
   --hue: 210;
@@ -17,13 +19,12 @@ a:visited {
 }
 
 html {
-  font-size: 62.5%;
   font-family: system-ui, serif;
 }
 
 body {
-  font-size: 1.8rem;
-  line-height: 1.618;
+  font-size: 1rem;
+  line-height: 2;
   max-width: 38em;
   min-height: 100vh;
   margin: auto;
@@ -116,6 +117,12 @@ header {
     font-size: xx-large;
     font-weight: bold;
     padding: 0.5em 1em;
+
+    img {
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 0.5em;
+    }
   }
 
   a:link,
@@ -192,6 +199,26 @@ header {
   }
 }
 
+.footer {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+
+    li {
+      display: block;
+      margin: 0;
+    }
+  }
+
+  a:hover {
+    color: hsl(var(--hue), 50%, 60%);
+  }
+}
+
 .blogContainer {
   display: grid;
   padding: 0;
@@ -239,6 +266,17 @@ header {
   .content {
     grid-area: content;
     width: 100%;
+  }
+
+  .toc {
+    float: right;
+    margin-top: 1em;
+
+    ul,
+    ol {
+      padding-left: 1em;
+      margin: 0.5em 1em;
+    }
   }
 }
 
@@ -296,12 +334,3 @@ header {
   }
 }
 
-.blog .toc {
-  float: right;
-  margin-top: 1em;
-
-  ul, ol {
-    padding-left: 1em;
-    margin: 0.5em 1em;
-  }
-}

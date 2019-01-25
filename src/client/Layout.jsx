@@ -2,17 +2,17 @@ import * as React from 'react'
 import Helmet from 'react-helmet-async'
 import { groupBy } from 'ramda'
 import { Redirect, Switch, Route } from 'react-router-dom'
+import { Query } from 'react-apollo'
 
 import Nav from './Nav'
 import Footer from './Footer'
 import Main from './Main'
 import NotFound from './NotFound'
 import Loading from './Loading'
-import { Query } from 'react-apollo'
-import query from './BlogList.gql'
 import BlogPost from './BlogPost'
 import BlogList from './BlogList'
 import GitActivity from './GitActivity'
+import query from './BlogList.gql'
 
 const Layout = () => (
   <div className="layout">

@@ -6,7 +6,8 @@ import { NavLink } from 'react-router-dom'
 const Nav = ({ routes }) => (
   <header>
     <div>
-      DanielFGray.com
+      <img src="https://secure.gravatar.com/avatar/be9906326e4b79af7ab66a157acced4c" />
+      {__appTitle}
     </div>
     <nav className="nav">
       <ul>
