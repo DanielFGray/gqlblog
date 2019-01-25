@@ -228,7 +228,10 @@ header {
     display: grid;
     padding: 5px;
     margin-bottom: 5px;
-    grid-template-areas: "title category" "date tags" "content content";
+    grid-template-areas:
+      "title title category"
+      "date readTime tags"
+      "content content content";
     font-size: smaller;
     max-width: 100%;
   }
@@ -261,6 +264,11 @@ header {
     display: inline;
     text-align: right;
     padding: 0 5px;
+  }
+
+  .readTime {
+    grid-area: readTime;
+    width: 100%;
   }
 
   .content {
