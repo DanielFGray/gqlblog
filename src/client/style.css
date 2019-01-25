@@ -293,6 +293,14 @@ header {
 }
 
 @media (max-width: 684px) {
+  body {
+    font-size: 92%;
+  }
+
+  header {
+    text-align: center;
+  }
+
   .repolist {
     display: block;
   }
