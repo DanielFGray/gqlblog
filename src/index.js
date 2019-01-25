@@ -20,7 +20,6 @@ const app = new Koa()
 
 const apolloServer = new ApolloServer({ schema })
 
-
 const router = new Router()
   .get('/*', SSR({ appBase, schema }))
 
