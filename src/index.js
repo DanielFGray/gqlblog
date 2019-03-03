@@ -5,7 +5,6 @@ import { ApolloServer } from 'apollo-server-koa'
 import { logger, staticFiles } from './koaMiddleware'
 import schema from './schema'
 import SSR from './SSR'
-import koaWebpack from 'koa-webpack'
 
 const {
   appBase,
