@@ -28,9 +28,9 @@ export const toObject = path => source => {
     ...data,
     content,
     file,
-    date: (new Date(data.date)).getTime(),
     readTime,
     words,
+    date: (new Date(data.date)).getTime(),
     url: `/${data.category}/${file}`,
     excerpt: cheerio('p', content).first().text(),
   }

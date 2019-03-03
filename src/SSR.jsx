@@ -11,12 +11,10 @@ import Layout from './client/Layout'
 
 export default ({ appBase, schema }) => {
   const link = new SchemaLink({ schema })
+  const cache = new InMemoryCache()
   return async ctx => {
-    const client = new ApolloClient({
-      ssrMode: true,
-      cache: new InMemoryCache(),
-      link,
-    })
+    const apolloOpts = { ssrMode: true, cache, link }
+    const client = new ApolloClient(apolloOpts)
 
     const routerCtx = {}
     const helmetCtx = {}

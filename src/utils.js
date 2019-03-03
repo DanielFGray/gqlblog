@@ -5,7 +5,8 @@ import {
   lensPath,
 } from 'ramda'
 
-export const on = curry((f, g, a, b) => f(g(a))(g(b)))
+export const getJS = stats => stats
+export const getCSS = stats => stats
 
 export const thread = (a, ...as) => (
   typeof a === 'function'

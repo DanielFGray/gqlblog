@@ -14,17 +14,12 @@ import './style.css'
 import Layout from './Layout'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const initData = window.__INIT_DATA // eslint-disable-line no-underscore-dangle
+  // eslint-disable-next-line no-underscore-dangle
+  const cache = new InMemoryCache().restore(window.__INIT_DATA)
+  const link = new HttpLink({ credentials: 'same-origin', uri: '/graphql' })
+  const apolloClient = new ApolloClient({ cache, link })
 
-  const apolloClient = new ApolloClient({
-    cache: new InMemoryCache().restore(initData),
-    link: new HttpLink({
-      credentials: 'same-origin',
-      uri: '/graphql',
-    }),
-  })
-
-  const Init = (
+  ReactDOM.hydrate((
     <ApolloProvider client={apolloClient}>
       <Router basename={__appBase}>
         <HelmetProvider>
@@ -32,7 +27,5 @@ document.addEventListener('DOMContentLoaded', () => {
         </HelmetProvider>
       </Router>
     </ApolloProvider>
-  )
-
-  ReactDOM.hydrate(Init, document.getElementById(__mount))
+  ), document.getElementById(__mount))
 })

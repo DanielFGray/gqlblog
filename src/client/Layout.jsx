@@ -28,8 +28,8 @@ const Layout = () => (
         }
         if (! (data && data.BlogList)) return <Loading />
         const byCategories = groupBy(x => x.category, data.BlogList)
-        const tagList = Array.from(data.BlogList.reduce((set, post) => {
-          post.tags.forEach(t => set.add(t))
+        const tagList = Array.from(data.BlogList.reduce((set, { tags }) => {
+          tags.forEach(t => set.add(t))
           return set
         }, new Set()))
         const categories = Object.keys(byCategories)
