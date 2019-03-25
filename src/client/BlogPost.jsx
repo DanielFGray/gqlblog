@@ -20,40 +20,39 @@ export const Post = ({
 }) => {
   const dateObj = new Date(date)
   return (
-    <div key={file}>
-      <div className="blog">
-        <h2 className="title">
-          <Link to={url}>{title}</Link>
-        </h2>
-        <div className="category">
-          {'category: '}
-          <Link to={`/${category}`}>{category}</Link>
-        </div>
-        <div className="date">
-          <a title={dateObj.toLocaleDateString()}>
-            {ago(dateObj)}
-          </a>
-        </div>
-        <div className="readTime">
-          <a title={`${words} words`}>
-            {readTime}
-          </a>
-        </div>
-        <ul className="tags">
-          {'tagged: '}
-          {tags.map(e => (
-            <li key={e} className="tag">
-              <Link to={`/tags/${e}`}>{e}</Link>
-            </li>
-          ))}
-        </ul>
-        {excerpt && (<div className="content">{excerpt}</div>)}
-        {content && (
-          <div
-            className="content"
-            dangerouslySetInnerHTML={{ __html: content /* eslint-disable-line react/no-danger */ }}
-          />)}
+    <div className="blog" key={file}>
+      <h2 className="title">
+        <Link to={url}>{title}</Link>
+      </h2>
+      <div className="category">
+        {'category: '}
+        <Link to={`/${category}`}>{category}</Link>
       </div>
+      <div className="date">
+        <a title={dateObj.toLocaleDateString()}>
+          {ago(dateObj)}
+        </a>
+      </div>
+      <div className="readTime">
+        <a title={`${words} words`}>
+          {readTime}
+        </a>
+      </div>
+      <ul className="tags">
+        {'tagged: '}
+        {tags.map(e => (
+          <li key={e} className="tag">
+            <Link to={`/tags/${e}`}>{e}</Link>
+          </li>
+        ))}
+      </ul>
+      {excerpt && (<div className="content">{excerpt}</div>)}
+      {content && (
+        <div
+          className="content"
+          dangerouslySetInnerHTML={{ __html: content /* eslint-disable-line react/no-danger */ }}
+        />
+      )}
     </div>
   )
 }
