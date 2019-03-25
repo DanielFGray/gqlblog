@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Helmet from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import { groupBy } from 'ramda'
 import { Redirect, Switch, Route } from 'react-router-dom'
 import { Query } from 'react-apollo'

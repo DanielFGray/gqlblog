@@ -1,5 +1,5 @@
 import React from 'react'
-import Helmet from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
 import { Query } from 'react-apollo'
