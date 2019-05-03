@@ -9,46 +9,43 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import Html from './Html'
 import Layout from './client/Layout'
 
-export default ({ appBase, schema }) => {
+export default function SSR({ appBase, schema }) => async ctx => {
   const link = new SchemaLink({ schema })
   const cache = new InMemoryCache()
-  return async ctx => {
-    const apolloOpts = { ssrMode: true, cache, link }
-    const client = new ApolloClient(apolloOpts)
+  const client = new ApolloClient({ link, cache, ssrMode: true })
 
-    const routerCtx = {}
-    const helmetCtx = {}
-    const App = (
-      <ApolloProvider client={client}>
-        <StaticRouter
-          basename={appBase}
-          location={ctx.url}
-          context={routerCtx}
-        >
-          <HelmetProvider context={helmetCtx}>
-            <Layout />
-          </HelmetProvider>
-        </StaticRouter>
-      </ApolloProvider>
-    )
-    try {
-      const html = await renderToStringWithData(App)
-      const { helmet } = helmetCtx
-      const data = client.extract()
-      const body = renderToStaticMarkup(Html({ data, helmet, html }))
-      if (routerCtx.status) {
-        ctx.status = routerCtx.status
-      }
-      if (routerCtx.url) {
-        ctx.redirect(routerCtx.url)
-      } else {
-        ctx.body = `<!doctype html>${body}`
-      }
-    } catch (e) {
-      ctx.status = 500
-      ctx.body = 'Error'
-      console.error(e)
-      process.exit(1)
+  const routerCtx = {}
+  const helmetCtx = {}
+  const App = (
+    <ApolloProvider client={client}>
+      <StaticRouter
+        basename={appBase}
+        location={ctx.url}
+        context={routerCtx}
+      >
+        <HelmetProvider context={helmetCtx}>
+          <Layout />
+        </HelmetProvider>
+      </StaticRouter>
+    </ApolloProvider>
+  )
+  try {
+    const html = await renderToStringWithData(App)
+    const { helmet } = helmetCtx
+    const data = client.extract()
+    const body = renderToStaticMarkup(Html({ data, helmet, html }))
+    if (routerCtx.status) {
+      ctx.status = routerCtx.status
     }
+    if (routerCtx.url) {
+      ctx.redirect(routerCtx.url)
+    } else {
+      ctx.body = `<!doctype html>${body}`
+    }
+  } catch (e) {
+    ctx.status = 500
+    ctx.body = 'Error'
+    console.error(e)
+    process.exit(1)
   }
 }
