@@ -1,5 +1,4 @@
 import Koa from 'koa'
-import Router from 'koa-router'
 import koaHelmet from 'koa-helmet'
 import { ApolloServer } from 'apollo-server-koa'
 import { logger, staticFiles } from './koaMiddleware'
@@ -17,18 +16,13 @@ const main = async () => {
   const app = new Koa()
     .use(koaHelmet())
     .use(logger())
+    .use(staticFiles({ root: publicDir }))
 
   const apolloServer = new ApolloServer({ schema })
   apolloServer.applyMiddleware({ app })
 
-  app.use(staticFiles({ root: publicDir }))
-
-  const router = new Router()
-    .get('/*', SSR({ appBase, schema }))
-
   app
-    .use(router.allowedMethods())
-    .use(router.routes())
+    .use(SSR({ appBase, schema }))
     .listen(port, host, () => console.log(`
     server now running on http://${host}:${port}`))
 }
