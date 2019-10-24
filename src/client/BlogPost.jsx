@@ -2,7 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import Loading from './Loading'
 import query from './BlogPost.gql'
 
@@ -57,26 +57,19 @@ export const Post = ({
   )
 }
 
-const BlogPost = ({ file }) => (
-  <div className="blogContainer">
-    <Query query={query} variables={{ file }}>
-      {({ errors, data }) => {
-        if (errors) {
-          console.error(errors)
-          return 'something went wrong :('
-        }
-        if (! (data && data.BlogPost)) return <Loading />
-        return (
-          <>
-            <Helmet>
-              <title>{data.BlogPost.title}</title>
-            </Helmet>
-            {Post(data.BlogPost)}
-          </>
-        )
-      }}
-    </Query>
-  </div>
-)
-
-export default BlogPost
+export default function BlogPost({ file }) {
+  const { errors, data } = useQuery(query, { variables: { file } })
+  if (errors) {
+    console.error(errors)
+    return 'something went wrong :('
+  }
+  if (! (data && data.BlogPost)) return <Loading />
+  return (
+    <div className="blogContainer">
+      <Helmet>
+        <title>{data.BlogPost.title}</title>
+      </Helmet>
+      {Post(data.BlogPost)}
+    </div>
+  )
+}

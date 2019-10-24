@@ -1,7 +1,7 @@
 import React from 'react'
 import ago from 's-ago'
 import Loading from './Loading'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import { urlTokens } from '../utils'
 import query from './GitActivity.gql'
 
@@ -46,25 +46,24 @@ const FeedItem = ({
 )
 
 
-export default () => (
-  <div>
-    <h3>Git repos</h3>
-    <Query query={query}>
-      {({ data, errors, loading }) => {
-        if (errors) {
-          console.error(errors)
-          return 'something went wrong :('
-        }
-        if (loading) return <Loading />
-        if (! (data && data.GitActivity.length)) {
-          return <p>I swear they're around here somewhere..</p>
-        }
-        return (
-          <ul className="repolist">
-            {data.GitActivity.map(x => <FeedItem key={x.url} {...x} />)}
-          </ul>
-        )
-      }}
-    </Query>
-  </div>
-)
+export default function GitActivity() {
+  const { data, errors, loading } = useQuery(query)
+  if (errors) {
+    console.error(errors)
+    return 'something went wrong :('
+  }
+  if (loading) return <Loading />
+  if (! (data && data.GitActivity.length)) {
+    return <p>I swear they&apos;re around here somewhere..</p>
+  }
+  return (
+    <div>
+      <h3>Git repos</h3>
+      <ul className="repolist">
+        {data.GitActivity.map(x => (
+          <FeedItem key={x.url} {...x} />)
+        )}
+      </ul>
+    </div>
+  )
+}

@@ -12,7 +12,7 @@ module.exports = {
     '@babel/preset-react',
   ],
   plugins: [
-    'babel-plugin-graphql-tag',
+    // 'babel-plugin-graphql-tag',
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
     // '@babel/plugin-proposal-throw-expressions',
@@ -23,7 +23,7 @@ module.exports = {
   env: {
     production: {
       plugins: [
-        ['lodash', { id: ['lodash', 'ramda', 'recompose'] }],
+        'ramda',
         // 'transform-react-remove-prop-types'
       ],
     },
