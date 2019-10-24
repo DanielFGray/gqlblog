@@ -7,6 +7,7 @@ module.exports = {
       },
       loose: true,
       useBuiltIns: 'usage',
+      corejs: 3,
     }],
     '@babel/preset-react',
   ],

@@ -27,7 +27,7 @@ const FeedItem = ({
   name,
   updated,
   url,
-  ...data,
+  ...data
 }) => (
   <li className="repo">
     <h3 className="title">
