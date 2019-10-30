@@ -13,7 +13,7 @@ const Linkify = text => urlTokens(text)
           {t.value}
         </a>
       )
-      : t.value
+      : t.type === 'string' ? t.value : (() => { throw new Error('unhandled linkify token') })()
   ))
 
 const prettyData = data => ['stars', 'issues', 'forks']
