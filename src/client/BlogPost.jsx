@@ -11,7 +11,7 @@ export const Post = ({
   title,
   category,
   url,
-  file,
+  id,
   tags,
   readTime,
   words,
@@ -20,7 +20,7 @@ export const Post = ({
 }) => {
   const dateObj = new Date(date)
   return (
-    <div className="blog" key={file}>
+    <div className="blog" key={id}>
       <h2 className="title">
         <Link to={url}>{title}</Link>
       </h2>
@@ -57,8 +57,8 @@ export const Post = ({
   )
 }
 
-export default function BlogPost({ file }) {
-  const { errors, data } = useQuery(query, { variables: { file } })
+export default function BlogPost({ id }) {
+  const { errors, data } = useQuery(query, { variables: { id } })
   if (errors) {
     console.error(errors)
     return 'something went wrong :('

@@ -23,15 +23,15 @@ export const toObject = path => source => {
   const { data, content: orig } = matter(source)
   const content = markdown(orig)
   const { words, text: readTime } = readingTime(orig)
-  const file = fname(path)
+  const id = fname(path)
   return {
+    id,
     ...data,
     content,
-    file,
     readTime,
     words,
     date: (new Date(data.date)).getTime(),
-    url: `/${data.category}/${file}`,
+    url: `/${data.category}/${id}`,
     excerpt: cheerio('p', content).first().text(),
   }
 }

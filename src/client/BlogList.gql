@@ -1,11 +1,11 @@
 query BlogList {
   BlogList {
+    id
     title
-    url
     category
+    url
     date
     tags
-    file
     excerpt
     words
     readTime

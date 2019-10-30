@@ -1,11 +1,11 @@
-query ($file: String!) {
-  BlogPost(file: $file) {
+query BlogPost($id: String!) {
+  BlogPost(id: $id) {
+    id
     title
     category
     url
     date
     tags
-    file
     content
     words
     readTime

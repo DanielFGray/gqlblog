@@ -24,7 +24,7 @@ export default function BlogList({ category, tag }) {
       <h3>Blog posts</h3>
       {tag && <b>{`Tagged: ${tag}`}</b>}
       {category && <b>{`Category: ${category}`}</b>}
-      {list.map(e => <Post key={e.file} {...e} />)}
+      {list.map(e => <Post key={e.id} {...e} />)}
     </div>
   )
 }

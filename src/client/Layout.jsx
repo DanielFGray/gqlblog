@@ -36,10 +36,10 @@ export default function Layout() {
       path: '/projects',
       component: GitActivity,
     },
-    ...data.BlogList.map(({ file, category }) => ({
-      path: `/${category}/${file}`,
+    ...data.BlogList.map(({ id, category }) => ({
+      path: `/${category}/${id}`,
       exact: true,
-      render: props => <BlogPost {...props} file={file} />,
+      render: props => <BlogPost {...props} id={id} />,
     })),
     ...categories.map(c => ({
       path: `/${c}`,
@@ -52,8 +52,8 @@ export default function Layout() {
       exact: true,
       render: props => <BlogList {...props} tag={t} />,
     })),
-    ...data.BlogList.map(({ file, category }) => ({
-      path: `/${file}`,
+    ...data.BlogList.map(({ id, category }) => ({
+      path: `/${id}`,
       exact: true,
       render: () => <Redirect to={`/${category}/${file}`} />,
     })),

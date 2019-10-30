@@ -9,7 +9,7 @@ const blogfeed = blog()
 export const resolvers = {
   Query: {
     BlogList: () => blogfeed.list(),
-    BlogPost: (root, { file }) => blogfeed.get(file),
+    BlogPost: (root, { id }) => blogfeed.get(id),
     GitActivity: () => gitfeed.list(),
   },
 }
@@ -22,7 +22,7 @@ export const typeDefs = gql`
      date: Float
      words: Int
      readTime: String
-     file: String
+     id: String!
      url: String
      content: String
      excerpt: String
@@ -31,7 +31,7 @@ export const typeDefs = gql`
   type Query {
     GitActivity: [GitActivity]!
     BlogList: [Blog]!
-    BlogPost(file: String!): Blog
+    BlogPost(id: String!): Blog
   }
 
   type GitActivity {
