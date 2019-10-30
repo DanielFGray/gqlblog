@@ -1,14 +1,16 @@
 /* eslint react/no-danger: off */
-import * as React from 'react'
+import React from 'react'
 import { endsWith } from 'ramda'
 import { partition } from './utils'
 
 const manifest = __non_webpack_require__('./manifest.json')
 
-const [styles, scripts] = partition([
-  endsWith('.css'),
-  endsWith('.js'),
-], Object.values(manifest))
+const [styles, scripts] = Object.values(manifest)
+  .reduce(([css, js, x], [k, v]) => (
+    k.endsWith('.css') ? [css.concat(v), js, x]
+    : k.endsWith('.js') ? [css, js.concat(v), x]
+    : [css, js, x.concat(v)]
+  ), [[], [], []])
 
 const Html = ({
   data,
