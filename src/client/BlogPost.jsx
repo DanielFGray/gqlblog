@@ -62,7 +62,7 @@ export const Post = ({
   )
 }
 
-export default function BlogPost({ id, cache }) {
+export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
   const { errors, data } = useQuery(query, { variables: { id } })
   if (errors) {
     console.error(errors)

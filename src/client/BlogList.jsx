@@ -19,12 +19,7 @@ export default function BlogList({ category, tag }) {
 
   return (
     <List
-      data={thread(
-        data.BlogList,
-        x => x.sort((a, b) => b.date - a.date),
-        filterIf(category, e => e.category === category),
-        filterIf(tag, e => e.tags.includes(tag)),
-      )}
+      data={data.BlogList}
       tag={tag}
       category={category}
     />
@@ -36,6 +31,10 @@ export const List = ({ tag, category, data }) => (
     <h3>Blog posts</h3>
     {tag && <b>{`Tagged: ${tag}`}</b>}
     {category && <b>{`Category: ${category}`}</b>}
-    {data.map(x => <Post key={x.id} data={x} />)}
+    {thread(
+      data.sort((a, b) => b.date - a.date),
+      filterIf(category, e => e.category === category),
+      filterIf(tag, e => e.tags.includes(tag)),
+    ).map(x => <Post key={x.id} data={x} />)}
   </div>
 )
