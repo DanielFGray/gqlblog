@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
 import { HelmetProvider } from 'react-helmet-async'
 import { renderToStringWithData } from '@apollo/react-ssr'
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { InMemoryCache } from 'apollo-cache-inmemory'
