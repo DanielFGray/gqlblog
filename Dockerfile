@@ -20,7 +20,7 @@ WORKDIR /opt/node_app
 USER node
 COPY . .
 RUN yarn
-RUN yarn prod
+RUN yarn build
 
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV

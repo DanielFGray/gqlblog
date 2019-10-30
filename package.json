@@ -9,7 +9,7 @@
     "run:watch": "nodemon -w dist -x 'node dist'",
     "run:pm2": "pm2 -s delete gqlblog; pm2 -m --watch --env production start ./dist/index.js --name gqlblog",
     "prod:watch": "NODE_ENV=production webpack -p --progress --watch",
-    "prod": "NODE_ENV=production webpack -p",
+    "build": "NODE_ENV=production webpack -p",
     "lint:css": "stylelint './src/**/*.css'",
     "lint:js": "eslint --cache --ext=.js,.jsx --ignore-path=.gitignore .",
     "lint:js-fix": "npm-run-all 'lint:js --fix'",
