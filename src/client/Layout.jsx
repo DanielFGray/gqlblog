@@ -41,7 +41,7 @@ export default function Layout() {
     ...data.BlogList.map(({ id, category }) => ({
       path: `/${category}/${id}`,
       exact: true,
-      render: props => <BlogPost {...props} id={id} />,
+      render: props => <BlogPost {...props} id={id} cache={data.BlogList.find(x => x.id === id)} />,
     })),
     ...categories.map(c => ({
       path: `/${c}`,

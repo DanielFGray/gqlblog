@@ -6,7 +6,7 @@ import {
 
 export const thread = (a, ...as) => (
   typeof a === 'function'
-    ? as.reduce((f, g) => x => f(g(x)), x => x)
+    ? as.reduce((f, g) => x => f(g(x)), a)
     : as.reduce((x, f) => f(x), a)
 )
 
