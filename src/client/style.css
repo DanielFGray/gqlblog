@@ -2,7 +2,6 @@
 
 :root {
   --hue: 210;
-  --hue: 210;
   --primary-color: hsl(var(--hue), 50%, 50%);
   --color-bg: #ccc;
   --color-bg-alt: #eee;
@@ -19,7 +18,7 @@ a:visited {
 }
 
 html {
-  font-family: system-ui, serif;
+  font-family: system-ui;
   font-size: 62.5%;
 }
 
@@ -52,6 +51,8 @@ h6 {
   word-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+  margin: 0.25em 0;
+  padding: 0.25em 0;
 }
 
 h1 { font-size: 2.35em; }
@@ -234,60 +235,36 @@ header {
 }
 
 .blogContainer {
-  display: grid;
   padding: 0;
 
   .blog {
     background: var(--color-bg-alt);
-    display: grid;
     padding: 5px;
     margin-bottom: 5px;
-    grid-template-areas:
-      "title title category"
-      "date readTime tags"
-      "content content content";
     font-size: smaller;
     max-width: 100%;
   }
 
+  .meta {
+    font-size: smaller;
+    margin-bottom: 0.25em;
+  }
+
   .title {
-    grid-area: title;
     font-size: larger;
     font-weight: bold;
   }
 
-  .category {
-    grid-area: category;
-    justify-self: end;
-  }
-
-  .date {
-    grid-area: date;
-  }
-
   .tags {
-    grid-area: tags;
-    justify-self: end;
     list-style: none;
     margin: 0;
     padding: 0;
     display: inline;
-  }
 
-  .tags .tag {
-    display: inline;
-    text-align: right;
-    padding: 0 5px;
-  }
-
-  .readTime {
-    grid-area: readTime;
-    width: 100%;
-  }
-
-  .content {
-    grid-area: content;
-    width: 100%;
+    .tag {
+      display: inline;
+      padding: 0 0.25em;
+    }
   }
 
   .toc {

@@ -19,12 +19,13 @@ const files = {}
 
 const fname = f => f.replace(/^.*[\\/](.*?).md$/, '$1')
 
-export const toObject = path => source => {
+const file2markdown = async path => {
+  const source = await fs.readFile(path)
   const { data, content: orig } = matter(source)
   const content = markdown(orig)
   const { words, text: readTime } = readingTime(orig)
   const id = fname(path)
-  return {
+  files[id] = {
     id,
     ...data,
     content,
@@ -35,23 +36,18 @@ export const toObject = path => source => {
     excerpt: cheerio('p', content).first().text(),
   }
 }
-
-const file2markdown = async path => {
-  const { file, ...data } = await fs.readFile(path)
-    .then(toObject(path))
-  files[file] = { file, ...data }
-}
-
-const main = () => {
+export default function main() {
   chokidar.watch('./content/**/*.md')
     .on('add', file2markdown)
     .on('change', file2markdown)
     .on('unlink', f => delete files[fname(f)])
 
   return {
-    get: f => files[f],
-    list: _ => Object.values(files),
+    list() {
+      return Object.values(files)
+    },
+    get(f) {
+      return files[f]
+    },
   }
 }
-
-export default main

@@ -54,7 +54,7 @@ const babelLoader = [
         options: {
           // output: 'string',
           // minify: true,
-          output: 'document',
+          output: 'document', // FIXME
         },
       },
     ],

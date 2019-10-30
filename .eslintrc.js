@@ -22,5 +22,8 @@ module.exports = {
     'no-unused-vars': ['error', { argsIgnorePattern: '^_$' }],
     'react/destructuring-assignment': 'off',
     'react/prop-types': 'off',
+    'react/jsx-props-no-spreading': ['warn', {
+      explicitSpread: 'enforce'
+    }],
   },
 }

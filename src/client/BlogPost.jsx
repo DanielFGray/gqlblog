@@ -24,29 +24,28 @@ export const Post = ({
       <h2 className="title">
         <Link to={url}>{title}</Link>
       </h2>
-      <div className="category">
+      <div className="meta">
         {'category: '}
         <Link to={`/${category}`}>{category}</Link>
-      </div>
-      <div className="date">
+        {' - '}
         <a title={dateObj.toLocaleDateString()}>
           {ago(dateObj)}
         </a>
-      </div>
-      <div className="readTime">
+        {' - '}
         <a title={`${words} words`}>
           {readTime}
         </a>
+        {' - '}
+        <ul className="tags">
+          {'tagged: '}
+          {tags.map(e => (
+            <li key={e} className="tag">
+              <Link to={`/tags/${e}`}>{e}</Link>
+            </li>
+          ))}
+        </ul>
       </div>
-      <ul className="tags">
-        {'tagged: '}
-        {tags.map(e => (
-          <li key={e} className="tag">
-            <Link to={`/tags/${e}`}>{e}</Link>
-          </li>
-        ))}
-      </ul>
-      {excerpt && (<div className="content">{excerpt}</div>)}
+      {excerpt && (<div className="content"><p>{excerpt}</p></div>)}
       {content && (
         <div
           className="content"

@@ -13,7 +13,7 @@ module.exports = {
   ],
   plugins: [
     // 'babel-plugin-graphql-tag',
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
+    // ['@babel/plugin-proposal-class-properties', { loose: true }],
     // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
     // '@babel/plugin-proposal-throw-expressions',
     // '@babel/plugin-syntax-dynamic-import',

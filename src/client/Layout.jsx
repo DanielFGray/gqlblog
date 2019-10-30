@@ -1,8 +1,9 @@
-import * as React from 'react'
+import React, { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Redirect, Switch, Route } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 
+import { uniq } from '../utils'
 import Nav from './Nav'
 import Footer from './Footer'
 import Main from './Main'
@@ -19,12 +20,13 @@ export default function Layout() {
     console.error(errors)
     return 'something went wrong :('
   }
+
   if (! (data && data.BlogList)) return <Loading />
-  const categories = Array.from(
-    data.BlogList.reduce((set, post) => set.add(post.category), new Set()),
-  )
-  const tagList = Array.from(data.BlogList.flatMap(x => x.tags))
-  const routes = [
+
+  const categories = uniq(data.BlogList.map(x => x.category))
+  const tagList = uniq(data.BlogList.flatMap(x => x.tags))
+
+  const routes = useMemo(() => [ // FIXME: this should probably be lifted and computed sooner?
     {
       label: 'Home',
       path: '/',
@@ -60,7 +62,8 @@ export default function Layout() {
     {
       component: NotFound,
     },
-  ]
+  ], [data])
+
   return (
     <div className="layout">
       <Helmet

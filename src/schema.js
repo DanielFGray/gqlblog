@@ -16,8 +16,8 @@ export const resolvers = {
 
 export const typeDefs = gql`
   type Blog {
-     title: String
-     category: String
+     title: String!
+     category: String!
      tags: [String]
      date: Float
      words: Int

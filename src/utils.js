@@ -1,18 +1,18 @@
 import {
-  pipe,
   curry,
   over,
   lensPath,
 } from 'ramda'
 
-export const getJS = stats => stats
-export const getCSS = stats => stats
-
 export const thread = (a, ...as) => (
   typeof a === 'function'
-    ? pipe(a, ...as)
-    : as.reduce((p, f) => f(p), a)
+    ? as.reduce((f, g) => x => f(g(x)), x => x)
+    : as.reduce((x, f) => f(x), a)
 )
+
+export const filterIf = curry((truthy, fn, list) => (truthy ? list.filter(fn) : list))
+
+export const uniq = x => Array.from(new Set(x))
 
 export const overPath = curry((lens, fn, x) => over(lensPath(lens), fn, x))
 
@@ -61,14 +61,3 @@ export const urlTokens = str => {
   })
   return tokens
 }
-
-export const Linkify = text => urlTokens(text)
-  .map(t => (
-    t.type === 'url'
-      ? (
-        <a href={t.value} target="_blank" rel="noopener noreferrer">
-          {t.value}
-        </a>
-      )
-      : t.value
-  ))
