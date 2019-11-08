@@ -162,11 +162,14 @@ header {
 }
 
 .repolist {
-  display: grid;
-  grid-template-columns: repeat(2, 50fr);
   padding: 0;
-  margin: 0;
-  grid-gap: 5px;
+  margin: 0 0.5em;
+  column-count: 2;
+  column-gap: 0.5em;
+}
+
+.repoitem {
+  display: inline-block;
 }
 
 .repo {
@@ -174,6 +177,8 @@ header {
   color: var(--text-color);
   padding: 5px;
   font-size: smaller;
+  min-width: 22em;
+  margin: 0.25em 0;
   display: grid;
   grid-template-areas: "title language" "description description" "updated extra";
 
@@ -200,7 +205,7 @@ header {
 
   .updated {
     grid-area: updated;
-    /* justify-self: end; */
+    justify-self: start;
   }
 }
 
@@ -289,6 +294,10 @@ header {
   }
 
   .repolist {
+    column-count: 1;
+  }
+
+  .repoitem {
     display: block;
   }
 
