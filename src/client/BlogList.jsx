@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { sortWith, descend } from 'ramda'
 import { useQuery } from '@apollo/react-hooks'
 import { thread, filterIf } from '../utils'
 import Loading from './Loading'
@@ -18,19 +17,24 @@ export default function BlogList({ category, tag }) {
     return <Loading />
   }
 
-  const sortPosts = thread(
-    sortWith([descend(x => x.date)]),
-    filterIf(category, e => e.category === category),
-    filterIf(tag, e => e.tags.includes(tag)),
-  )
-
   return (
-    <div className="blogContainer">
-      <h3>Blog posts</h3>
-      {tag && <b>{`Tagged: ${tag}`}</b>}
-      {category && <b>{`Category: ${category}`}</b>}
-      {sortPosts(data.BlogList)
-        .map(e => <Post key={e.id} {...e} />)}
-    </div>
+    <List
+      data={data.BlogList}
+      tag={tag}
+      category={category}
+    />
   )
 }
+
+export const List = ({ tag, category, data }) => (
+  <div className="blogContainer">
+    <h3>Blog posts</h3>
+    {tag && <b>{`Tagged: ${tag}`}</b>}
+    {category && <b>{`Category: ${category}`}</b>}
+    {thread(
+      data.sort((a, b) => b.date - a.date),
+      filterIf(category, e => e.category === category),
+      filterIf(tag, e => e.tags.includes(tag)),
+    ).map(x => <Post key={x.id} data={x} />)}
+  </div>
+)

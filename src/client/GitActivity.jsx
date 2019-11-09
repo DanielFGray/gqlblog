@@ -13,7 +13,7 @@ const Linkify = text => urlTokens(text)
           {t.value}
         </a>
       )
-      : t.value
+      : t.type === 'string' ? t.value : (() => { throw new Error('unhandled linkify token') })()
   ))
 
 const prettyData = data => ['stars', 'issues', 'forks']
@@ -29,19 +29,21 @@ const FeedItem = ({
   url,
   ...data
 }) => (
-  <li className="repo">
-    <h3 className="title">
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        {name}
-      </a>
-    </h3>
-    <div className="language">{data.language}</div>
-    <div className="description">{Linkify(description)}</div>
-    <div className="updated">
-      {'updated '}
-      {ago(new Date(updated))}
+  <li className="repoitem">
+    <div className="repo">
+      <h3 className="title">
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {name}
+        </a>
+      </h3>
+      <div className="language">{data.language}</div>
+      <div className="description">{Linkify(description)}</div>
+      <div className="updated">
+        {'updated '}
+  {ago(new Date(updated))}
+</div>
+<div className="extra">{prettyData(data)}</div>
     </div>
-    <div className="extra">{prettyData(data)}</div>
   </li>
 )
 

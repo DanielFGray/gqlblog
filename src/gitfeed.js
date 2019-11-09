@@ -45,6 +45,7 @@ const github = request({
   url: 'https://api.github.com/',
   headers: {
     Authorization: `token ${secrets.github.key}`,
+    'User-Agent': 'danielfgray/gqlblog',
   },
 })
 

@@ -7,23 +7,25 @@ import Loading from './Loading'
 import query from './BlogPost.gql'
 
 export const Post = ({
-  date,
-  title,
-  category,
-  url,
-  id,
-  tags,
-  readTime,
-  words,
-  excerpt = '',
-  content = '',
+  data: {
+    date,
+    title,
+    category,
+    url,
+    id,
+    tags,
+    readTime,
+    words,
+    excerpt = '',
+    content = '',
+  },
 }) => {
   const dateObj = new Date(date)
   return (
     <div className="blog" key={id}>
-      <h2 className="title">
+      <h1 className="title">
         <Link to={url}>{title}</Link>
-      </h2>
+      </h1>
       <div className="meta">
         {'category: '}
         <Link to={`/${category}`}>{category}</Link>
@@ -45,7 +47,11 @@ export const Post = ({
           ))}
         </ul>
       </div>
-      {excerpt && (<div className="content"><p>{excerpt}</p></div>)}
+      {excerpt && (
+        <div className="content">
+          <p>{excerpt}</p>
+        </div>
+      )}
       {content && (
         <div
           className="content"
@@ -56,19 +62,18 @@ export const Post = ({
   )
 }
 
-export default function BlogPost({ id }) {
+export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
   const { errors, data } = useQuery(query, { variables: { id } })
   if (errors) {
     console.error(errors)
     return 'something went wrong :('
   }
-  if (! (data && data.BlogPost)) return <Loading />
   return (
     <div className="blogContainer">
       <Helmet>
-        <title>{data.BlogPost.title}</title>
+        <title>{cache.title}</title>
       </Helmet>
-      {Post(data.BlogPost)}
+      <Post data={(data && data.BlogPost) || cache} />
     </div>
   )
 }
