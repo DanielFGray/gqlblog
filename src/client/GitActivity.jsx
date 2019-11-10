@@ -16,12 +16,19 @@ const Linkify = text => urlTokens(text)
       : t.type === 'string' ? t.value : (() => { throw new Error('unhandled linkify token') })()
   ))
 
-const prettyData = data => ['stars', 'issues', 'forks']
-  .map(name => ({ name, count: data[name] }))
-  .filter(x => x.count > 0)
-  .map(({ count, name }) => `${count} ${count === 1 ? name.replace(/s$/, '') : name}`)
-  .join(', ')
+const prettyData = data => (
+  <ul>
+    {['stars', 'issues', 'forks']
+      .map(name => ({ name, count: data[name] }))
+      .filter(x => x.count > 0)
+      .map(({ count, name }) => (
+        <li key={name}>
+          {`${count} ${count === 1 ? name.replace(/s$/, '') : name}`}
+        </li>
+      ))}
+  </ul>
 
+)
 const FeedItem = ({
   description = '',
   name,
@@ -31,18 +38,17 @@ const FeedItem = ({
 }) => (
   <li className="repoitem">
     <div className="repo">
-      <h3 className="title">
+      <h1 className="title">
         <a href={url} target="_blank" rel="noopener noreferrer">
           {name}
         </a>
-      </h3>
+      </h1>
       <div className="language">{data.language}</div>
       <div className="description">{Linkify(description)}</div>
       <div className="updated">
-        {'updated '}
-  {ago(new Date(updated))}
-</div>
-<div className="extra">{prettyData(data)}</div>
+        {`updated ${ago(new Date(updated))}`}
+      </div>
+      <div className="extra">{prettyData(data)}</div>
     </div>
   </li>
 )
@@ -59,8 +65,8 @@ export default function GitActivity() {
     return <p>I swear they&apos;re around here somewhere..</p>
   }
   return (
-    <div>
-      <h3>Git repos</h3>
+    <div className="projects">
+      <h1>Git repos</h1>
       <ul className="repolist">
         {data.GitActivity.map(x => (
           <FeedItem key={x.url} {...x} />)

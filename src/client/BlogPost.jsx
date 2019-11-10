@@ -27,17 +27,20 @@ export const Post = ({
         <Link to={url}>{title}</Link>
       </h1>
       <div className="meta">
-        {'category: '}
-        <Link to={`/${category}`}>{category}</Link>
-        {' - '}
-        <a title={dateObj.toLocaleDateString()}>
-          {ago(dateObj)}
-        </a>
-        {' - '}
-        <a title={`${words} words`}>
-          {readTime}
-        </a>
-        {' - '}
+        <div>
+          {'category: '}
+          <Link to={`/${category}`}>{category}</Link>
+        </div>
+        <div>
+          <a title={dateObj.toLocaleDateString()}>
+            {ago(dateObj)}
+          </a>
+        </div>
+        <div>
+          <a title={`${words} words`}>
+            {readTime}
+          </a>
+        </div>
         <ul className="tags">
           {'tagged: '}
           {tags.map(e => (
@@ -63,7 +66,7 @@ export const Post = ({
 }
 
 export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
-  const { errors, data } = useQuery(query, { variables: { id } })
+  const { errors, data, loading } = useQuery(query, { variables: { id } })
   if (errors) {
     console.error(errors)
     return 'something went wrong :('
@@ -74,6 +77,7 @@ export default function BlogPost({ id, cache }) { // FIXME: why am i manually pa
         <title>{cache.title}</title>
       </Helmet>
       <Post data={(data && data.BlogPost) || cache} />
+      {loading && <Loading />}
     </div>
   )
 }

@@ -33,11 +33,6 @@ export default function Layout() {
       exact: true,
       component: Main,
     },
-    {
-      label: 'Projects',
-      path: '/projects',
-      component: GitActivity,
-    },
     ...data.BlogList.map(({ id, category }) => ({
       path: `/${category}/${id}`,
       exact: true,
@@ -59,6 +54,11 @@ export default function Layout() {
       exact: true,
       render: () => <Redirect to={`/${category}/${file}`} />,
     })),
+    {
+      label: 'Projects',
+      path: '/projects',
+      component: GitActivity,
+    },
     {
       component: NotFound,
     },

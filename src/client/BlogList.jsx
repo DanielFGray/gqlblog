@@ -28,7 +28,7 @@ export default function BlogList({ category, tag }) {
 
 export const List = ({ tag, category, data }) => (
   <div className="blogContainer">
-    <h3>Blog posts</h3>
+    <h1>Blog posts</h1>
     {tag && <b>{`Tagged: ${tag}`}</b>}
     {category && <b>{`Category: ${category}`}</b>}
     {thread(
