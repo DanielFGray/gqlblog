@@ -171,8 +171,9 @@ header {
       }
     }
 
-    a.active {
+    .active {
       text-decoration: none;
+      background: var(--primary-color);
       font-weight: bold;
     }
   }

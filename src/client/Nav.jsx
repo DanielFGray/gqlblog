@@ -14,7 +14,7 @@ export default function Nav({ routes }) {
           {routes
             .filter(({ label }) => label)
             .map(({ label, path }) => (
-              <NavLink to={path} exact key={`${label}_${path}`}>
+              <NavLink to={path} exact={path === '/'} key={`${label}_${path}`}>
                 <li>
                   {label[0].toUpperCase().concat(label.slice(1).toLowerCase())}
                 </li>

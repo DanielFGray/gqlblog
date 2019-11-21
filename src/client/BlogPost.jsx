@@ -27,16 +27,16 @@ export const Post = ({
         <Link to={url}>{title}</Link>
       </h1>
       <div className="meta">
-        <div>
-          category:
+        <div className="category">
+          {`category: `}
           <Link to={`/${category}`}>{category}</Link>
         </div>
-        <div>
+        <div className="date">
           <a title={dateObj.toLocaleDateString()}>
             {ago(dateObj)}
           </a>
         </div>
-        <div>
+        <div className="readTime">
           <a title={`${words} words`}>
             {readTime}
           </a>
