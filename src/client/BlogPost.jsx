@@ -28,7 +28,7 @@ export const Post = ({
       </h1>
       <div className="meta">
         <div>
-          {'category: '}
+          category:
           <Link to={`/${category}`}>{category}</Link>
         </div>
         <div>
@@ -42,7 +42,7 @@ export const Post = ({
           </a>
         </div>
         <ul className="tags">
-          {'tagged: '}
+          tagged:
           {tags.map(e => (
             <li key={e} className="tag">
               <Link to={`/tags/${e}`}>{e}</Link>

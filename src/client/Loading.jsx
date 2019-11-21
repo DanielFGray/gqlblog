@@ -1,12 +1,12 @@
 import React from 'react'
 
-const Spinner = () => (
-  <div className="spinner">
-    <div>
-      <span>{'{'}</span>
-      <span>{'}'}</span>
+export default function Spinner() {
+  return (
+    <div className="spinner">
+      <div>
+        <span>{'{'}</span>
+        <span>{'}'}</span>
+      </div>
     </div>
-  </div>
-)
-
-export default Spinner
+  )
+}

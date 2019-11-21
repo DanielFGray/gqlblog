@@ -69,8 +69,7 @@ export default function GitActivity() {
       <h1>Git repos</h1>
       <ul className="repolist">
         {data.GitActivity.map(x => (
-          <FeedItem key={x.url} {...x} />)
-        )}
+          <FeedItem key={x.url} {...x} />))}
       </ul>
     </div>
   )

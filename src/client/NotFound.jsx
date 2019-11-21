@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet-async'
 
-const NotFound = props => {
+export default function NotFound(props) {
   if (props.staticContext) {
     // eslint-disable-next-line no-param-reassign
     props.staticContext.status = 404
@@ -15,5 +15,3 @@ const NotFound = props => {
     </p>
   )
 }
-
-export default NotFound

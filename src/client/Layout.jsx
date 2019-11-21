@@ -73,7 +73,13 @@ export default function Layout() {
       <Nav {...{ routes }} />
       <div className="main">
         <Switch>
-          {routes.map(({ path, label: _, component: C, render, ...rest }) => (
+          {routes.map(({
+            path,
+            render,
+            label: _,
+            component: C,
+            ...rest
+          }) => (
             <Route
               key={path || 'notfound'}
               path={path}

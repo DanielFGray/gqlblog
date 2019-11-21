@@ -12,6 +12,12 @@ import 'prismjs/themes/prism-okaidia.css'
 import './style.css'
 
 import Layout from './Layout'
+import ErrorBoundary from './Error'
+import Stringify from './Stringify'
+
+function handleError({ error, info }) {
+  console.log({ error, info })
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const apolloClient = new ApolloClient({
@@ -21,12 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   ReactDOM.hydrate((
-    <ApolloProvider client={apolloClient}>
-      <Router basename={__appBase}>
-        <HelmetProvider>
-          <Layout />
-        </HelmetProvider>
-      </Router>
-    </ApolloProvider>
+    <ErrorBoundary fallback={Stringify} didCatch={handleError}>
+      <ApolloProvider client={apolloClient}>
+        <Router basename={__appBase}>
+          <HelmetProvider>
+            <Layout />
+          </HelmetProvider>
+        </Router>
+      </ApolloProvider>
+    </ErrorBoundary>
   ), document.getElementById(__mount))
 })
