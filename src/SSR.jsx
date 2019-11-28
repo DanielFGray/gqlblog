@@ -10,15 +10,32 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import Html from './Html'
 import Layout from './client/Layout'
 
+const getAssets = ctx => {
+  const list = Object.values(
+    process.env.NODE_ENV === 'production' ?
+    ctx.state.manifest
+    : ctx.state.webpackStats.toJson().assetsByChunkName.main
+  )
+  return list.reduce((p, x) => {
+    if (/\.css$/.test(x)) {
+      p[0].push(x)
+    } else if (/\.js$/.test(x)) {
+      p[1].push(x)
+    }
+    return p
+  }, [[], []])
+}
+
 export default function SSR({ appBase, schema }) {
+  const link = new SchemaLink({ schema })
   return async ctx => {
-    const link = new SchemaLink({ schema })
+    const [styles, scripts] = getAssets(ctx)
     const cache = new InMemoryCache()
     const client = new ApolloClient({ link, cache, ssrMode: true })
 
     const routerCtx = {}
     const helmetCtx = {}
-    const App = (
+    const init = (
       <ApolloProvider client={client}>
         <StaticRouter
           basename={appBase}
@@ -31,24 +48,17 @@ export default function SSR({ appBase, schema }) {
         </StaticRouter>
       </ApolloProvider>
     )
-    try {
-      const html = await renderToStringWithData(App)
-      const { helmet } = helmetCtx
-      const data = client.extract()
-      const body = renderToStaticMarkup(Html({ data, helmet, html }))
-      if (routerCtx.status) {
-        ctx.status = routerCtx.status
-      }
-      if (routerCtx.url) {
-        ctx.redirect(routerCtx.url)
-      } else {
-        ctx.body = `<!doctype html>${body}`
-      }
-    } catch (e) {
-      ctx.status = 500
-      ctx.body = 'Error'
-      console.error(e)
-      process.exit(1)
+    const html = await renderToStringWithData(init)
+    const { helmet } = helmetCtx
+    const data = { __INIT_DATA: client.extract() }
+    const body = renderToStaticMarkup(Html({ data, helmet, html, scripts, styles, appBase }))
+    if (routerCtx.status) {
+      ctx.status = routerCtx.status
+    }
+    if (routerCtx.url) {
+      ctx.redirect(routerCtx.url)
+    } else {
+      ctx.body = `<!doctype html>${body}`
     }
   }
 }

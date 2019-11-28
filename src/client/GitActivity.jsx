@@ -3,17 +3,30 @@ import ago from 's-ago'
 import { useQuery } from '@apollo/react-hooks'
 import Loading from './Loading'
 import { urlTokens } from '../utils'
-import query from './GitActivity.gql'
+import gql from 'graphql-tag'
+
+const GitActivityQuery = gql`query GitActivity {
+  GitActivity {
+    url
+    name
+    description
+    updated
+    stars
+    issues
+    forks
+    language
+  }
+}`
 
 const Linkify = text => urlTokens(text)
   .map((t, i) => (
     t.type === 'url'
-      ? (
-        <a href={t.value} target="_blank" rel="noopener noreferrer" key={i}>
-          {t.value}
-        </a>
-      )
-      : t.type === 'string' ? t.value : (() => { throw new Error('unhandled linkify token') })()
+    ? (
+      <a href={t.value} target="_blank" rel="noopener noreferrer" key={i}>
+        {t.value}
+      </a>
+    )
+    : t.type === 'string' ? t.value : (() => { throw new Error('unhandled linkify token') })()
   ))
 
 const prettyData = data => (
@@ -55,7 +68,7 @@ const FeedItem = ({
 
 
 export default function GitActivity() {
-  const { data, errors, loading } = useQuery(query)
+  const { data, errors, loading } = useQuery(GitActivityQuery)
   if (errors) {
     console.error(errors)
     return 'something went wrong :('

@@ -2,12 +2,6 @@ import {
   curry,
 } from 'ramda'
 
-export const thread = (a, ...as) => (
-  typeof a === 'function'
-    ? as.reduce((f, g) => x => f(g(x)), a)
-    : as.reduce((x, f) => f(x), a)
-)
-
 export const filterIf = curry((truthy, fn, list) => (
   truthy
     ? list.filter(fn)

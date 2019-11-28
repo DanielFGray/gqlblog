@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { NavLink } from 'react-router-dom'
 
-// https://reacttraining.com/react-router/web/api/NavLink
+const { APP_TITLE } = process.env
 
 export default function Nav({ routes }) {
   return (
     <header>
       <div>
-        {__appTitle}
+        {APP_TITLE}
       </div>
       <nav className="nav">
         <ul>

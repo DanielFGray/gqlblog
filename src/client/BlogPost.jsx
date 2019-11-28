@@ -3,8 +3,23 @@ import { Helmet } from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import Loading from './Loading'
-import query from './BlogPost.gql'
+
+export const BlogPostQuery = gql`
+query BlogPost($id: String!) {
+  BlogPost(id: $id) {
+    id
+    title
+    category
+    url
+    date
+    tags
+    content
+    words
+    readTime
+  }
+}`
 
 export const Post = ({
   data: {
@@ -16,8 +31,8 @@ export const Post = ({
     tags,
     readTime,
     words,
-    excerpt = '',
-    content = '',
+    excerpt,
+    content,
   },
 }) => {
   const dateObj = new Date(date)
@@ -66,7 +81,7 @@ export const Post = ({
 }
 
 export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
-  const { errors, data, loading } = useQuery(query, { variables: { id } })
+  const { errors, data, loading } = useQuery(BlogPostQuery, { variables: { id } })
   if (errors) {
     console.error(errors)
     return 'something went wrong :('

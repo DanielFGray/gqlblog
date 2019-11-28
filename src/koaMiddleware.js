@@ -9,9 +9,7 @@ export const logger = () => async (ctx, next) => {
 
 export const staticFiles = opts => async (ctx, next) => {
   try {
-    if (ctx.path !== '/') {
-      return await send(ctx, ctx.path, opts)
-    }
+    return await send(ctx, ctx.path, opts)
   } catch (e) {
     /* fallthrough */
   }
