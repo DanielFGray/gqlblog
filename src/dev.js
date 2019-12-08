@@ -1,34 +1,41 @@
-/* eslint-disable global-require,import/no-extraneous-dependencies */
-export async function addDevMiddleware(app) {
-  const webpack = require('webpack')
-  const koaWebpack = require('koa-webpack')
-  const config = require('../webpack.config')
-  const WebpackBar = require('webpackbar')
+/* eslint-disable import/no-extraneous-dependencies, global-require */
+import webpack from 'webpack'
+import koaWebpack from 'koa-webpack'
+import WebpackBar from 'webpackbar'
+import config from '../webpack.config'
+import hotServer from './hotServerMiddleware'
 
-  const compiler = webpack(config)
-  const clientCompiler = compiler.compilers.find(c => c.name === 'client')
+export async function devMiddleware() {
+  const multiCompiler = webpack(config)
+  const clientCompiler = multiCompiler.compilers.find(c => c.name === 'client')
 
-  const bar = new WebpackBar({
-    profile: true,
-    fancy: true,
+  multiCompiler.compilers.forEach(c => {
+    new WebpackBar({
+      profile: true,
+      name: c.name,
+    }).apply(c)
+
+    c.hooks.done.tap('built', () => {
+      console.log('finished building')
+    })
   })
 
-  bar.apply(clientCompiler)
-
-  app.use(await koaWebpack({
-    compiler: clientCompiler,
-    devMiddleware: {
-      serverSideRender: true,
-      stats: {
-        chunks: true,
-        chunkModules: false,
-        colors: true,
-        modules: false,
-        children: false,
+  return {
+    hotServer: hotServer(multiCompiler),
+    hotClient: await koaWebpack({
+      compiler: clientCompiler,
+      devMiddleware: {
+        serverSideRender: true,
+        logLevel: 'trace',
+        // stats: false,
+        stats: {
+          chunks: true,
+          chunkModules: false,
+          colors: true,
+          modules: false,
+          children: false,
+        },
       },
-    },
-  }))
-
-  // app.use(require('./hotServerMiddleware').default(compiler))
-  return compiler
+    }),
+  }
 }

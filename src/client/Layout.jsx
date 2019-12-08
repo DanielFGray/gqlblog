@@ -34,11 +34,15 @@ export default function Layout() {
       exact: true,
       component: Main,
     },
-    ...data.BlogList.map(({ id, category }) => ({
+    ...data.BlogList.flatMap(({ id, category }) => [{
       path: `/${category}/${id}`,
       exact: true,
       render: props => <BlogPost {...props} id={id} cache={data.BlogList.find(x => x.id === id)} />,
-    })),
+    }, {
+      path: `/${id}`,
+      exact: true,
+        render: () => <Redirect to={`/${category}/${id}`} />,
+    }]),
     ...categories.map(c => ({
       path: `/${c}`,
       label: c,
@@ -49,11 +53,6 @@ export default function Layout() {
       path: `/tags/${t}`,
       exact: true,
       render: props => <BlogList {...props} tag={t} />,
-    })),
-    ...data.BlogList.map(({ id, category }) => ({
-      path: `/${id}`,
-      exact: true,
-      render: () => <Redirect to={`/${category}/${file}`} />,
     })),
     {
       label: 'Projects',

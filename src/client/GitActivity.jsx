@@ -74,7 +74,7 @@ export default function GitActivity() {
     return 'something went wrong :('
   }
   if (loading) return <Loading />
-  if (! (data && data.GitActivity.length)) {
+  if (! (data?.GitActivity.length)) {
     return <p>I swear they&apos;re around here somewhere..</p>
   }
   return (

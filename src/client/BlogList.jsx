@@ -46,14 +46,11 @@ export const List = ({ tag, category, data }) => (
     <h1>Blog posts</h1>
     {tag && <b>{`Tagged: ${tag}`}</b>}
     {category && <b>{`Category: ${category}`}</b>}
-    {data.reduce((p, c) => {
-      if ((category && c.category !== category) || (tag && c.tags.includes(tag))) {
-        return p
-      }
-      p.push(c)
-      return p
-    }, [])
-      .sort((a, b) => b.date - a.date)
-      .map(y => <Post key={y.id} data={y} />) }
+    {thread([
+      filterIf(category, e => e.category === category),
+      filterIf(tag, e => e.tags.includes(tag)),
+      x => x.slice(0).sort((a, b) => b.date - a.date),
+      x => x.map(y => <Post key={y.id} data={y} />),
+    ], data)}
   </div>
 )

@@ -91,7 +91,7 @@ export default function BlogPost({ id, cache }) { // FIXME: why am i manually pa
       <Helmet>
         <title>{cache.title}</title>
       </Helmet>
-      <Post data={(data && data.BlogPost) || cache} />
+      <Post data={data?.BlogPost ?? cache} />
       {loading && <Loading />}
     </div>
   )

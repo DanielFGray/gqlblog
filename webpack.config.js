@@ -2,12 +2,7 @@
 
 require('dotenv').config()
 const path = require('path')
-const {
-  HotModuleReplacementPlugin,
-  DefinePlugin,
-  NoEmitOnErrorsPlugin,
-  optimize: { OccurrenceOrderPlugin },
-} = require('webpack')
+const { DefinePlugin } = require('webpack')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -83,7 +78,7 @@ const clientConfig = {
   name: 'client',
   mode: NODE_ENV,
   devtool,
-  entry: ['react-hot-loader/patch', './src/client/index'],
+  entry: ['./src/client/index'],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
@@ -103,14 +98,6 @@ const clientConfig = {
     new MiniCssExtractPlugin({
       filename: devMode ? '[name].css' : '[name]-[hash].css',
       chunkFilename: devMode ? '[name].css' : '[id]-[chunkhash].css',
-    }),
-    new DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(NODE_ENV),
-        APP_BASE: JSON.stringify(APP_BASE),
-        APP_TITLE: JSON.stringify(APP_TITLE),
-        MOUNT: JSON.stringify(MOUNT),
-      },
     }),
     new DefinePlugin({
       'process.env': {
@@ -157,10 +144,6 @@ const serverConfig = {
   },
   stats,
   plugins: [
-    new OccurrenceOrderPlugin(),
-    new HotModuleReplacementPlugin(),
-    // Use NoErrorsPlugin for webpack 1.x
-    new NoEmitOnErrorsPlugin(),
   ],
 }
 

@@ -25,25 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const cache = new InMemoryCache()
   try {
     // eslint-disable-next-line no-underscore-dangle
-    const initData = JSON.parse(window.__INIT_DATA)
+    const initData = window.__INIT_DATA
     if (initData) {
       cache.restore(initData)
     }
-  } catch (e) { /* fallthrough */ }
+  } catch (e) { console.error('failed to update cache', e) }
   const apolloClient = new ApolloClient({
     link: new HttpLink({ credentials: 'same-origin', uri: '/graphql' }),
     cache,
   })
   const init = (
-    <ErrorBoundary fallback={Stringify} didCatch={handleError}>
-      <ApolloProvider client={apolloClient}>
-        <Router basename={APP_BASE}>
-          <HelmetProvider>
-            <Layout />
-          </HelmetProvider>
-        </Router>
-      </ApolloProvider>
-    </ErrorBoundary>
+    <ApolloProvider client={apolloClient}>
+      <Router basename={APP_BASE}>
+        <HelmetProvider>
+          <Layout />
+        </HelmetProvider>
+      </Router>
+    </ApolloProvider>
   )
   const root = document.getElementById(MOUNT)
   ReactDOM.hydrate(init, root)
