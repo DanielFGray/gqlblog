@@ -10,12 +10,13 @@ import Main from './Main'
 import NotFound from './NotFound'
 import Loading from './Loading'
 import BlogPost from './BlogPost'
-import BlogList from './BlogList'
+import BlogList, { BlogListQuery } from './BlogList'
 import GitActivity from './GitActivity'
-import query from './BlogList.gql'
+
+const { APP_TITLE } = process.env
 
 export default function Layout() {
-  const { errors, data } = useQuery(query)
+  const { errors, data } = useQuery(BlogListQuery)
   if (errors) {
     console.error(errors)
     return 'something went wrong :('
@@ -26,18 +27,22 @@ export default function Layout() {
   const categories = uniq(data.BlogList.map(x => x.category))
   const tagList = uniq(data.BlogList.flatMap(x => x.tags))
 
-  const routes = useMemo(() => [ // FIXME: this should probably be lifted and computed sooner?
+  const routes = [ // FIXME: this should probably be lifted and computed sooner?
     {
       label: 'Home',
       path: '/',
       exact: true,
       component: Main,
     },
-    ...data.BlogList.map(({ id, category }) => ({
+    ...data.BlogList.flatMap(({ id, category }) => [{
       path: `/${category}/${id}`,
       exact: true,
       render: props => <BlogPost {...props} id={id} cache={data.BlogList.find(x => x.id === id)} />,
-    })),
+    }, {
+      path: `/${id}`,
+      exact: true,
+        render: () => <Redirect to={`/${category}/${id}`} />,
+    }]),
     ...categories.map(c => ({
       path: `/${c}`,
       label: c,
@@ -49,11 +54,6 @@ export default function Layout() {
       exact: true,
       render: props => <BlogList {...props} tag={t} />,
     })),
-    ...data.BlogList.map(({ id, category }) => ({
-      path: `/${id}`,
-      exact: true,
-      render: () => <Redirect to={`/${category}/${file}`} />,
-    })),
     {
       label: 'Projects',
       path: '/projects',
@@ -62,13 +62,13 @@ export default function Layout() {
     {
       component: NotFound,
     },
-  ], [data])
+  ]
 
   return (
     <div className="layout">
       <Helmet
-        defaultTitle={__appTitle}
-        titleTemplate={`${__appTitle} | %s`}
+        defaultTitle={APP_TITLE}
+        titleTemplate={`${APP_TITLE} | %s`}
       />
       <Nav {...{ routes }} />
       <div className="main">

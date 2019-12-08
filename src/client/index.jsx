@@ -19,22 +19,30 @@ function handleError({ error, info }) {
   console.log({ error, info })
 }
 
+const { APP_BASE, MOUNT } = process.env
+
 document.addEventListener('DOMContentLoaded', () => {
+  const cache = new InMemoryCache()
+  try {
+    // eslint-disable-next-line no-underscore-dangle
+    const initData = window.__INIT_DATA
+    if (initData) {
+      cache.restore(initData)
+    }
+  } catch (e) { console.error('failed to update cache', e) }
   const apolloClient = new ApolloClient({
     link: new HttpLink({ credentials: 'same-origin', uri: '/graphql' }),
-    // eslint-disable-next-line no-underscore-dangle
-    cache: new InMemoryCache().restore(window.__INIT_DATA),
+    cache,
   })
-
-  ReactDOM.hydrate((
-    <ErrorBoundary fallback={Stringify} didCatch={handleError}>
-      <ApolloProvider client={apolloClient}>
-        <Router basename={__appBase}>
-          <HelmetProvider>
-            <Layout />
-          </HelmetProvider>
-        </Router>
-      </ApolloProvider>
-    </ErrorBoundary>
-  ), document.getElementById(__mount))
+  const init = (
+    <ApolloProvider client={apolloClient}>
+      <Router basename={APP_BASE}>
+        <HelmetProvider>
+          <Layout />
+        </HelmetProvider>
+      </Router>
+    </ApolloProvider>
+  )
+  const root = document.getElementById(MOUNT)
+  ReactDOM.hydrate(init, root)
 })

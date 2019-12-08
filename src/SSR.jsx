@@ -1,23 +1,41 @@
-import * as React from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
+import React from 'react'
+import { renderToStringWithData } from '@apollo/react-ssr'
 import { StaticRouter } from 'react-router'
 import { HelmetProvider } from 'react-helmet-async'
-import { renderToStringWithData } from '@apollo/react-ssr'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client'
 import { SchemaLink } from 'apollo-link-schema'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import Html from './Html'
 import Layout from './client/Layout'
+import Html from './Html'
+
+const getAssets = ctx => {
+  const list = Object.values(
+    process.env.NODE_ENV === 'production'
+      ? ctx.state.manifest
+      : ctx.state.webpackStats.toJson().assetsByChunkName.main,
+  )
+  return list.reduce((p, x) => {
+    if (/\.css$/.test(x)) {
+      p.styles.push(x)
+    } else if (/\.js$/.test(x)) {
+      p.scripts.push(x)
+    }
+    return p
+  }, { styles: [], scripts: [] })
+}
 
 export default function SSR({ appBase, schema }) {
   return async ctx => {
-    const link = new SchemaLink({ schema })
-    const cache = new InMemoryCache()
-    const client = new ApolloClient({ link, cache, ssrMode: true })
-
+    const { styles, scripts } = getAssets(ctx)
+    const client = new ApolloClient({
+      ssrMode: true,
+      cache: new InMemoryCache(),
+      link: new SchemaLink({ schema }),
+    })
     const routerCtx = {}
     const helmetCtx = {}
+
     const App = (
       <ApolloProvider client={client}>
         <StaticRouter
@@ -31,24 +49,25 @@ export default function SSR({ appBase, schema }) {
         </StaticRouter>
       </ApolloProvider>
     )
-    try {
-      const html = await renderToStringWithData(App)
-      const { helmet } = helmetCtx
-      const data = client.extract()
-      const body = renderToStaticMarkup(Html({ data, helmet, html }))
-      if (routerCtx.status) {
-        ctx.status = routerCtx.status
-      }
-      if (routerCtx.url) {
-        ctx.redirect(routerCtx.url)
-      } else {
-        ctx.body = `<!doctype html>${body}`
-      }
-    } catch (e) {
-      ctx.status = 500
-      ctx.body = 'Error'
-      console.error(e)
-      process.exit(1)
+
+    const html = await renderToStringWithData(App)
+    const { helmet } = helmetCtx
+    const data = { __INIT_DATA: client.extract() }
+
+    if (routerCtx.statusCode) {
+      ctx.status = routerCtx.statusCode
     }
+    if (routerCtx.url) {
+      ctx.redirect(routerCtx.url)
+      return
+    }
+    ctx.body = Html({
+      data,
+      helmet,
+      html,
+      styles,
+      scripts,
+      appBase,
+    })
   }
 }

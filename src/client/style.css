@@ -5,17 +5,12 @@
   --primary-color: hsl(var(--hue), 50%, 50%);
   --color-bg: #ccc;
   --color-bg-alt: #eee;
-  --color-text: #131313;
+  --color-text: #111;
 }
 
 * {
   box-sizing: border-box;
   /* border: 1px solid #f00; */
-}
-
-a:link,
-a:visited {
-  color: var(--primary-color);
 }
 
 html {
@@ -136,17 +131,18 @@ header {
     }
   }
 
-  a:link,
-  a:visited {
-    color: #fff;
-  }
-
   nav {
     width: 100%;
     background: hsl(var(--hue), 50%, 60%);
 
     a {
       width: 100%;
+
+      &:link,
+      &:hover,
+      &:visited {
+        color: var(--text-color);
+      }
     }
 
     ul {
@@ -160,10 +156,11 @@ header {
       li {
         display: block;
         margin: 0;
-        border: 1px #fff;
+        border: 0;
         text-align: center;
         padding: 0.5em 0;
         width: 100%;
+        transition: 0.3s ease;
 
         &:hover {
           background: var(--primary-color);
@@ -179,6 +176,16 @@ header {
   }
 }
 
+a:link,
+a:visited {
+  color: var(--primary-color);
+  transition: 0.3s ease;
+}
+
+a:hover {
+  color: hsl(var(--hue), 50%, 60%);
+}
+
 .projects {
   padding: 0 0.5em;
 }
@@ -192,6 +199,37 @@ header {
 
 .repoitem {
   display: inline-block;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 0.5em 0;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+
+    li {
+      display: block;
+      margin: 0;
+    }
+
+    svg {
+      transition: 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  a:hover {
+    color: hsl(var(--hue), 50%, 60%);
+  }
 }
 
 .repo {
@@ -250,37 +288,6 @@ header {
   }
 }
 
-.footer {
-  margin-top: auto;
-  padding: 0.5em 0;
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-
-    li {
-      display: block;
-      margin: 0;
-    }
-
-    svg {
-      transition: 0.3s ease;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  a:hover {
-    color: hsl(var(--hue), 50%, 60%);
-  }
-}
-
 .blogContainer {
   padding: 0 0.5em;
 
@@ -317,6 +324,7 @@ header {
     .tag {
       display: inline;
       padding: 0 0.25em;
+
       &:not(:last-child):after {
         content: ',';
       }
@@ -399,12 +407,13 @@ header {
 }
 
 @keyframes fadein {
-    from {
-      transform: scale(0.1);
-      opacity: 0;
-    }
-    to   {
-      transform: scale(1);
-      opacity: 1;
+  from {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }

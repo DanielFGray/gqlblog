@@ -29,7 +29,7 @@ export default class ErrorBoundary extends React.Component {
     const { error } = this.state
     const { fallback: F, children } = this.props
     if (error) {
-      return <F error={error} />
+      return <F error={error.message || error} />
     }
     return children
   }
