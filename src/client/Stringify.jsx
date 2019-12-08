@@ -1,7 +1,9 @@
 import * as React from 'react'
 
-export default props => (
-  <pre>
-    {JSON.stringify(props, null, 2)}
-  </pre>
-)
+export default function Stringify(props) {
+  return (
+    <pre>
+      {JSON.stringify(props, null, 2)}
+    </pre>
+  )
+}

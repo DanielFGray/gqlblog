@@ -5,16 +5,12 @@
   --primary-color: hsl(var(--hue), 50%, 50%);
   --color-bg: #ccc;
   --color-bg-alt: #eee;
-  --color-text: #131313;
+  --color-text: #111;
 }
 
 * {
   box-sizing: border-box;
-}
-
-a:link,
-a:visited {
-  color: var(--primary-color);
+  /* border: 1px solid #f00; */
 }
 
 html {
@@ -26,7 +22,6 @@ body {
   font-size: 1.8rem;
   line-height: 1.618;
   max-width: 38em;
-  min-height: 100vh;
   margin: auto;
   color: var(--color-text);
   background-color: #333;
@@ -107,10 +102,17 @@ input[type] {
   }
 }
 
-#root,
-.main {
+.layout {
   background: var(--color-bg);
   max-width: 38em;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  height: 100%;
 }
 
 header {
@@ -129,41 +131,68 @@ header {
     }
   }
 
-  a:link,
-  a:visited {
-    color: #fff;
-  }
-
   nav {
     width: 100%;
     background: hsl(var(--hue), 50%, 60%);
-    padding: 0.5em 1em;
-    /* box-shadow: inset 1px 5px 10px -3px rgba(0, 0, 0, 0.75); */
-  }
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    a {
+      width: 100%;
 
-    li {
-      display: block;
+      &:link,
+      &:hover,
+      &:visited {
+        color: var(--text-color);
+      }
+    }
+
+    ul {
+      list-style: none;
       margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+
+      li {
+        display: block;
+        margin: 0;
+        border: 0;
+        text-align: center;
+        padding: 0.5em 0;
+        width: 100%;
+        transition: 0.3s ease;
+
+        &:hover {
+          background: var(--primary-color);
+        }
+      }
+    }
+
+    .active {
+      text-decoration: none;
+      background: var(--primary-color);
+      font-weight: bold;
     }
   }
+}
 
-  a.active {
-    text-decoration: none;
-    font-weight: bold;
-  }
+a:link,
+a:visited {
+  color: var(--primary-color);
+  transition: 0.3s ease;
+}
+
+a:hover {
+  color: hsl(var(--hue), 50%, 60%);
+}
+
+.projects {
+  padding: 0 0.5em;
 }
 
 .repolist {
   padding: 0;
-  margin: 0 0.5em;
+  margin: 0;
   column-count: 2;
   column-gap: 0.5em;
 }
@@ -172,10 +201,41 @@ header {
   display: inline-block;
 }
 
+.footer {
+  margin-top: auto;
+  padding: 0.5em 0;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+
+    li {
+      display: block;
+      margin: 0;
+    }
+
+    svg {
+      transition: 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  a:hover {
+    color: hsl(var(--hue), 50%, 60%);
+  }
+}
+
 .repo {
   background: var(--color-bg-alt);
   color: var(--text-color);
-  padding: 5px;
+  padding: 0.25em;
   font-size: smaller;
   min-width: 22em;
   margin: 0.25em 0;
@@ -197,6 +257,24 @@ header {
     text-align: right;
     grid-area: extra;
     justify-self: end;
+    font-size: smaller;
+
+    ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin: 0;
+      margin-left: 0.25em;
+      padding: 0;
+
+      &:not(:last-child):after {
+        content: ', ';
+      }
+    }
   }
 
   .description {
@@ -206,46 +284,17 @@ header {
   .updated {
     grid-area: updated;
     justify-self: start;
-  }
-}
-
-.footer {
-  margin-top: 0.5em;
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-
-    li {
-      display: block;
-      margin: 0;
-    }
-
-    svg {
-      transition: 0.3s ease;
-    }
-
-    svg:hover {
-      transform: scale(1.1);
-    }
-  }
-
-  a:hover {
-    color: hsl(var(--hue), 50%, 60%);
+    font-size: smaller;
   }
 }
 
 .blogContainer {
-  padding: 0;
+  padding: 0 0.5em;
 
   .blog {
     background: var(--color-bg-alt);
-    padding: 5px;
-    margin-bottom: 5px;
+    padding: 0.25em;
+    margin-bottom: 0.5em;
     font-size: smaller;
     max-width: 100%;
   }
@@ -253,6 +302,12 @@ header {
   .meta {
     font-size: smaller;
     margin-bottom: 0.25em;
+    display: flex;
+
+    div:not(:last-child):after {
+      content: '-';
+      padding: 0 0.25em;
+    }
   }
 
   .title {
@@ -269,6 +324,10 @@ header {
     .tag {
       display: inline;
       padding: 0 0.25em;
+
+      &:not(:last-child):after {
+        content: ',';
+      }
     }
   }
 
@@ -302,7 +361,7 @@ header {
   }
 
   .repo {
-    margin-bottom: 5px;
+    margin-bottom: 0.5em;
   }
 
   .blogContainer .blog {
@@ -320,6 +379,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: fadein 4s;
 
   > div {
     color: #999;
@@ -346,3 +406,14 @@ header {
   }
 }
 
+@keyframes fadein {
+  from {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

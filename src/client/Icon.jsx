@@ -1,38 +1,41 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 
-const FontAwesomeIcon = React.memo(
-  ({ i, size, className = '', ...props }) => {
-    if (! i) {
-      return 'null'
-    }
-    const {
-      icon: [width, height, , , svgPathData],
-      iconName,
-      prefix,
-    } = i
-    return (
-      <svg
-        aria-hidden="true"
-        className={[
-          'svg-inline--fa',
-          `fa-${iconName}`,
-          `fa-w-${Math.ceil((width / height) * 16)}`,
-          size ? `fa-${size}` : '',
-          className,
-        ].join(' ')}
-        data-icon={iconName}
-        data-prefix={prefix}
-        role="img"
-        viewBox={`0 0 ${width} ${height}`}
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-      >
-        <path d={svgPathData} fill="currentColor" />
-      </svg>
-    )
-  },
-)
+const FontAwesomeIcon = React.memo(({
+  i,
+  size,
+  className = '',
+  ...props
+}) => {
+  if (! i) {
+    return 'null'
+  }
+  const {
+    icon: [width, height, , , svgPathData],
+    iconName,
+    prefix,
+  } = i
+  return (
+    <svg
+      aria-hidden="true"
+      className={[
+        'svg-inline--fa',
+        `fa-${iconName}`,
+        `fa-w-${Math.ceil((width / height) * 16)}`,
+        size ? `fa-${size}` : '',
+        className,
+      ].join(' ')}
+      data-icon={iconName}
+      data-prefix={prefix}
+      role="img"
+      viewBox={`0 0 ${width} ${height}`}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d={svgPathData} fill="currentColor" />
+    </svg>
+  )
+})
 
 FontAwesomeIcon.displayName = 'FontAwesomeIcon'
 

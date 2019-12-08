@@ -3,8 +3,23 @@ import { Helmet } from 'react-helmet-async'
 import ago from 's-ago'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import Loading from './Loading'
-import query from './BlogPost.gql'
+
+export const BlogPostQuery = gql`
+query BlogPost($id: String!) {
+  BlogPost(id: $id) {
+    id
+    title
+    category
+    url
+    date
+    tags
+    content
+    words
+    readTime
+  }
+}`
 
 export const Post = ({
   data: {
@@ -16,8 +31,8 @@ export const Post = ({
     tags,
     readTime,
     words,
-    excerpt = '',
-    content = '',
+    excerpt,
+    content,
   },
 }) => {
   const dateObj = new Date(date)
@@ -27,19 +42,22 @@ export const Post = ({
         <Link to={url}>{title}</Link>
       </h1>
       <div className="meta">
-        {'category: '}
-        <Link to={`/${category}`}>{category}</Link>
-        {' - '}
-        <a title={dateObj.toLocaleDateString()}>
-          {ago(dateObj)}
-        </a>
-        {' - '}
-        <a title={`${words} words`}>
-          {readTime}
-        </a>
-        {' - '}
+        <div className="category">
+          {`category: `}
+          <Link to={`/${category}`}>{category}</Link>
+        </div>
+        <div className="date">
+          <a title={dateObj.toLocaleDateString()}>
+            {ago(dateObj)}
+          </a>
+        </div>
+        <div className="readTime">
+          <a title={`${words} words`}>
+            {readTime}
+          </a>
+        </div>
         <ul className="tags">
-          {'tagged: '}
+          tagged:
           {tags.map(e => (
             <li key={e} className="tag">
               <Link to={`/tags/${e}`}>{e}</Link>
@@ -63,7 +81,7 @@ export const Post = ({
 }
 
 export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
-  const { errors, data } = useQuery(query, { variables: { id } })
+  const { errors, data, loading } = useQuery(BlogPostQuery, { variables: { id } })
   if (errors) {
     console.error(errors)
     return 'something went wrong :('
@@ -73,7 +91,8 @@ export default function BlogPost({ id, cache }) { // FIXME: why am i manually pa
       <Helmet>
         <title>{cache.title}</title>
       </Helmet>
-      <Post data={(data && data.BlogPost) || cache} />
+      <Post data={data?.BlogPost ?? cache} />
+      {loading && <Loading />}
     </div>
   )
 }
