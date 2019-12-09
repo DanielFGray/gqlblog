@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async'
 export default function NotFound(props) {
   if (props.staticContext) {
     // eslint-disable-next-line no-param-reassign
-    props.staticContext.status = 404
+    props.staticContext.statusCode = 404
   }
   return (
     <p>
