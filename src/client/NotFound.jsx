@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet-async'
 
-export default function NotFound(props) {
+export default function NotFound({ location, ...props }) {
   if (props.staticContext) {
     // eslint-disable-next-line no-param-reassign
     props.staticContext.statusCode = 404
@@ -11,7 +11,7 @@ export default function NotFound(props) {
       <Helmet>
         <title>Not Found</title>
       </Helmet>
-      {`${props.location.pathname} does not exist`}
+      {`${location.pathname} does not exist`}
     </p>
   )
 }
