@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Redirect, Switch, Route } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
@@ -41,7 +41,7 @@ export default function Layout() {
     }, {
       path: `/${id}`,
       exact: true,
-        render: () => <Redirect to={`/${category}/${id}`} />,
+      render: () => <Redirect to={`/${category}/${id}`} />,
     }]),
     ...categories.map(c => ({
       path: `/${c}`,

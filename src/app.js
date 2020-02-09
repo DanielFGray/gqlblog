@@ -1,5 +1,4 @@
 import kcompose from 'koa-compose'
-import Router from 'koa-router'
 import koaHelmet from 'koa-helmet'
 // import KoaRouter from 'koa-router'
 import { ApolloServer } from 'apollo-server-koa'
