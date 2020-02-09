@@ -173,6 +173,6 @@ export default async function main(interval?: number) {
     cache = data
   }
   setTimeout(() => {f()}, t)
-  f()
+  if (cache.length === 0) { f() }
   return { list: () => cache }
 }
