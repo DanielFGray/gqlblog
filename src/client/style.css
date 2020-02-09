@@ -303,6 +303,7 @@ a:hover {
     font-size: smaller;
     margin-bottom: 0.25em;
     display: flex;
+    flex-wrap: wrap;
 
     div:not(:last-child):after {
       content: '-';
