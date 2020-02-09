@@ -1,0 +1,51 @@
+query GithubUserActivity($user: String!, $branches: Int!, $limit: Int!, $forks: Boolean) {
+  user(login: $user) {
+    repositories(first: $limit, isFork: $forks, orderBy: { field: PUSHED_AT, direction: DESC }) {
+      totalCount
+      edges {
+        node {
+          name
+          description
+          url
+          stargazers {
+            totalCount
+          }
+          forks {
+            totalCount
+          }
+          issues(states: [OPEN]) {
+            totalCount
+          }
+          languages(first: 1, orderBy: {field: SIZE, direction: DESC}) {
+            nodes {
+              name
+            }
+          }
+          refs(refPrefix: "refs/heads/", orderBy: { direction: DESC, field: TAG_COMMIT_DATE }, first: $branches) {
+            edges {
+              node {
+                ... on Ref {
+                  name
+                  target {
+                    ... on Commit {
+                      history(first: 1) {
+                        edges {
+                          node {
+                            ... on Commit {
+                              committedDate
+                              message
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

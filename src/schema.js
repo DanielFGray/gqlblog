@@ -10,7 +10,7 @@ export const resolvers = {
   Query: {
     BlogList: () => blogfeed.list(),
     BlogPost: (root, { id }) => blogfeed.get(id),
-    GitActivity: () => gitfeed.list(),
+    GitActivity: async () => (await gitfeed).list(),
   },
 }
 
@@ -37,12 +37,18 @@ export const typeDefs = gql`
   type GitActivity {
     url: String!
     name: String!
-    updated: Float!
+    updated: Float
     stars: Float!
     issues: Float
     forks: Float!
     description: String
     language: String
+    branches: [GitBranch!]
+  }
+
+  type GitBranch {
+    message: String
+    committedDate: Int
   }
 `
 
