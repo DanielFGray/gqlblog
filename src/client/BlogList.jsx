@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import { thread, filterIf } from '../utils'
 import Loading from './Loading'
 import { Post } from './BlogPost'
-import gql from 'graphql-tag'
 
 export const BlogListQuery = gql`
 query BlogList {

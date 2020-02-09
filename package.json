@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -w webpack.config.js -w babel.config.js -w src -x 'babel-node src'",
+    "start": "nodemon -w webpack.config.js -w babel.config.js -w src -x 'babel-node --inspect -x .ts,.js,.tsx,.jsx src/index.js'",
     "run:pm2": "pm2 -s delete gqlblog; pm2 start",
     "build": "NODE_ENV=production webpack -p",
     "lint:css": "stylelint './src/**/*.css'",
@@ -101,6 +101,7 @@
     "style-loader": "^1.0.1",
     "stylelint": "^12.0.0",
     "stylelint-config-standard": "^19.0.0",
+    "typescript": "^3.7.5",
     "webpack": "^4.41.2",
     "webpack-assets-manifest": "^3.1.1",
     "webpack-bundle-analyzer": "^3.6.0",
