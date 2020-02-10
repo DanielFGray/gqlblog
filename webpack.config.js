@@ -41,26 +41,13 @@ const cssLoaders = [
 
 const babelLoader = [
   {
-    test: /\.jsx?$/,
+    test: /\.[tj]sx?$/,
     exclude: /node_modules/,
     use: [
       {
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
-        },
-      },
-    ],
-  },
-  {
-    test: /\.g(raph)?ql$/,
-    use: [
-      {
-        loader: 'webpack-graphql-loader',
-        options: {
-          // output: 'string',
-          // minify: true,
-          output: 'document', // FIXME
         },
       },
     ],
@@ -72,15 +59,16 @@ const stats = {
   modules: false,
   colors: true,
 }
-const devtool = devMode ? 'eval-source-map' : 'source-map'
+
+const extensions = ['.ts', '.tsx', '.js', '.jsx', '.cjs']
 
 const clientConfig = {
   name: 'client',
   mode: NODE_ENV,
-  devtool,
-  entry: ['./src/client/index'],
+  devtool: devMode ? 'cheap-module-eval-source-map' : undefined,
+  entry: { main: './src/client/index' },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions,
   },
   output: {
     path: path.resolve(PUBLIC_DIR),
@@ -109,7 +97,7 @@ const clientConfig = {
     }),
     new WebpackAssetsManifest({
       // https://github.com/webdeveric/webpack-assets-manifest/#readme
-      output: path.join(path.resolve(OUTPUT_DIR), './manifest.json'),
+      output: path.join(path.resolve(OUTPUT_DIR), 'manifest.json'),
       writeToDisk: true,
     }),
     ...(
@@ -125,15 +113,14 @@ const serverConfig = {
   name: 'server',
   mode: NODE_ENV,
   entry: { index: './src/index' },
-  devtool,
-  target: 'node',
+  devtool: 'source-map',
+  target: 'async-node',
   externals: [
-    /config\.js$/,
     /manifest\.json$/,
     nodeExternals(),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions,
   },
   output: {
     filename: '[name].js',

@@ -2,8 +2,11 @@
 import webpack from 'webpack'
 import koaWebpack from 'koa-webpack'
 import WebpackBar from 'webpackbar'
+import fetch from 'isomorphic-unfetch'
 import config from '../webpack.config'
 import hotServer from './hotServerMiddleware'
+
+const { HOST, PORT } = process.env
 
 export async function devMiddleware() {
   const multiCompiler = webpack(config)
@@ -15,8 +18,14 @@ export async function devMiddleware() {
       name: c.name,
     }).apply(c)
 
-    c.hooks.done.tap('built', () => {
-      console.log('finished building')
+    c.hooks.done.tap('built', async () => {
+      try {
+        // FIXME: these should be tests
+        await Promise.all([fetch(`http://${HOST}:${PORT}/`), fetch(`http://${HOST}:${PORT}/projects`),])
+      } catch (e) {
+        console.error(e)
+      }
+
     })
   })
 

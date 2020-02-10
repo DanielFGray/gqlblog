@@ -43,7 +43,7 @@ export const Post = ({
       </h1>
       <div className="meta">
         <div className="category">
-          {`category: `}
+          category:
           <Link to={`/${category}`}>{category}</Link>
         </div>
         <div className="date">
