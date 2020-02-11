@@ -1,14 +1,5 @@
 import React from 'react'
 
-/**
- * @typedef {object} Props
- * @prop {React.Component<{error}>} fallback
- * @prop {React.Component} children
- * @prop {Function<{error,info}>} didCatch
- *
- * @extends {React.Component<Props>}
- */
-
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props)
@@ -27,9 +18,9 @@ export default class ErrorBoundary extends React.Component {
 
   render() {
     const { error } = this.state
-    const { fallback: F, children } = this.props
+    const { fallback, children } = this.props
     if (error) {
-      return <F error={error.message || error} />
+      return fallback
     }
     return children
   }

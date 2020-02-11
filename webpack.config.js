@@ -14,7 +14,10 @@ const {
   OUTPUT_DIR,
   APP_TITLE,
   APP_BASE,
+  APP_URL,
   MOUNT,
+  PORT,
+  HOST,
 } = process.env
 
 const devMode = NODE_ENV === 'development'
@@ -41,7 +44,7 @@ const cssLoaders = [
 
 const babelLoader = [
   {
-    test: /\.[tj]sx?$/,
+    test: /\.(gql|[tj]sx?)$/,
     exclude: /node_modules/,
     use: [
       {
@@ -60,13 +63,13 @@ const stats = {
   colors: true,
 }
 
-const extensions = ['.ts', '.tsx', '.js', '.jsx', '.cjs']
+const extensions = ['.ts', '.tsx', '.js', '.jsx', '.cjs', '.gql']
 
 const clientConfig = {
   name: 'client',
   mode: NODE_ENV,
   devtool: devMode ? 'cheap-module-eval-source-map' : undefined,
-  entry: { main: './src/client/index' },
+  entry: ['./src/client/index'],
   resolve: {
     extensions,
   },
@@ -91,8 +94,11 @@ const clientConfig = {
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV),
         APP_BASE: JSON.stringify(APP_BASE),
+        APP_URL: JSON.stringify(APP_URL),
         APP_TITLE: JSON.stringify(APP_TITLE),
         MOUNT: JSON.stringify(MOUNT),
+        PORT: JSON.stringify(PORT),
+        HOST: JSON.stringify(HOST),
       },
     }),
     new WebpackAssetsManifest({

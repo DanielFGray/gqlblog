@@ -1,0 +1,35 @@
+type Blog {
+   title: String!
+   category: String!
+   tags: [String]
+   date: Float
+   words: Int
+   readTime: String
+   id: String!
+   url: String!
+   content: String
+   excerpt: String
+}
+
+type Query {
+  GitActivity: [GitActivity]!
+  BlogList: [Blog]!
+  BlogPost(id: String!): Blog
+}
+
+type GitActivity {
+  url: String!
+  name: String!
+  updated: Float
+  stars: Int!
+  issues: Int
+  forks: Int!
+  description: String
+  language: String
+  branches: [GitBranch!]
+}
+
+type GitBranch {
+  message: String!
+  committedDate: Float!
+}

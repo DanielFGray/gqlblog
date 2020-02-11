@@ -6,6 +6,9 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { onError } from 'apollo-link-error'
+import { ApolloLink } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
 
 import 'normalize.css'
 import 'prismjs/themes/prism-okaidia.css'
@@ -13,15 +16,16 @@ import './style.css'
 
 import Layout from './Layout'
 import ErrorBoundary from './Error'
-import Stringify from './Stringify'
 
 function handleError({ error, info }) {
   console.log({ error, info })
 }
 
-const { APP_BASE, MOUNT } = process.env
+const {APP_BASE, MOUNT, HOST, PORT} = process.env
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (!MOUNT) throw new Error('missing MOUNT env')
+
   const cache = new InMemoryCache()
   try {
     // eslint-disable-next-line no-underscore-dangle
@@ -31,17 +35,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) { console.error('failed to update cache', e) }
   const apolloClient = new ApolloClient({
-    link: new HttpLink({ credentials: 'same-origin', uri: '/graphql' }),
+    link: ApolloLink.from([
+      onError(({ networkError, graphQLErrors }) => {
+        if (graphQLErrors) {
+          console.error(...graphQLErrors)
+        }
+        if (networkError) {
+          console.error(networkError)
+        }
+      }),
+      new WebSocketLink({
+        uri: `ws://${HOST}:${PORT}/subscriptions`,
+        options: {
+          reconnect: true,
+        },
+      }),
+      new HttpLink({ credentials: 'same-origin', uri: '/graphql' }),
+    ]),
     cache,
   })
   const init = (
-    <ApolloProvider client={apolloClient}>
-      <Router basename={APP_BASE}>
-        <HelmetProvider>
-          <Layout />
-        </HelmetProvider>
-      </Router>
-    </ApolloProvider>
+    <ErrorBoundary didCatch={handleError} fallback={<>There was en error :(</>}>
+      <ApolloProvider client={apolloClient}>
+        <Router basename={APP_BASE}>
+          <HelmetProvider>
+            <Layout />
+          </HelmetProvider>
+        </Router>
+      </ApolloProvider>
+    </ErrorBoundary>
   )
   const root = document.getElementById(MOUNT)
   ReactDOM.hydrate(init, root)

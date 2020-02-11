@@ -9,3 +9,4 @@ node_modules/
 secrets.js
 feedcache.json
 content
+./src/generated-types.ts
