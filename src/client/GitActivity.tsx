@@ -4,21 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Loading from './Loading'
 import { urlTokens } from '../utils'
-
-const GitActivityQuery = gql`
-  query GitActivity {
-    GitActivity {
-      url
-      name
-      description
-      updated
-      stars
-      issues
-      forks
-      language
-    }
-  }
-`
+import GitActivityQuery from './queries/GitActivity.gql'
 
 const Linkify = text => urlTokens(text)
   .map((t, i) => {

@@ -1,8 +1,11 @@
 import 'dotenv/config'
 import http from 'http'
 import Koa from 'koa'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { execute, subscribe } from 'graphql'
 import { promises as fs } from 'fs'
 import app from './app'
+import schema from './schema'
 
 const { NODE_ENV, PORT, HOST } = process.env
 
@@ -14,22 +17,33 @@ const die = e => {
 async function main() {
   const koa = new Koa()
 
-  if (NODE_ENV === 'development') {
-    const { devMiddleware } = await import('./dev')
-    const { hotClient, hotServer } = await devMiddleware()
-    koa.use(hotClient)
-  } else {
-    const manifest = JSON.parse(await fs.readFile('./dist/manifest.json'))
+  if (NODE_ENV !== 'development') {
+    const manifest = JSON.parse(await fs.readFile('./dist/manifest.json', 'utf8'))
     koa.use(async (ctx, next) => {
       ctx.state.manifest = manifest
       await next()
     })
+  } else {
+    const { devMiddleware } = await import('./dev')
+    const { hotClient } = await devMiddleware()
+    koa.use(hotClient)
   }
   koa.use(app())
 
   const server = http.createServer(koa.callback())
-  await new Promise(res => { server.listen(PORT, HOST, res) })
+  await new Promise(res => { server.listen(Number(PORT), HOST, res) })
   console.info(`server now running on http://${HOST}:${PORT}`)
+  SubscriptionServer.create(
+    {
+      execute,
+      subscribe,
+      schema,
+    },
+    {
+      server,
+      path: '/subscriptions',
+    },
+  )
 }
 main().catch(die)
 

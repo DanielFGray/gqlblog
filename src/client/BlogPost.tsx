@@ -5,21 +5,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import Loading from './Loading'
-
-export const BlogPostQuery = gql`
-query BlogPost($id: String!) {
-  BlogPost(id: $id) {
-    id
-    title
-    category
-    url
-    date
-    tags
-    content
-    words
-    readTime
-  }
-}`
+import { Blog, useBlogPostQuery } from '../generated-types'
 
 export const Post = ({
   data: {
@@ -34,7 +20,7 @@ export const Post = ({
     excerpt,
     content,
   },
-}) => {
+}: { data: Blog }) => {
   const dateObj = new Date(date)
   return (
     <div className="blog" key={id}>
@@ -81,9 +67,9 @@ export const Post = ({
 }
 
 export default function BlogPost({ id, cache }) { // FIXME: why am i manually passing a cache around
-  const { errors, data, loading } = useQuery(BlogPostQuery, { variables: { id } })
-  if (errors) {
-    console.error(errors)
+  const { error, data, loading } = useBlogPostQuery({ variables: { id } })
+  if (error) {
+    console.error(error)
     return 'something went wrong :('
   }
   return (

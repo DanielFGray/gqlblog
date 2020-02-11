@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies, global-require */
+import { spawn } from 'child_process'
 import webpack from 'webpack'
 import koaWebpack from 'koa-webpack'
 import WebpackBar from 'webpackbar'
@@ -12,6 +13,9 @@ export async function devMiddleware() {
   const multiCompiler = webpack(config)
   const clientCompiler = multiCompiler.compilers.find(c => c.name === 'client')
 
+  // this is cool?
+  let watchingQueries = false
+
   multiCompiler.compilers.forEach(c => {
     new WebpackBar({
       profile: true,
@@ -20,8 +24,12 @@ export async function devMiddleware() {
 
     c.hooks.done.tap('built', async () => {
       try {
+        if (! watchingQueries) spawn('yarn', ['graphql-codegen', '--watch'], { stdio: 'inherit' })
         // FIXME: these should be tests
-        await Promise.all([fetch(`http://${HOST}:${PORT}/`), fetch(`http://${HOST}:${PORT}/projects`),])
+        await Promise.all([
+          fetch(`http://${HOST}:${PORT}/`),
+          fetch(`http://${HOST}:${PORT}/projects`),
+        ])
       } catch (e) {
         console.error(e)
       }

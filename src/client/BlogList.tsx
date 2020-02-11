@@ -4,27 +4,13 @@ import gql from 'graphql-tag'
 import { thread, filterIf } from '../utils'
 import Loading from './Loading'
 import { Post } from './BlogPost'
-
-export const BlogListQuery = gql`
-query BlogList {
-  BlogList {
-    id
-    title
-    category
-    url
-    date
-    tags
-    excerpt
-    words
-    readTime
-  }
-}`
+import { useBlogListQuery } from '../generated-types'
 
 export default function BlogList({ category, tag }) {
-  const { errors, data } = useQuery(BlogListQuery)
+  const { error, data } = useBlogListQuery()
 
-  if (errors) {
-    console.error(errors)
+  if (error) {
+    console.error(error)
     return 'something went wrong :('
   }
 
@@ -33,11 +19,7 @@ export default function BlogList({ category, tag }) {
   }
 
   return (
-    <List
-      data={data.BlogList}
-      tag={tag}
-      category={category}
-    />
+    <List data={data.BlogList} tag={tag} category={category} />
   )
 }
 

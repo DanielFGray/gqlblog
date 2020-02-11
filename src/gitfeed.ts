@@ -1,26 +1,17 @@
 import { URL, URLSearchParams } from 'url'
-import fs from 'fs-extra'
+import { promises as fs } from 'fs'
 import path from 'path'
 import fetch from 'isomorphic-unfetch'
 import * as R from 'ramda'
 import query from './githubuser.gql'
+import { GitActivity } from './generated-types'
 
-import secrets from '../secrets'
-
-export type GitActivity = {
-  url: string;
-  name: string;
-  description: string;
-  language?: string;
-  updated?: number;
-  stars: number;
-  issues: number;
-  forks: number;
-  branches?: {
-    committedDate: number;
-    message: string;
-  }[]
-}
+const {
+  GITHUB_KEY,
+  GITHUB_USER,
+  GITLAB_KEY,
+  GITLAB_USER,
+} = process.env
 
 const cacheFile = path.resolve('./feedcache.json')
 let cache: GitActivity[] = []
@@ -47,14 +38,14 @@ const request = R.curry(async (a, b) => {
 const gitlab = request({
   url: 'https://gitlab.com/api/v4/',
   headers: {
-    'PRIVATE-TOKEN': secrets.gitlab.key,
+    'PRIVATE-TOKEN': GITLAB_KEY,
   },
 })
 
 const github = request({
   url: 'https://api.github.com/',
   headers: {
-    Authorization: `token ${secrets.github.key}`,
+    Authorization: `token ${GITHUB_KEY}`,
     'User-Agent': 'danielfgray/gqlblog',
   },
 })
@@ -63,7 +54,7 @@ const seconds = (d: number) => new Date(d).getTime()
 
 const gitlabRepos = async (): Promise<GitActivity[]> => {
   const publicProjects = (page: number) => gitlab({
-    url: `users/${secrets.gitlab.user}/projects`,
+    url: `users/${GITLAB_USER}/projects`,
     data: { page, visibility: 'public' },
   })
   const res = (await Promise.all([
@@ -96,13 +87,17 @@ const githubRepos = async (): Promise<GitActivity[]> => {
     data: {
       query: query.loc.source.body,
       variables: {
-        user: 'danielfgray',
+        user: GITHUB_USER,
         limit: 100,
         branches: 100,
         forks: false,
       },
     },
   })
+  if (res.errors) {
+    console.error(res)
+    throw new Error()
+  }
   const totalCount = res.data.user.repositories.totalCount
   return R.pipe(
     x => normalizeEdge(x.data.user.repositories),
@@ -147,32 +142,36 @@ const getRepos = async (): Promise<GitActivity[]> => {
   )(res)
 }
 
-
 const writeCache = async (data: GitActivity[]) => {
   await fs.writeFile(cacheFile, JSON.stringify(data), 'utf8')
   return data
 }
 
-const readCache = async () => {
+const readCache = async (): Promise<GitActivity[]> => {
   let result = '[]'
   try {
     result = await fs.readFile(cacheFile, 'utf8')
   } catch (e) {
-    console.log('cache missing! writing empty cache')
+    console.error('error reading cache! writing empty cache')
     return writeCache([])
   }
   return JSON.parse(result)
 }
 
-export default async function main(interval?: number) {
-  const t = interval ?? 10 * 60 * 1000
-  cache = await readCache()
-  const f = async () => {
-    const data = await getRepos()
-    writeCache(data)
-    cache = data
+export default function main(interval?: number) {
+  const t = interval ?? 30 * 60 * 1000
+  const subscribe = () => {
+    getRepos().then(data => {
+      writeCache(data)
+      cache = data
+    })
+    setTimeout(() => {
+      subscribe()
+    }, cache.length === 0 ? 0 : t)
   }
-  setTimeout(() => {f()}, t)
-  if (cache.length === 0) { f() }
+  readCache().then(x => {
+    cache = x
+    subscribe()
+  })
   return { list: () => cache }
 }

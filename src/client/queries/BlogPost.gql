@@ -1,0 +1,13 @@
+query BlogPost($id: String!) {
+  BlogPost(id: $id) {
+    id
+    title
+    category
+    url
+    date
+    tags
+    content
+    words
+    readTime
+  }
+}

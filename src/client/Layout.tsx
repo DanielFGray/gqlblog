@@ -10,16 +10,17 @@ import Main from './Main'
 import NotFound from './NotFound'
 import Loading from './Loading'
 import BlogPost from './BlogPost'
-import BlogList, { BlogListQuery } from './BlogList'
+import BlogList from './BlogList'
 import GitActivity from './GitActivity'
+import BlogListQuery from './queries/BlogList.gql'
 
 const { APP_TITLE } = process.env
 
 export default function Layout() {
-  const { errors, data } = useQuery(BlogListQuery)
-  if (errors) {
-    console.error(errors)
-    return 'something went wrong :('
+  const { error, data } = useQuery(BlogListQuery)
+  if (error) {
+    console.error(error)
+    throw new Error(error.message)
   }
 
   if (! (data && data.BlogList)) return <Loading />

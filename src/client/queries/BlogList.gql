@@ -1,0 +1,13 @@
+query BlogList {
+  BlogList {
+    id
+    title
+    category
+    url
+    date
+    tags
+    excerpt
+    words
+    readTime
+  }
+}
