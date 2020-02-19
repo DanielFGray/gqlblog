@@ -4,7 +4,7 @@ import chokidar from 'chokidar'
 import matter from 'gray-matter'
 import cheerio from 'cheerio'
 import readingTime from 'reading-time'
-import markdownIt from 'markdown-it'
+import MarkdownIt from 'markdown-it'
 import prism from 'markdown-it-prism'
 import anchor from 'markdown-it-anchor'
 import toc from 'markdown-it-toc-done-right'
@@ -13,7 +13,7 @@ import { Blog } from './generated-types'
 
 const { NODE_ENV } = process.env
 
-const md = new markdownIt({})
+const md = new MarkdownIt({})
   .use(prism, { plugins: ['line-highlight'] })
   .use(anchor, { permalink: true, permalinkBefore: true, permalinkSymbol: '#' })
   .use(toc, { containerClass: 'toc', listType: 'ul' })
@@ -66,12 +66,14 @@ export default function main() {
       type: 'files',
       depth: 3,
     })
-      .then(R.forEach(f => file2markdown(f.fullPath)))
+      .then(R.tap(files => { console.log(`${files.length} blog posts found`) }))
+      .then(R.forEach(f => { file2markdown(f.fullPath) }))
   }
 
   return {
     list() {
       return Object.values(cache)
+        .sort(R.descend(x => x.date))
     },
     get(f: string) {
       return cache[f]

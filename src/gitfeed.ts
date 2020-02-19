@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import fetch from 'isomorphic-unfetch'
 import * as R from 'ramda'
-import query from './githubuser.gql'
+import githubUserDataQuery from './githubuser.gql'
 import { GitActivity } from './generated-types'
 
 const {
@@ -16,15 +16,18 @@ const {
 const cacheFile = path.resolve('./feedcache.json')
 let cache: GitActivity[] = []
 
-const on = R.curry((f, g, a, b) => f(g(a))(g(b)))
-const mergeBy = R.curry((p, a, b) => on(R.merge, R.propOr({}, p), a, b))
+type fetchRequest = RequestInit & { url: string; data?: { [key: string]: any } }
 
-const request = R.curry(async (a, b) => {
-  const method = R.propOr('get', 'method', b)
-  const headers = mergeBy('headers', a, b)
-  const data = mergeBy('data', a, b)
+const request = R.curry(async (a: fetchRequest, b: fetchRequest): Promise<unknown> => {
+  const method = a.method ?? b.method ?? 'get'
+  const aheaders = a?.headers ?? {}
+  const bheaders = b?.headers ?? {}
+  const headers = { ...aheaders, ...bheaders }
+  const adata = a?.data ?? {}
+  const bdata = b?.data ?? {}
+  const data = { ...adata, ...bdata }
   let url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
-  let body = undefined
+  let body = null
   if (method === 'get') url = url.concat('?').concat(new URLSearchParams(data).toString())
   else body = JSON.stringify(data)
   const res = await fetch(url, {
@@ -61,22 +64,25 @@ const gitlabRepos = async (): Promise<GitActivity[]> => {
     publicProjects(1),
     publicProjects(2),
   ]))
-  .flat(1)
-  .map(x => ({
-    url: x.web_url,
-    name: x.name,
-    description: x.description,
-    updated: seconds(x.last_activity_at),
-    stars: x.star_count,
-    issues: x.open_issues_count,
-    forks: x.forks_count,
-  }))
+    .flat(1)
+    .map(x => ({
+      id: `${x.id}-${x.web_url}`,
+      url: x.web_url,
+      name: x.name,
+      description: x.description,
+      updated: seconds(x.last_activity_at),
+      stars: x.star_count,
+      issues: x.open_issues_count,
+      forks: x.forks_count,
+    }))
   console.log(`fetched ${res.length} public projects from gitlab`)
   return res
 }
 
 const normalizeEdge = <T>(x: { edges: { node: T[] } }): T[] => {
-  if (!(x.edges instanceof Array)) throw new Error(`expected input to "normalizeEdge" to be an array, received ${typeof x}`)
+  if (! (x.edges instanceof Array)) {
+    throw new Error(`expected input to "normalizeEdge" to be an array, received ${typeof x}`)
+  }
   return x.edges.flatMap(e => e.node) ?? []
 }
 
@@ -85,11 +91,12 @@ const githubRepos = async (): Promise<GitActivity[]> => {
     url: 'graphql',
     method: 'post',
     data: {
-      query: query.loc.source.body,
+      query: githubUserDataQuery.loc.source.body,
       variables: {
         user: GITHUB_USER,
         limit: 100,
-        branches: 100,
+        branches: 1,
+        commits: 1,
         forks: false,
       },
     },
@@ -98,10 +105,10 @@ const githubRepos = async (): Promise<GitActivity[]> => {
     console.error(res)
     throw new Error()
   }
-  const totalCount = res.data.user.repositories.totalCount
+  const { totalCount } = res.data.user.repositories
   return R.pipe(
     x => normalizeEdge(x.data.user.repositories),
-    R.map(({refs, stargazers, languages, ...rest}) => {
+    R.map(({ refs, stargazers, primaryLanguage, ...rest }) => {
       const branches = R.pipe(
         normalizeEdge,
         R.map(R.pipe(
@@ -109,21 +116,22 @@ const githubRepos = async (): Promise<GitActivity[]> => {
             const [{ node }] = target.history.edges
             return {
               name,
-              ...node
+              ...node,
             }
           },
           R.over(R.lensProp('committedDate'), seconds),
         )),
-        R.sort(R.descend(x => x.committedDate))
+        R.sort(R.descend(x => x.committedDate)),
       )(refs)
       const updated = branches[0].committedDate
       return {
         ...rest,
         updated,
+        createdAt: seconds(rest.createdAt),
         forks: rest.forks.totalCount,
         issues: rest.issues.totalCount,
         stars: stargazers.totalCount,
-        language: languages.nodes[0]?.name,
+        language: primaryLanguage?.name,
         branches,
       }
     }),
@@ -134,7 +142,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
 
 const getRepos = async (): Promise<GitActivity[]> => {
   console.log('updating repolist cache')
-  const res = await Promise.all([gitlabRepos(), githubRepos()])
+  const res = (await Promise.all([githubRepos(), gitlabRepos()]))
   return R.pipe(
     R.flatten,
     R.uniqBy(x => x.name),
@@ -151,27 +159,30 @@ const readCache = async (): Promise<GitActivity[]> => {
   let result = '[]'
   try {
     result = await fs.readFile(cacheFile, 'utf8')
+    return JSON.parse(result)
   } catch (e) {
     console.error('error reading cache! writing empty cache')
     return writeCache([])
   }
-  return JSON.parse(result)
 }
 
 export default function main(interval?: number) {
-  const t = interval ?? 30 * 60 * 1000
-  const subscribe = () => {
-    getRepos().then(data => {
-      writeCache(data)
-      cache = data
-    })
+  const t = interval ?? 30 * 60 * 1000 // 30 minutes
+
+  const subscribe = async () => {
+    const data = await getRepos()
+    writeCache(data)
+    cache = data
     setTimeout(() => {
       subscribe()
-    }, cache.length === 0 ? 0 : t)
+    }, cache.length ? t : 0)
   }
+
   readCache().then(x => {
     cache = x
+    console.log(`${cache.length} repos in cache`)
     subscribe()
   })
+
   return { list: () => cache }
 }

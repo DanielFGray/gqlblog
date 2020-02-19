@@ -13,7 +13,7 @@ const social = [
   { url: 'https://reddit.com/u/danielfgray', icon: reddit },
 ]
 
-const Footer = () => (
+const Footer: React.FC = () => (
   <footer className="footer">
     <ul className="social">
       {social.map(({ url, icon }) => (

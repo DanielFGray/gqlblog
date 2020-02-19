@@ -16,8 +16,6 @@ const {
   APP_BASE,
   APP_URL,
   MOUNT,
-  PORT,
-  HOST,
 } = process.env
 
 const devMode = NODE_ENV === 'development'
@@ -97,8 +95,6 @@ const clientConfig = {
         APP_URL: JSON.stringify(APP_URL),
         APP_TITLE: JSON.stringify(APP_TITLE),
         MOUNT: JSON.stringify(MOUNT),
-        PORT: JSON.stringify(PORT),
-        HOST: JSON.stringify(HOST),
       },
     }),
     new WebpackAssetsManifest({
@@ -107,8 +103,8 @@ const clientConfig = {
       writeToDisk: true,
     }),
     ...(
-      NODE_ENV
-        ? [new OptimizeCssAssetsPlugin()]
+      ! devMode
+        ? [new OptimizeCssAssetsPlugin({ cssProcessor: require('cssnano') })]
         : []
     ),
   ],

@@ -7,10 +7,10 @@ import { promises as fs } from 'fs'
 import app from './app'
 import schema from './schema'
 
-const { NODE_ENV, PORT, HOST } = process.env
+const { NODE_ENV, PORT, HOST, APP_URL } = process.env
 
-const die = e => {
-  console.error(e)
+const die = (e?: Error | string) => {
+  if (e) console.error(e)
   process.exit(1)
 }
 
@@ -25,14 +25,13 @@ async function main() {
     })
   } else {
     const { devMiddleware } = await import('./dev')
-    const { hotClient } = await devMiddleware()
-    koa.use(hotClient)
+    koa.use(await devMiddleware())
   }
   koa.use(app())
 
   const server = http.createServer(koa.callback())
   await new Promise(res => { server.listen(Number(PORT), HOST, res) })
-  console.info(`server now running on http://${HOST}:${PORT}`)
+  console.info(`server now running on http://${APP_URL}`)
   SubscriptionServer.create(
     {
       execute,

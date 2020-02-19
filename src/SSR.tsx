@@ -28,9 +28,9 @@ const getAssets = (ctx: Koa.Context): Assets => {
       : ctx.state.webpackStats.toJson().assetsByChunkName.main,
   )
   return list.reduce((p: Assets, x) => {
-    if (/\.css$/.test(x)) {
+    if (x.endsWith('.css')) {
       p.styles.push(x)
-    } else if (/\.js$/.test(x)) {
+    } else if (x.endsWith('.js')) {
       p.scripts.push(x)
     }
     return p
@@ -51,7 +51,7 @@ export default async function SSR(ctx: Koa.Context) {
           console.error(networkError)
         }
       }),
-      new SchemaLink({schema}),
+      new SchemaLink({ schema }),
     ]),
   })
   const routerCtx: StaticRouterContext = {}
@@ -72,7 +72,7 @@ export default async function SSR(ctx: Koa.Context) {
   )
 
   const html = await renderToStringWithData(App)
-  const {helmet}: HelmetData = helmetCtx
+  const { helmet }: HelmetData = helmetCtx
   const data = { __INIT_DATA: client.extract() }
 
   if (routerCtx.statusCode) {

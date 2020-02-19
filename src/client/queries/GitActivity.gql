@@ -1,5 +1,6 @@
 query GitActivity {
   GitActivity {
+    id
     url
     name
     description
@@ -8,9 +9,5 @@ query GitActivity {
     issues
     forks
     language
-    branches {
-      committedDate
-      message
-    }
   }
 }

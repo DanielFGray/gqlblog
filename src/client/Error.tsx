@@ -1,18 +1,25 @@
 import React from 'react'
+import Stringify from './Stringify'
 
-export default class ErrorBoundary extends React.Component {
+interface ErrorBoundary {
+  didCatch: (error: Error, info: any) => void;
+  children: React.ReactNode;
+  fallback?: (error: Error) => React.ReactNode;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundary, { error: null | Error }> {
   constructor(props) {
     super(props)
     this.state = { error: null }
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     return { error }
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: Error, info: any) {
     if (this.props.didCatch) {
-      this.props.didCatch({ error, info })
+      this.props.didCatch(error, info)
     }
   }
 
@@ -20,8 +27,20 @@ export default class ErrorBoundary extends React.Component {
     const { error } = this.state
     const { fallback, children } = this.props
     if (error) {
-      return fallback
+      if (fallback) return fallback(error)
+      return (
+        <div className="ugly_error">
+          there was an error :(
+          {Stringify(
+            error instanceof Error
+              ? error.message
+              : error
+          )}
+        </div>
+      )
     }
     return children
   }
 }
+
+export default ErrorBoundary

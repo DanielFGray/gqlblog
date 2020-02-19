@@ -1,7 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Redirect, Switch, Route } from 'react-router-dom'
-import { useQuery } from '@apollo/react-hooks'
+import { Redirect, Switch, Route, RouteProps, RouteComponentProps } from 'react-router-dom'
 
 import { uniq } from '../utils'
 import Nav from './Nav'
@@ -12,12 +11,12 @@ import Loading from './Loading'
 import BlogPost from './BlogPost'
 import BlogList from './BlogList'
 import GitActivity from './GitActivity'
-import BlogListQuery from './queries/BlogList.gql'
+import { useBlogListQuery } from '../generated-types'
 
 const { APP_TITLE } = process.env
 
 export default function Layout() {
-  const { error, data } = useQuery(BlogListQuery)
+  const { error, data } = useBlogListQuery()
   if (error) {
     console.error(error)
     throw new Error(error.message)
@@ -25,10 +24,11 @@ export default function Layout() {
 
   if (! (data && data.BlogList)) return <Loading />
 
-  const categories = uniq(data.BlogList.map(x => x.category))
-  const tagList = uniq(data.BlogList.flatMap(x => x.tags))
+  const categories = uniq(data.BlogList.map(x => x?.category))
+  const tagList = uniq(data.BlogList.flatMap(x => x?.tags ?? []))
 
-  const routes = [ // FIXME: this should probably be lifted and computed sooner?
+  // FIXME: this should probably be lifted and computed sooner?
+  const routes: (RouteProps & { label: string })[] = [
     {
       label: 'Home',
       path: '/',
@@ -38,22 +38,28 @@ export default function Layout() {
     ...data.BlogList.flatMap(({ id, category }) => [{
       path: `/${category}/${id}`,
       exact: true,
-      render: props => <BlogPost {...props} id={id} cache={data.BlogList.find(x => x.id === id)} />,
+      render: (props: RouteComponentProps) => (
+        <BlogPost
+          {...props}
+          id={id}
+          cache={data.BlogList.find(x => x?.id === id)}
+        />
+      ),
     }, {
       path: `/${id}`,
       exact: true,
-      render: () => <Redirect to={`/${category}/${id}`} />,
+      render: _ => <Redirect to={`/${category}/${id}`} />,
     }]),
     ...categories.map(c => ({
       path: `/${c}`,
       label: c,
       exact: true,
-      render: props => <BlogList {...props} category={c} />,
+      render: (props: RouteComponentProps) => <BlogList {...props} category={c} />,
     })),
     ...tagList.map(t => ({
       path: `/tags/${t}`,
       exact: true,
-      render: props => <BlogList {...props} tag={t} />,
+      render: (props: RouteComponentProps) => <BlogList {...props} tag={t} />,
     })),
     {
       label: 'Projects',

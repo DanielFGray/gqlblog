@@ -37,7 +37,10 @@ export const staticFiles: Koa.Middleware = async (ctx, next) => {
 }
 
 export default function app() {
-  const apolloServer = new ApolloServer({ schema })
+  const apolloServer = new ApolloServer({
+    schema,
+    playground: true,
+  })
   return kcompose([
     koaHelmet(),
     logErrors,

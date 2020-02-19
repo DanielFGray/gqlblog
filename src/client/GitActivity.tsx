@@ -1,12 +1,10 @@
 import React from 'react'
 import ago from 's-ago'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import Loading from './Loading'
 import { urlTokens } from '../utils'
-import GitActivityQuery from './queries/GitActivity.gql'
+import { useGitActivityQuery, GitActivity as TGitActivity } from '../generated-types'
 
-const Linkify = text => urlTokens(text)
+const Linkify = (text: string) => urlTokens(text)
   .map((t, i) => {
     switch (t.type) {
     case 'url':
@@ -27,11 +25,11 @@ const Linkify = text => urlTokens(text)
     }
   })
 
-const prettyData = data => (
+const prettyData = (data: { [key: string]: number | null | undefined }) => (
   <ul>
     {['stars', 'issues', 'forks']
       .map(name => ({ name, count: data[name] }))
-      .filter(x => x.count > 0)
+      .filter(x => x.count)
       .map(({ count, name }) => (
         <li key={name}>
           {`${count} ${count === 1 ? name.replace(/s$/, '') : name}`}
@@ -41,12 +39,16 @@ const prettyData = data => (
 )
 
 const FeedItem = ({
-  description = '',
-  name,
-  updated,
-  url,
-  ...data
-}) => (
+  data: {
+    description = '',
+    name,
+    updated,
+    url,
+    language,
+    branches: _b,
+    ...data
+  },
+}: { data: TGitActivity }) => (
   <li className="repoitem">
     <div className="repo">
       <h1 className="title">
@@ -54,8 +56,8 @@ const FeedItem = ({
           {name}
         </a>
       </h1>
-      <div className="language">{data.language}</div>
-      <div className="description">{Linkify(description)}</div>
+      <div className="language">{language}</div>
+      <div className="description">{description && Linkify(description)}</div>
       <div className="updated">
         {`updated ${ago(new Date(updated))}`}
       </div>
@@ -66,10 +68,10 @@ const FeedItem = ({
 
 
 export default function GitActivity() {
-  const { data, errors, loading } = useQuery(GitActivityQuery)
-  if (errors) {
-    console.error(errors)
-    return 'something went wrong :('
+  const { data, error, loading } = useGitActivityQuery()
+  if (error) {
+    console.error(error)
+    return <>something went wrong :(</>
   }
   if (loading) return <Loading />
   if (! (data?.GitActivity.length)) {
@@ -80,7 +82,7 @@ export default function GitActivity() {
       <h1>Git repos</h1>
       <ul className="repolist">
         {data.GitActivity.map(x => (
-          <FeedItem key={x.url} {...x} />))}
+          <FeedItem key={x.url} data={x} />))}
       </ul>
     </div>
   )

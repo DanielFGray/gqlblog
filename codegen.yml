@@ -1,4 +1,4 @@
-schema: ./src/schema.gql
+schema: ./src/typeDefs.gql
 documents: ./src/client/queries/*.gql
 generates:
   src/generated-types.ts:
@@ -10,10 +10,11 @@ generates:
       - typescript-resolvers
       - typescript-react-apollo
     config:
-      skipTypename: true
       namingConvention: change-case#pascalCase
+      noGraphQLTag: true
+      overwrite: true
+      skipTypename: true
+      withComponent: false
+      withHOC: false
       withHooks: true
       withMutationFn: true
-      withHOC: false
-      withComponent: false
-      overwrite: true

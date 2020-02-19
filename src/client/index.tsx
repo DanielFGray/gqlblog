@@ -17,14 +17,10 @@ import './style.css'
 import Layout from './Layout'
 import ErrorBoundary from './Error'
 
-function handleError({ error, info }) {
-  console.log({ error, info })
-}
-
-const {APP_BASE, MOUNT, HOST, PORT} = process.env
+const { APP_BASE, MOUNT, APP_URL } = process.env
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!MOUNT) throw new Error('missing MOUNT env')
+  if (! MOUNT) throw new Error('missing MOUNT env')
 
   const cache = new InMemoryCache()
   try {
@@ -34,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cache.restore(initData)
     }
   } catch (e) { console.error('failed to update cache', e) }
+
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([
       onError(({ networkError, graphQLErrors }) => {
@@ -45,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }),
       new WebSocketLink({
-        uri: `ws://${HOST}:${PORT}/subscriptions`,
+        uri: `ws://${APP_URL}/subscriptions`,
         options: {
           reconnect: true,
         },
@@ -54,8 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ]),
     cache,
   })
+
   const init = (
-    <ErrorBoundary didCatch={handleError} fallback={<>There was en error :(</>}>
+    <ErrorBoundary didCatch={console.error}>
       <ApolloProvider client={apolloClient}>
         <Router basename={APP_BASE}>
           <HelmetProvider>
@@ -65,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </ApolloProvider>
     </ErrorBoundary>
   )
+
   const root = document.getElementById(MOUNT)
   ReactDOM.hydrate(init, root)
 })

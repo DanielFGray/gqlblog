@@ -2,18 +2,17 @@ import { curry } from 'ramda'
 
 export const thread = curry((as, a) => as.reduce((x, f) => f(x), a))
 
-export const filterIf = curry((truthy, fn, list) => (
-  truthy
-    ? list.filter(fn)
-    : list
-))
+export const uniq = <T>(x: T[]): T[] => Array.from(new Set(x))
 
-export const uniq = x => Array.from(new Set(x))
+interface Token {
+  type: 'string' | 'url';
+  value: string;
+}
 
 /* blame greenjello on freenode for this */
-export const urlTokens = str => {
+export const urlTokens = (str: string) => {
   const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
-  const tokens = []
+  const tokens: Token[] = []
   let last = 0
   if (! str) return tokens
   str.replace(regex, (m, ...args) => {

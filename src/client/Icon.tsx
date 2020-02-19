@@ -1,11 +1,17 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
+import { IconDefinition } from '@fortawesome/fontawesome-common-types'
 
-const FontAwesomeIcon = React.memo(({
+const FontAwesomeIcon = ({
   i,
   size,
   className = '',
   ...props
+}: {
+  i: IconDefinition | null;
+  size: string | null;
+  className: string;
+  props: React.SVGProps<SVGSVGElement>;
 }) => {
   if (! i) {
     return 'null'
@@ -35,7 +41,7 @@ const FontAwesomeIcon = React.memo(({
       <path d={svgPathData} fill="currentColor" />
     </svg>
   )
-})
+}
 
 FontAwesomeIcon.displayName = 'FontAwesomeIcon'
 

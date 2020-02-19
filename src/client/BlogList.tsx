@@ -1,17 +1,20 @@
 import * as React from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-import { thread, filterIf } from '../utils'
 import Loading from './Loading'
 import { Post } from './BlogPost'
 import { useBlogListQuery } from '../generated-types'
 
-export default function BlogList({ category, tag }) {
+export default function BlogList({
+  category,
+  tag,
+}: {
+  category?: string;
+  tag?: string;
+}) {
   const { error, data } = useBlogListQuery()
 
   if (error) {
     console.error(error)
-    return 'something went wrong :('
+    return <>something went wrong :(</>
   }
 
   if (! (data && data.BlogList)) {
@@ -19,20 +22,22 @@ export default function BlogList({ category, tag }) {
   }
 
   return (
-    <List data={data.BlogList} tag={tag} category={category} />
+    <div className="blogContainer">
+      <h1>Blog posts</h1>
+      {tag && <b>{`Tagged: ${tag}`}</b>}
+      {category && <b>{`Category: ${category}`}</b>}
+      {data.BlogList
+        .filter(e => {
+          if (category && e.category !== category) return false
+          if (tag && e.tags?.length && ! e.tags?.includes(tag)) return false
+          return true
+        })
+        .sort((a, b) => {
+          const aa = a.date
+          const bb = b.date
+          return aa > bb ? -1 : aa < bb ? 1 : 0
+        })
+        .map(y => <Post key={y.id} data={y} />)}
+    </div>
   )
 }
-
-export const List = ({ tag, category, data }) => (
-  <div className="blogContainer">
-    <h1>Blog posts</h1>
-    {tag && <b>{`Tagged: ${tag}`}</b>}
-    {category && <b>{`Category: ${category}`}</b>}
-    {thread([
-      filterIf(category, e => e.category === category),
-      filterIf(tag, e => e.tags.includes(tag)),
-      x => x.slice(0).sort((a, b) => b.date - a.date),
-      x => x.map(y => <Post key={y.id} data={y} />),
-    ], data)}
-  </div>
-)
