@@ -11,12 +11,15 @@ const {
   GITHUB_USER,
   GITLAB_KEY,
   GITLAB_USER,
-} = process.env
+} = require('./secrets')
 
 const cacheFile = path.resolve('./feedcache.json')
 let cache: GitActivity[] = []
 
-type fetchRequest = RequestInit & { url: string; data?: { [key: string]: any } }
+type fetchRequest = RequestInit & {
+  url: string;
+  data?: BodyInit;
+}
 
 const request = R.curry(async (a: fetchRequest, b: fetchRequest): Promise<unknown> => {
   const method = a.method ?? b.method ?? 'get'
@@ -107,7 +110,8 @@ const githubRepos = async (): Promise<GitActivity[]> => {
   }
   const { totalCount } = res.data.user.repositories
   return R.pipe(
-    x => normalizeEdge(x.data.user.repositories),
+    x => x.data.user.repositories,
+    normalizeEdge,
     R.map(({ refs, stargazers, primaryLanguage, ...rest }) => {
       const branches = R.pipe(
         normalizeEdge,
@@ -143,7 +147,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
 const getRepos = async (): Promise<GitActivity[]> => {
   console.log('updating repolist cache')
   const res = (await Promise.all([githubRepos(), gitlabRepos()]))
-  return R.pipe(
+  return R.pipe<GitActivity[]>(
     R.flatten,
     R.uniqBy(x => x.name),
     R.sort(R.descend(x => x.updated)),
