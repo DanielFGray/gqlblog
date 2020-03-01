@@ -11,33 +11,25 @@ const {
   GITHUB_USER,
   GITLAB_KEY,
   GITLAB_USER,
-} = require('./secrets')
+} = require('../secrets')
 
 const cacheFile = path.resolve('./feedcache.json')
 let cache: GitActivity[] = []
 
-type fetchRequest = RequestInit & {
-  url: string;
-  data?: BodyInit;
-}
+type fetchRequest = RequestInit & {url: string}
 
 const request = R.curry(async (a: fetchRequest, b: fetchRequest): Promise<unknown> => {
   const method = a.method ?? b.method ?? 'get'
-  const aheaders = a?.headers ?? {}
-  const bheaders = b?.headers ?? {}
-  const headers = { ...aheaders, ...bheaders }
-  const adata = a?.data ?? {}
-  const bdata = b?.data ?? {}
-  const data = { ...adata, ...bdata }
-  let url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
+  const headers = { ...a?.headers ?? {}, ...b?.headers ?? {} }
+  const data = {
+    ...a.body ?? {},
+    ...b.body ?? {},
+  }
   let body = null
+  let url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
   if (method === 'get') url = url.concat('?').concat(new URLSearchParams(data).toString())
   else body = JSON.stringify(data)
-  const res = await fetch(url, {
-    method,
-    headers,
-    body,
-  })
+  const res = await fetch(url, { method, headers, body })
   return res.json()
 })
 
@@ -61,7 +53,7 @@ const seconds = (d: number) => new Date(d).getTime()
 const gitlabRepos = async (): Promise<GitActivity[]> => {
   const publicProjects = (page: number) => gitlab({
     url: `users/${GITLAB_USER}/projects`,
-    data: { page, visibility: 'public' },
+    body: { page, visibility: 'public' },
   })
   const res = (await Promise.all([
     publicProjects(1),
@@ -93,7 +85,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
   const res = await github({
     url: 'graphql',
     method: 'post',
-    data: {
+    body: {
       query: githubUserDataQuery.loc.source.body,
       variables: {
         user: GITHUB_USER,
@@ -155,7 +147,11 @@ const getRepos = async (): Promise<GitActivity[]> => {
 }
 
 const writeCache = async (data: GitActivity[]) => {
-  await fs.writeFile(cacheFile, JSON.stringify(data), 'utf8')
+  try {
+    await fs.writeFile(cacheFile, JSON.stringify(data), 'utf8')
+  } catch (e) {
+    console.log('failed writing cache!', e)
+  }
   return data
 }
 
@@ -182,11 +178,9 @@ export default function main(interval?: number) {
     }, cache.length ? t : 0)
   }
 
-  readCache().then(x => {
-    cache = x
-    console.log(`${cache.length} repos in cache`)
-    subscribe()
-  })
+  readCache().then(x => { cache = x })
+    .then(() => { console.log(`${cache.length} repos in cache`) })
+    .then(() => { subscribe() })
 
   return { list: () => cache }
 }
