@@ -10,4 +10,4 @@ secrets.js
 feedcache.json
 content
 .env
-./src/generated-types.ts
+generated-types.ts

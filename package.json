@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "graphql-codegen",
+    "prebuild": "graphql-codegen",
     "postinstall": "typesync",
     "start": "nodemon -w webpack.config.js -w babel.config.js -w src -x 'babel-node --inspect -x .ts,.js,.tsx,.jsx src/index.ts'",
     "run:pm2": "pm2 -s delete gqlblog; pm2 start",
