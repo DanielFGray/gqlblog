@@ -40,6 +40,7 @@ export default function app() {
   const apolloServer = new ApolloServer({
     schema,
     playground: true,
+    introspection: true,
   })
   return kcompose([
     koaHelmet(),
