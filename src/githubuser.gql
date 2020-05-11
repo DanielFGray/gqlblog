@@ -1,6 +1,6 @@
 query GithubUserActivity($user: String!, $branches: Int!, $limit: Int!, $forks: Boolean!, $commits: Int!) {
   user(login: $user) {
-    repositories(first: $limit, isFork: $forks, orderBy: { field: PUSHED_AT, direction: DESC }) {
+    repositories(first: $limit, privacy: PUBLIC, isFork: $forks, orderBy: { field: PUSHED_AT, direction: DESC }) {
       totalCount
       edges {
         node {
@@ -8,8 +8,14 @@ query GithubUserActivity($user: String!, $branches: Int!, $limit: Int!, $forks: 
           name
           description
           url
-          diskUsage
           createdAt
+          diskUsage
+          collaborators {
+            totalCount
+          }
+          licenseInfo {
+            nickname
+          }
           stargazers {
             totalCount
           }
@@ -19,11 +25,13 @@ query GithubUserActivity($user: String!, $branches: Int!, $limit: Int!, $forks: 
           issues(states: [OPEN]) {
             totalCount
           }
+          pullRequests(states:[OPEN]) {
+            totalCount
+          }
           primaryLanguage {
             name
           }
           refs(refPrefix: "refs/heads/", orderBy: { direction: DESC, field: TAG_COMMIT_DATE }, first: $branches) {
-            totalCount
             edges {
               node {
                 ... on Ref {

@@ -9,5 +9,15 @@ query GitActivity {
     issues
     forks
     language
+    collaborators
+    diskUsage
+    pullRequests
+    license
+    branches {
+      name
+      committedDate
+      commitUrl
+      message
+    }
   }
 }

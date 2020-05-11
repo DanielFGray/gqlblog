@@ -11,7 +11,7 @@ export const resolvers: Resolvers = {
   Query: {
     BlogPost: (_, { id }) => blogfeed.get(id),
     BlogList: () => blogfeed.list(),
-    GitActivity: () => gitfeed.list(),
+    GitActivity: (_, { branches, limit }) => gitfeed.list({ branches, limit }),
   },
 }
 

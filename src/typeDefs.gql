@@ -12,7 +12,7 @@ type Blog {
 }
 
 type Query {
-  GitActivity: [GitActivity!]!
+  GitActivity(branches: Int, limit: Int): [GitActivity!]!
   BlogList: [Blog!]!
   BlogPost(id: String!): Blog!
 }
@@ -27,6 +27,10 @@ type GitActivity {
   forks: Int!
   description: String
   language: String
+  collaborators: Int
+  diskUsage: Int
+  pullRequests: Int
+  license: String
   branches: [GitBranch!]
 }
 
