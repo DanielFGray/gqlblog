@@ -6,32 +6,29 @@ import * as R from 'ramda'
 import githubUserDataQuery from './githubuser.gql'
 import { GitActivity } from './generated-types'
 
-const {
-  GITHUB_KEY,
-  GITHUB_USER,
-  GITLAB_KEY,
-  GITLAB_USER,
-} = require('../secrets')
+const { GITHUB_KEY, GITHUB_USER, GITLAB_KEY, GITLAB_USER } = require('../secrets')
 
 const cacheFile = path.resolve('./feedcache.json')
 let cache: GitActivity[] = []
 
-type fetchRequest = RequestInit & {url: string}
+type fetchRequest = RequestInit & { url: string }
 
-const request = R.curry(async (a: fetchRequest, b: fetchRequest): Promise<unknown> => {
-  const method = a.method ?? b.method ?? 'get'
-  const headers = { ...a?.headers ?? {}, ...b?.headers ?? {} }
-  const data = {
-    ...a.body ?? {},
-    ...b.body ?? {},
-  }
-  let body = null
-  let url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
-  if (method === 'get') url = url.concat('?').concat(new URLSearchParams(data).toString())
-  else body = JSON.stringify(data)
-  const res = await fetch(url, { method, headers, body })
-  return res.json()
-})
+const request = R.curry(
+  async (a: fetchRequest, b: fetchRequest): Promise<unknown> => {
+    const method = a.method ?? b.method ?? 'get'
+    const headers = { ...(a?.headers ?? {}), ...(b?.headers ?? {}) }
+    const data = {
+      ...(a.body ?? {}),
+      ...(b.body ?? {}),
+    }
+    let body = null
+    let url = b.url.startsWith('http') ? b.url : a.url.concat(b.url)
+    if (method === 'get') url = url.concat('?').concat(new URLSearchParams(data).toString())
+    else body = JSON.stringify(data)
+    const res = await fetch(url, { method, headers, body })
+    return res.json()
+  },
+)
 
 const gitlab = request({
   url: 'https://gitlab.com/api/v4/',
@@ -55,21 +52,16 @@ const gitlabRepos = async (): Promise<GitActivity[]> => {
     url: `users/${GITLAB_USER}/projects`,
     body: { page, visibility: 'public' },
   })
-  const res = (await Promise.all([
-    publicProjects(1),
-    publicProjects(2),
-  ]))
-    .flat(1)
-    .map(x => ({
-      id: `${x.id}-${x.web_url}`,
-      url: x.web_url,
-      name: x.name,
-      description: x.description,
-      updated: seconds(x.last_activity_at),
-      stars: x.star_count,
-      issues: x.open_issues_count,
-      forks: x.forks_count,
-    }))
+  const res = (await Promise.all([publicProjects(1), publicProjects(2)])).flat(1).map(x => ({
+    id: `${x.id}-${x.web_url}`,
+    url: x.web_url,
+    name: x.name,
+    description: x.description,
+    updated: seconds(x.last_activity_at),
+    stars: x.star_count,
+    issues: x.open_issues_count,
+    forks: x.forks_count,
+  }))
   console.log(`fetched ${res.length} public projects from gitlab`)
   return res
 }
@@ -90,7 +82,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
       variables: {
         user: GITHUB_USER,
         limit: 100,
-        branches: 1,
+        branches: 100,
         commits: 1,
         forks: false,
       },
@@ -104,30 +96,32 @@ const githubRepos = async (): Promise<GitActivity[]> => {
   return R.pipe(
     x => x.data.user.repositories,
     normalizeEdge,
-    R.map(({ refs, stargazers, primaryLanguage, ...rest }) => {
+    R.map(({ refs, stargazers, licenseInfo, primaryLanguage, ...rest }) => {
       const branches = R.pipe(
         normalizeEdge,
-        R.map(R.pipe(
-          ({ name, target }) => {
+        R.filter(x => ! x.name.startsWith('dependabot')),
+        R.map(
+          R.pipe(({ name, target }) => {
             const [{ node }] = target.history.edges
             return {
               name,
               ...node,
             }
-          },
-          R.over(R.lensProp('committedDate'), seconds),
-        )),
+          }, R.over(R.lensProp('committedDate'), seconds)),
+        ),
         R.sort(R.descend(x => x.committedDate)),
       )(refs)
-      const updated = branches[0].committedDate
       return {
         ...rest,
-        updated,
+        updated: branches[0].committedDate,
         createdAt: seconds(rest.createdAt),
         forks: rest.forks.totalCount,
         issues: rest.issues.totalCount,
         stars: stargazers.totalCount,
         language: primaryLanguage?.name,
+        collaborators: rest.collaborators?.totalCount,
+        pullRequests: rest.pullRequests?.totalCount,
+        license: licenseInfo?.nickname,
         branches,
       }
     }),
@@ -138,7 +132,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
 
 const getRepos = async (): Promise<GitActivity[]> => {
   console.log('updating repolist cache')
-  const res = (await Promise.all([githubRepos(), gitlabRepos()]))
+  const res = await Promise.all([githubRepos(), gitlabRepos()])
   return R.pipe<GitActivity[]>(
     R.flatten,
     R.uniqBy(x => x.name),
@@ -173,14 +167,27 @@ export default function main(interval?: number) {
     const data = await getRepos()
     writeCache(data)
     cache = data
-    setTimeout(() => {
-      subscribe()
-    }, cache.length ? t : 0)
+    setTimeout(
+      () => {
+        subscribe()
+      },
+      cache.length ? t : 0,
+    )
   }
 
-  readCache().then(x => { cache = x })
-    .then(() => { console.log(`${cache.length} repos in cache`) })
-    .then(() => { subscribe() })
+  readCache()
+    .then(x => {
+      cache = x
+      console.log(`${cache.length} repos in cache`)
+      subscribe()
+    })
 
-  return { list: () => cache }
+  return {
+    list: ({ branches = 1, limit = 100 }) => cache
+      .map(e => ({
+        ...e,
+        branches: e.branches?.slice(0, branches),
+      }))
+      .slice(0, limit),
+  }
 }

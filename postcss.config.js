@@ -6,8 +6,6 @@ module.exports = {
     'postcss-fixes': { preset: 'recommended' },
     'postcss-advanced-variables': {},
     'postcss-nested': {},
-    'postcss-extend-rule': {},
-    'postcss-property-lookup': {},
   },
   env: {
     production: {

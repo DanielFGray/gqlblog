@@ -22,7 +22,7 @@ export default function Layout() {
     throw new Error(error.message)
   }
 
-  if (! (data && data.BlogList)) return <Loading />
+  if (!(data && data.BlogList)) return <Loading />
 
   const categories = uniq(data.BlogList.map(x => x?.category))
   const tagList = uniq(data.BlogList.flatMap(x => x?.tags ?? []))
@@ -35,21 +35,20 @@ export default function Layout() {
       exact: true,
       component: Main,
     },
-    ...data.BlogList.flatMap(({ id, category }) => [{
-      path: `/${category}/${id}`,
-      exact: true,
-      render: (props: RouteComponentProps) => (
-        <BlogPost
-          {...props}
-          id={id}
-          cache={data.BlogList.find(x => x?.id === id)}
-        />
-      ),
-    }, {
-      path: `/${id}`,
-      exact: true,
-      render: _ => <Redirect to={`/${category}/${id}`} />,
-    }]),
+    ...data.BlogList.flatMap(({ id, category }) => [
+      {
+        path: `/${category}/${id}`,
+        exact: true,
+        render: (props: RouteComponentProps) => (
+          <BlogPost {...props} id={id} cache={data.BlogList.find(x => x?.id === id)} />
+        ),
+      },
+      {
+        path: `/${id}`,
+        exact: true,
+        render: _ => <Redirect to={`/${category}/${id}`} />,
+      },
+    ]),
     ...categories.map(c => ({
       path: `/${c}`,
       label: c,
@@ -73,20 +72,11 @@ export default function Layout() {
 
   return (
     <div className="layout">
-      <Helmet
-        defaultTitle={APP_TITLE}
-        titleTemplate={`${APP_TITLE} | %s`}
-      />
+      <Helmet defaultTitle={APP_TITLE} titleTemplate={`${APP_TITLE} | %s`} />
       <Nav {...{ routes }} />
-      <div className="main">
+      <main>
         <Switch>
-          {routes.map(({
-            path,
-            render,
-            label: _,
-            component: C,
-            ...rest
-          }) => (
+          {routes.map(({ path, render, label: _, component: C, ...rest }) => (
             <Route
               key={path || 'notfound'}
               path={path}
@@ -95,7 +85,7 @@ export default function Layout() {
             />
           ))}
         </Switch>
-      </div>
+      </main>
       <Footer />
     </div>
   )

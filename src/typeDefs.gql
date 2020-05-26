@@ -1,14 +1,14 @@
 type Blog {
-   title: String!
-   category: String
-   tags: [String!]
-   date: Float
-   words: Int!
-   readTime: String!
-   id: String!
-   url: String!
-   content: String!
-   excerpt: String!
+  title: String!
+  category: String
+  tags: [String!]
+  date: Float
+  words: Int!
+  readTime: String!
+  id: String!
+  url: String!
+  content: String!
+  excerpt: String!
 }
 
 type Query {

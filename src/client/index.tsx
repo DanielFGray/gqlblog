@@ -9,13 +9,13 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { onError } from 'apollo-link-error'
 import { ApolloLink } from 'apollo-link'
 import { WebSocketLink } from 'apollo-link-ws'
-
-import 'normalize.css'
-import 'prismjs/themes/prism-okaidia.css'
-import './style.css'
-
 import Layout from './Layout'
 import ErrorBoundary from './Error'
+
+import 'normalize.css'
+import './style.css'
+import 'prism-themes/themes/prism-dracula.css'
+import './font-awesome.css'
 
 const { APP_BASE, MOUNT, APP_URL } = process.env
 

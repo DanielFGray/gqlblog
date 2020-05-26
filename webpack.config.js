@@ -8,15 +8,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 
-const {
-  NODE_ENV,
-  PUBLIC_DIR,
-  OUTPUT_DIR,
-  APP_TITLE,
-  APP_BASE,
-  APP_URL,
-  MOUNT,
-} = process.env
+const { NODE_ENV, PUBLIC_DIR, OUTPUT_DIR, APP_TITLE, APP_BASE, APP_URL, MOUNT } = process.env
 
 const devMode = NODE_ENV === 'development'
 
@@ -24,19 +16,12 @@ const cssLoaders = [
   {
     test: /\.css$/,
     include: /node_modules/,
-    use: [
-      MiniCssExtractPlugin.loader,
-      'css-loader',
-    ],
+    use: [MiniCssExtractPlugin.loader, 'css-loader'],
   },
   {
     test: /\.css$/,
     exclude: /node_modules/,
-    use: [
-      MiniCssExtractPlugin.loader,
-      'css-loader',
-      'postcss-loader',
-    ],
+    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
   },
 ]
 
@@ -44,14 +29,7 @@ const babelLoader = [
   {
     test: /\.(gql|[tj]sx?)$/,
     exclude: /node_modules/,
-    use: [
-      {
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-        },
-      },
-    ],
+    use: ['babel-loader'],
   },
 ]
 
@@ -78,10 +56,7 @@ const clientConfig = {
     chunkFilename: devMode ? '[name].js' : '[id]-[chunkhash].js',
   },
   module: {
-    rules: [
-      ...babelLoader,
-      ...cssLoaders,
-    ],
+    rules: [...babelLoader, ...cssLoaders],
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -102,11 +77,7 @@ const clientConfig = {
       output: path.join(path.resolve(OUTPUT_DIR), 'manifest.json'),
       writeToDisk: true,
     }),
-    ...(
-      ! devMode
-        ? [new OptimizeCssAssetsPlugin({ cssProcessor: require('cssnano') })]
-        : []
-    ),
+    ...(! devMode ? [new OptimizeCssAssetsPlugin({ cssProcessor: require('cssnano') })] : []),
   ],
   stats,
 }
@@ -117,10 +88,7 @@ const serverConfig = {
   entry: { index: './src/index' },
   devtool: 'source-map',
   target: 'async-node',
-  externals: [
-    /manifest\.json$/,
-    nodeExternals(),
-  ],
+  externals: [/manifest\.json$/, nodeExternals()],
   resolve: {
     extensions,
   },
@@ -132,8 +100,7 @@ const serverConfig = {
     rules: babelLoader,
   },
   stats,
-  plugins: [
-  ],
+  plugins: [],
 }
 
 module.exports = [clientConfig, serverConfig]
