@@ -31,6 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) { console.error('failed to update cache', e) }
 
+  const websocketProtocol = NODE_ENV == 'production'
+    ? 'wss'
+    : 'ws'
+
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([
       onError(({ networkError, graphQLErrors }) => {
@@ -42,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }),
       new WebSocketLink({
-        uri: `ws://${APP_URL}/subscriptions`,
+        uri: `${websocketProtocol}://${APP_URL}/subscriptions`,
         options: {
           reconnect: true,
         },
