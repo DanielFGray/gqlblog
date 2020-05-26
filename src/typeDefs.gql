@@ -1,0 +1,43 @@
+type Blog {
+  title: String!
+  category: String
+  tags: [String!]
+  date: Float
+  words: Int!
+  readTime: String!
+  id: String!
+  url: String!
+  content: String!
+  excerpt: String!
+}
+
+type Query {
+  GitActivity(branches: Int, limit: Int): [GitActivity!]!
+  BlogList: [Blog!]!
+  BlogPost(id: String!): Blog!
+}
+
+type GitActivity {
+  id: ID!
+  url: String!
+  name: String!
+  updated: Float!
+  stars: Int!
+  issues: Int
+  forks: Int!
+  description: String
+  language: String
+  collaborators: Int
+  diskUsage: Int
+  pullRequests: Int
+  license: String
+  branches: [GitBranch!]
+}
+
+type GitBranch {
+  id: ID!
+  message: String!
+  committedDate: Float!
+  name: String!
+  commitUrl: String!
+}

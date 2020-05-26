@@ -6,7 +6,7 @@ const { APP_TITLE } = process.env
 export default function Nav({ routes }) {
   return (
     <header>
-      <div>
+      <div className="title">
         {APP_TITLE}
       </div>
       <nav className="nav">

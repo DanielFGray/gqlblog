@@ -9,3 +9,5 @@ node_modules/
 secrets.js
 feedcache.json
 content
+.env
+generated-types.ts

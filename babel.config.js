@@ -15,8 +15,8 @@ module.exports = {
     '@babel/preset-react',
   ],
   plugins: [
-    'import-graphql',
-    'babel-plugin-graphql-tag',
+    ['import-graphql', { extensions: ['.gql'] }],
+    // ['babel-plugin-graphql-tag'],
     // ['@babel/plugin-proposal-class-properties', { loose: true }],
     // ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],
     // '@babel/plugin-proposal-throw-expressions',

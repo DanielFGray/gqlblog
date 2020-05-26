@@ -1,14 +1,22 @@
 /* eslint-disable react/no-danger, react/jsx-props-no-spreading */
 import React from 'react'
+import { HelmetData } from 'react-helmet'
 import { renderToStaticMarkup } from 'react-dom/server'
+
+const { APP_BASE } = process.env
 
 export default function Html({
   data,
   html,
   helmet,
-  appBase = '',
   styles,
   scripts,
+}: {
+  data: any;
+  html: string;
+  styles: string[];
+  scripts: string[];
+  helmet: HelmetData;
 }) {
   return `<!doctype html>${renderToStaticMarkup((
     <html lang="en" {...helmet.htmlAttributes.toComponent()}>
@@ -30,7 +38,7 @@ export default function Html({
             key={link}
             rel="stylesheet"
             type="text/css"
-            href={`${appBase}/${link}`}
+            href={`${APP_BASE}/${link}`}
           />
         ))}
       </head>
@@ -58,7 +66,7 @@ export default function Html({
             key={js}
             defer
             type="text/javascript"
-            src={`${appBase}/${js}`}
+            src={`${APP_BASE}/${js}`}
           />
         ))}
       </body>

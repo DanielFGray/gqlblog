@@ -1,14 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
 module.exports = {
-  plugins: [
-    require('postcss-import')(),
-    require('postcss-preset-env')({ stage: 0 }),
-    require('postcss-fixes')({ preset: 'recommended' }),
-    require('postcss-advanced-variables')(),
-    require('postcss-nested')(),
-    require('postcss-extend-rule')(),
-    require('postcss-property-lookup')(),
-  ],
+  plugins: {
+    'postcss-import': {},
+    'postcss-preset-env': { stage: 0 },
+    'postcss-fixes': { preset: 'recommended' },
+    'postcss-advanced-variables': {},
+    'postcss-nested': {},
+  },
   env: {
     production: {
       cssnano: {

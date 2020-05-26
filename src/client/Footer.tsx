@@ -7,13 +7,13 @@ import { faReddit as reddit } from '@fortawesome/free-brands-svg-icons/faReddit'
 import Icon from './Icon'
 
 const social = [
-  { url: 'https://gitlab.com/danielfgray', icon: git },
+  { url: 'https://github.com/danielfgray', icon: git },
   { url: 'https://fb.me/danielfgray', icon: facebook },
   { url: 'https://twitter.com/danielfgray', icon: twitter },
   { url: 'https://reddit.com/u/danielfgray', icon: reddit },
 ]
 
-const Footer = () => (
+const Footer: React.FC = () => (
   <footer className="footer">
     <ul className="social">
       {social.map(({ url, icon }) => (

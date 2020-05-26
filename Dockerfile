@@ -1,29 +1,44 @@
-FROM node:10-alpine
+FROM node:alpine as builder
+
+RUN mkdir /app && chown -R node:node /app
+WORKDIR /app
+USER node
+
+COPY --chown=node:node package.json .
+COPY --chown=node:node yarn.lock .
+
+RUN yarn
+
+COPY --chown=node:node . .
+
+# RUN yarn test
+RUN yarn build
+
+FROM node:alpine
 
 ARG PORT=3000
 ENV PORT $PORT
 EXPOSE $PORT
 ENV HOST 0.0.0.0
-
-RUN npm i yarn@latest -g
+ENV NODE_ENV=production
 
 RUN apk add --no-cache tini
 
-RUN mkdir /opt/gqlblog && chown node:node /opt/gqlblog
-WORKDIR /opt/gqlblog
+RUN mkdir /app && chown -R node:node /app
+WORKDIR /app
 USER node
-COPY . .
 
-ADD package.json yarn.lock /tmp/
-RUN cd /tmp && yarn
-RUN ln -sf /tmp/node_modules /opt/gqlblog/
+COPY --chown=node:node --from=builder "/app/package.json" .
+COPY --chown=node:node --from=builder "/app/yarn.lock" .
+COPY --chown=node:node --from=builder "/app/dist/" ./dist/
+COPY --chown=node:node --from=builder "/app/public/" ./public/
+COPY --chown=node:node --from=builder "/app/content/" ./content/
+COPY --chown=node:node --from=builder "/app/.env" .
 
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
-
-RUN yarn build
+RUN yarn
+RUN ls -la
 
 # HEALTHCHECK --interval=30s CMD node healthcheck.js
 
 ENTRYPOINT [ "/sbin/tini" ]
-CMD [ "./docker-entrypoint.sh" ]
+CMD [ "node", "./dist/index.js" ]

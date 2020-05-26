@@ -1,0 +1,22 @@
+query GitActivity {
+  GitActivity {
+    id
+    url
+    name
+    description
+    updated
+    stars
+    issues
+    forks
+    language
+    collaborators
+    diskUsage
+    license
+    branches {
+      name
+      committedDate
+      commitUrl
+      message
+    }
+  }
+}
