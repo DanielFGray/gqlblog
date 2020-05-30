@@ -17,7 +17,7 @@ import './style.css'
 import 'prism-themes/themes/prism-dracula.css'
 import './font-awesome.css'
 
-const { APP_BASE, MOUNT, APP_URL } = process.env
+const { APP_BASE, MOUNT, APP_URL, NODE_ENV } = process.env
 
 document.addEventListener('DOMContentLoaded', () => {
   if (! MOUNT) throw new Error('missing MOUNT env')
