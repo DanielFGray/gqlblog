@@ -8,7 +8,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { onError } from 'apollo-link-error'
 import { ApolloLink } from 'apollo-link'
-import { WebSocketLink } from 'apollo-link-ws'
+// import { WebSocketLink } from 'apollo-link-ws'
 import Layout from './Layout'
 import ErrorBoundary from './Error'
 
@@ -17,7 +17,7 @@ import './style.css'
 import 'prism-themes/themes/prism-dracula.css'
 import './font-awesome.css'
 
-const { APP_BASE, MOUNT, APP_URL, NODE_ENV } = process.env
+const { APP_BASE, MOUNT } = process.env
 
 document.addEventListener('DOMContentLoaded', () => {
   if (! MOUNT) throw new Error('missing MOUNT env')
@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (e) { console.error('failed to update cache', e) }
 
-  const websocketProtocol = NODE_ENV == 'production'
-    ? 'wss'
-    : 'ws'
+  // const websocketProtocol = NODE_ENV == 'production'
+  //   ? 'wss'
+  //   : 'ws'
 
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([
@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error(networkError)
         }
       }),
-      new WebSocketLink({
-        uri: `${websocketProtocol}://${APP_URL}/subscriptions`,
-        options: {
-          reconnect: true,
-        },
-      }),
+      // new WebSocketLink({
+      //   uri: `${websocketProtocol}://${APP_URL}/subscriptions`,
+      //   options: {
+      //     reconnect: true,
+      //   },
+      // }),
       new HttpLink({ credentials: 'same-origin', uri: '/graphql' }),
     ]),
     cache,
