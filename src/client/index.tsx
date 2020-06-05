@@ -38,12 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const apolloClient = new ApolloClient({
     link: ApolloLink.from([
       onError(({ networkError, graphQLErrors }) => {
-        if (graphQLErrors) {
-          console.error(...graphQLErrors)
-        }
-        if (networkError) {
-          console.error(networkError)
-        }
+        if (graphQLErrors) console.error(...graphQLErrors)
+        if (networkError) console.error(networkError)
       }),
       // new WebSocketLink({
       //   uri: `${websocketProtocol}://${APP_URL}/subscriptions`,

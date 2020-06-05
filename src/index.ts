@@ -46,6 +46,7 @@ async function main() {
 }
 main().catch(die)
 
-process.on('exit', () => die('exiting!'))
-process.on('SIGINT', () => die('interrupted!'))
-process.on('uncaughtException', die)
+process
+  .on('exit', () => die('exiting!'))
+  .on('SIGINT', () => die('interrupted!'))
+  .on('uncaughtException', die)

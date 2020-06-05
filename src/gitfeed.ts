@@ -62,7 +62,7 @@ const gitlabRepos = async (): Promise<GitActivity[]> => {
     issues: x.open_issues_count,
     forks: x.forks_count,
   }))
-  console.log(`fetched ${res.length} public projects from gitlab`)
+  console.log(`fetched ${res.length} repos from gitlab`)
   return res
 }
 
@@ -126,7 +126,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
       }
     }),
     R.sort(R.descend(x => x.branches[0].committedDate)),
-    R.tap(x => console.log(`fetched ${x.length}/${totalCount} public projects from github`)),
+    R.tap(x => console.log(`fetched ${x.length}/${totalCount} repos from github`)),
   )(res)
 }
 
