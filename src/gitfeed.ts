@@ -167,19 +167,14 @@ export default function main(interval?: number) {
     const data = await getRepos()
     writeCache(data)
     cache = data
-    setTimeout(
-      () => {
-        subscribe()
-      },
-      cache.length ? t : 0,
-    )
+    setTimeout(subscribe, t)
   }
 
   readCache()
     .then(x => {
       cache = x
       console.log(`${cache.length} repos in cache`)
-      subscribe()
+      setTimeout(subscribe, cache.length ? t : 0)
     })
 
   return {
