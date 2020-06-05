@@ -50,3 +50,4 @@ process
   .on('exit', () => die('exiting!'))
   .on('SIGINT', () => die('interrupted!'))
   .on('uncaughtException', die)
+  .on('unhandledRejection', die)
