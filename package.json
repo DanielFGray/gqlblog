@@ -30,7 +30,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-schema": "^1.2.4",
     "apollo-link-ws": "^1.0.19",
-    "apollo-server": "^2.10.1",
+    "apollo-server": "^2.14.2",
     "apollo-server-koa": "^2.10.1",
     "chalk": "^3.0.0",
     "cheerio": "^1.0.0-rc.3",
