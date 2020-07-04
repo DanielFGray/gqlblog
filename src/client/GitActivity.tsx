@@ -63,7 +63,7 @@ const FeedItem = ({
           {' on '}
           <span className="name">{branch.name}</span>
           {': '}
-          <span className="message">{branch.message}</span>
+          <a href={branch.commitUrl} className="message" target="_blank" rel="noopener noreferrer">{branch.message}</a>
         </div>
       ) : (
         <div className="branchinfo">
