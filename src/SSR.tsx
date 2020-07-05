@@ -1,5 +1,6 @@
 import Koa from 'koa'
 import React from 'react'
+import type webpack from 'webpack'
 import { renderToStringWithData } from '@apollo/react-ssr'
 import { StaticRouter, StaticRouterContext } from 'react-router'
 import { HelmetProvider } from 'react-helmet-async'
@@ -15,8 +16,8 @@ import Html from './Html'
 import schema from './schema'
 
 type Assets = {
-  styles: string[];
-  scripts: string[];
+  styles: string[]
+  scripts: string[]
 }
 
 const { APP_BASE } = process.env
@@ -25,31 +26,30 @@ const getAssets = (ctx: Koa.Context): Assets => {
   const list: string[] = Object.values(
     process.env.NODE_ENV === 'production'
       ? ctx.state.manifest
-      : ctx.state.webpackStats.toJson().assetsByChunkName.main,
+      : (ctx.state.webpackStats as webpack.Stats).toJson().assetsByChunkName?.main,
   )
-  return list.reduce((p: Assets, x) => {
-    if (x.endsWith('.css')) {
-      p.styles.push(x)
-    } else if (x.endsWith('.js')) {
-      p.scripts.push(x)
-    }
-    return p
-  }, { styles: [], scripts: [] })
+  return list.reduce(
+    (p: Assets, x) => {
+      if (x.endsWith('.css')) {
+        p.styles.push(x)
+      } else if (x.endsWith('.js')) {
+        p.scripts.push(x)
+      }
+      return p
+    },
+    { styles: [], scripts: [] },
+  )
 }
 
-export default async function SSR(ctx: Koa.Context) {
+export default async function SSR(ctx: Koa.Context): Promise<void> {
   const { styles, scripts } = getAssets(ctx)
   const client = new ApolloClient({
     ssrMode: true,
     cache: new InMemoryCache(),
     link: ApolloLink.from([
       onError(({ networkError, graphQLErrors }) => {
-        if (graphQLErrors) {
-          console.error(...graphQLErrors)
-        }
-        if (networkError) {
-          console.error(networkError)
-        }
+        if (graphQLErrors) console.error(...graphQLErrors)
+        if (networkError) console.error(networkError)
       }),
       new SchemaLink({ schema }),
     ]),
@@ -59,11 +59,7 @@ export default async function SSR(ctx: Koa.Context) {
 
   const App = (
     <ApolloProvider client={client}>
-      <StaticRouter
-        basename={APP_BASE}
-        location={ctx.url}
-        context={routerCtx}
-      >
+      <StaticRouter basename={APP_BASE} location={ctx.url} context={routerCtx}>
         <HelmetProvider context={helmetCtx}>
           <Layout />
         </HelmetProvider>

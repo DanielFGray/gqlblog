@@ -56,10 +56,10 @@ export const Post = ({ data }: { data: Blog }) => {
   )
 }
 
-type Cache = Pick<Blog, 'id' | 'title' | 'category' | 'url' | 'date' | 'tags' | 'excerpt' | 'words' | 'readTime'>
+type Cache = Omit<Blog, 'content'>
 
 // FIXME: why am i manually passing a cache around
-export default function BlogPost({ id, cache }: { id: string; cache: Cache }) {
+export default function BlogPost({ id, cache }: { id: string; cache: Cache }): JSX.Element {
   const { error, data, loading } = useBlogPostQuery({ variables: { id } })
   if (error) {
     console.error(error)

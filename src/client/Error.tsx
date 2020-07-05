@@ -2,9 +2,9 @@ import React from 'react'
 import Stringify from './Stringify'
 
 interface ErrorBoundary {
-  didCatch: (error: Error, info: any) => void;
-  children: React.ReactNode;
-  fallback?: (error: Error) => React.ReactNode;
+  didCatch: (error: Error, info: any) => void
+  children: React.ReactNode
+  fallback?: (error: Error) => React.ReactNode
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundary, { error: null | Error }> {
@@ -31,11 +31,7 @@ class ErrorBoundary extends React.Component<ErrorBoundary, { error: null | Error
       return (
         <div className="ugly_error">
           there was an error :(
-          {Stringify(
-            error instanceof Error
-              ? error.message
-              : error
-          )}
+          {Stringify(error instanceof Error ? error.message : error)}
         </div>
       )
     }

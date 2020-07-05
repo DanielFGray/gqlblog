@@ -7,7 +7,7 @@ import send from 'koa-send'
 import schema from './schema'
 import SSR from './SSR'
 
-const { PUBLIC_DIR: root } = process.env
+const { PUBLIC_DIR } = process.env
 
 export const logErrors: Koa.Middleware = async (ctx, next) => {
   // FIXME: better error handling?
@@ -30,13 +30,13 @@ export const logger: Koa.Middleware = async (ctx, next) => {
 export const staticFiles: Koa.Middleware = async (ctx, next) => {
   try {
     if (ctx.path !== '/') {
-      return await send(ctx, ctx.path, { root })
+      return await send(ctx, ctx.path, { root: PUBLIC_DIR })
     }
   } catch (e) { /* fallthrough */ }
   return next()
 }
 
-export default function app() {
+export default function app(): Koa.Middleware {
   const apolloServer = new ApolloServer({
     schema,
     playground: true,

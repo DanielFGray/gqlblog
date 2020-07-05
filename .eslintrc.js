@@ -58,7 +58,6 @@ module.exports = {
     'react/prop-types': 'off',
     'valid-jsdoc': 'warn',
     '@typescript-eslint/await-thenable': 'warn',
-    '@typescript-eslint/ban-ts-ignore': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/require-await': 'warn',

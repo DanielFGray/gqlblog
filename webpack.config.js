@@ -1,4 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies,global-require */
+/* eslint-disable
+  @typescript-eslint/no-var-requires,
+  import/no-extraneous-dependencies,
+  global-require */
 
 require('dotenv').config()
 const path = require('path')
@@ -29,7 +32,7 @@ const babelLoader = [
   {
     test: /\.(gql|[tj]sx?)$/,
     exclude: /node_modules/,
-    use: ['babel-loader'],
+    use: 'babel-loader',
   },
 ]
 
@@ -41,6 +44,8 @@ const stats = {
 
 const extensions = ['.ts', '.tsx', '.js', '.jsx', '.cjs', '.gql']
 
+/** @typedef {import('webpack').Configuration} WebpackConfig */
+/** @type WebpackConfig */
 const clientConfig = {
   name: 'client',
   mode: NODE_ENV,
@@ -82,6 +87,7 @@ const clientConfig = {
   stats,
 }
 
+/** @type WebpackConfig */
 const serverConfig = {
   name: 'server',
   mode: NODE_ENV,

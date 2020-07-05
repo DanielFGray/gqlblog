@@ -8,11 +8,10 @@ const FontAwesomeIcon = ({
   className = '',
   ...props
 }: {
-  i: IconDefinition | null;
+  i: IconDefinition;
   size: string | null;
   className: string;
-  props: React.SVGProps<SVGSVGElement>;
-}) => {
+} & React.SVGProps<SVGSVGElement>): JSX.Element => {
   if (! i) {
     return 'null'
   }
