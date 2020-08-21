@@ -8,11 +8,11 @@ const FontAwesomeIcon = ({
   className = '',
   ...props
 }: {
-  i: IconDefinition;
-  size: string | null;
-  className: string;
+  i: IconDefinition
+  size: string | null
+  className: string
 } & React.SVGProps<SVGSVGElement>): JSX.Element => {
-  if (! i) {
+  if (!i) {
     return 'null'
   }
   const {
@@ -35,8 +35,7 @@ const FontAwesomeIcon = ({
       role="img"
       viewBox={`0 0 ${width} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+      {...props}>
       <path d={svgPathData} fill="currentColor" />
     </svg>
   )

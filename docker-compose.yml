@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 
 networks:
   appnet:
@@ -8,17 +8,19 @@ services:
   gqlblog:
     build: .
     container_name: gqlblog
+    ports:
+      - 3000:80
     networks:
       - appnet
     environment:
-      - "VIRTUAL_HOST=dfg.rocks"
-      - "VIRTUAL_PORT=3000"
+      - 'VIRTUAL_HOST=dfg.rocks'
+      - 'VIRTUAL_PORT=3000'
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.blog.rule=Host(`dfg.rocks`)"
-      - "traefik.http.services.blog.loadbalancer.server.port=3000"
-      - "traefik.http.routers.blog.entrypoints=web"
-      - "traefik.http.routers.blog.tls.certresolver=mydnschallenge"
-      - "traefik.http.middlewares.blog.redirectscheme.scheme=https"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.blog.rule=Host(`dfg.rocks`)'
+      - 'traefik.http.services.blog.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.blog.entrypoints=web'
+      - 'traefik.http.routers.blog.tls.certresolver=mydnschallenge'
+      - 'traefik.http.middlewares.blog.redirectscheme.scheme=https'
       # - "traefik.http.routers.blog.tls.domains[0].main=dfg.rocks"
       # - "traefik.http.routers.blog.tls.domains[0].sans=*.dfg.rocks"

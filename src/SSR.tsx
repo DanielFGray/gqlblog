@@ -1,17 +1,13 @@
 import Koa from 'koa'
 import React from 'react'
 import type webpack from 'webpack'
-import { renderToStringWithData } from '@apollo/react-ssr'
 import { StaticRouter, StaticRouterContext } from 'react-router'
 import { HelmetProvider } from 'react-helmet-async'
 import { HelmetData } from 'react-helmet'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { ApolloClient } from 'apollo-client'
-import { SchemaLink } from 'apollo-link-schema'
-import { onError } from 'apollo-link-error'
-import { ApolloLink } from 'apollo-link'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import Layout from './client/Layout'
+import { ApolloProvider, ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
+import { renderToStringWithData } from '@apollo/client/react/ssr'
+import { SchemaLink } from '@apollo/client/link/schema'
+import { onError } from '@apollo/client/link/error'
 import Html from './Html'
 import schema from './schema'
 
@@ -20,7 +16,14 @@ type Assets = {
   scripts: string[]
 }
 
-const { APP_BASE } = process.env
+const { APP_BASE, NODE_ENV } = process.env
+
+const getApp = async (): Promise<React.FC> => {
+  // eslint-disable-next-line global-require
+  if (NODE_ENV === 'production') return require('./client/Layout')
+  const importFresh = (await import('import-fresh')).default
+  return (await importFresh('./client/Layout')).default
+}
 
 const getAssets = (ctx: Koa.Context): Assets => {
   const list: string[] = Object.values(
@@ -57,6 +60,7 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
   const routerCtx: StaticRouterContext = {}
   const helmetCtx = {}
 
+  const Layout = await getApp()
   const App = (
     <ApolloProvider client={client}>
       <StaticRouter basename={APP_BASE} location={ctx.url} context={routerCtx}>
@@ -69,7 +73,7 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
 
   const html = await renderToStringWithData(App)
   const { helmet }: HelmetData = helmetCtx
-  const data = { __INIT_DATA: client.extract() }
+  const data = client.extract()
 
   if (routerCtx.statusCode) {
     ctx.status = routerCtx.statusCode

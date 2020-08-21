@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "incremental": true,
+    // "incremental": true,
     "target": "ESNext",
     "module": "ESNext",
     // "lib": [],
@@ -14,7 +14,7 @@
     // "outDir": "./",
     "rootDir": "./src",
     // "composite": true,
-    "tsBuildInfoFile": "./node_modules/tsccache",
+    // "tsBuildInfoFile": "./node_modules/tsccache",
     // "removeComments": true,
     "noEmit": true,
     "importHelpers": true,

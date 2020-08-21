@@ -9,6 +9,7 @@
 
 * {
   box-sizing: border-box;
+
   /* border: 1px solid #f00; */
 }
 
@@ -248,7 +249,9 @@ a:hover {
 .projectList {
   padding: 0;
   margin: 0;
+
   /* column-count: 2; */
+
   /* column-gap: 0.5em; */
 }
 
@@ -313,6 +316,7 @@ a:hover {
 
   .blog {
     /* background: var(--color-bg-alt); */
+
     /* padding: 0.25em; */
     margin-bottom: 0.5em;
     font-size: smaller;

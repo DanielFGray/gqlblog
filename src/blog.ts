@@ -15,13 +15,17 @@ const { NODE_ENV } = process.env
 
 const md = new MarkdownIt({})
   .use(prism, { plugins: ['line-highlight'] })
-  .use(anchor, { permalink: true, permalinkBefore: true, permalinkSymbol: '#' })
+  .use(anchor, {
+    permalink: true,
+    permalinkBefore: true,
+    permalinkSymbol: '#',
+  })
   .use(toc, { containerClass: 'toc', listType: 'ul' })
 
 export const markdown = (text: string) => md.render(`\${toc}${text}`)
 
 type PostCache = {
-  [key: string]: Blog;
+  [key: string]: Blog
 }
 
 const cache: PostCache = {}
@@ -29,6 +33,7 @@ const cache: PostCache = {}
 const basenameWithoutExtension = R.replace(/^.*[\\/](.*?).md$/, '$1')
 
 async function file2markdown(path: string) {
+  console.log('process markdown file: %s', path)
   const source = await fs.readFile(path)
   const { data, content: orig } = matter(source)
   const { title, date, category, tags } = data
@@ -45,7 +50,7 @@ async function file2markdown(path: string) {
     content,
     readTime,
     words,
-    date: (new Date(date)).getTime(),
+    date: new Date(date).getTime(),
     url,
     excerpt,
   }
@@ -53,27 +58,39 @@ async function file2markdown(path: string) {
 }
 
 export default function main() {
-  if (NODE_ENV !== 'development') {
+  if (NODE_ENV === 'development') {
+    console.log('watching markdown files...')
     const watcher = chokidar.watch('./content/**/*.md')
-    watcher.on('add', f => { file2markdown(f) })
-    watcher.on('change', f => { file2markdown(f) })
-    watcher.on('unlink', f => { delete cache[basenameWithoutExtension(f)] })
-  } else {
-    readdirp.promise('./content', {
-      root: './content',
-      fileFilter: ['*.md'],
-      directoryFilter: ['!.git', '!*modules'],
-      type: 'files',
-      depth: 3,
+    watcher.on('add', file2markdown)
+    watcher.on('change', file2markdown)
+    watcher.on('unlink', f => {
+      delete cache[basenameWithoutExtension(f)]
     })
-      .then(R.tap(files => { console.log(`${files.length} blog posts found`) }))
-      .then(R.forEach(f => { file2markdown(f.fullPath) }))
+  } else {
+    readdirp
+      .promise('./content', {
+        root: './content',
+        fileFilter: ['*.md'],
+        directoryFilter: ['!.git', '!*modules'],
+        type: 'files',
+        depth: 3,
+      })
+      .then(
+        R.tap(files => {
+          console.log(`${files.length} blog posts found`)
+        }),
+      )
+      .then(
+        R.forEach(f => {
+          file2markdown(f.fullPath)
+        }),
+      )
+      .catch(e => console.log(e))
   }
 
   return {
     list() {
-      return Object.values(cache)
-        .sort(R.descend(x => x.date))
+      return Object.values(cache).sort(R.descend(x => x.date))
     },
     get(f: string) {
       return cache[f]

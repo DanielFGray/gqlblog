@@ -63,7 +63,9 @@ const FeedItem = ({
           {' on '}
           <span className="name">{branch.name}</span>
           {': '}
-          <a href={branch.commitUrl} className="message" target="_blank" rel="noopener noreferrer">{branch.message}</a>
+          <a href={branch.commitUrl} className="message" target="_blank" rel="noopener noreferrer">
+            {branch.message}
+          </a>
         </div>
       ) : (
         <div className="branchinfo">
@@ -109,17 +111,15 @@ export default function GitActivity() {
             </button>
           </div>
         )}
-        {'sort:'}
+        sort:
         <button
           className={sort === 'date' ? 'active' : undefined}
-          onClick={() => changeSort('date')}
-        >
+          onClick={() => changeSort('date')}>
           date
         </button>
         <button
           className={sort === 'stars' ? 'active' : undefined}
-          onClick={() => changeSort('stars')}
-        >
+          onClick={() => changeSort('stars')}>
           stars
         </button>
       </div>

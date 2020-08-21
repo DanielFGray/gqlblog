@@ -49,7 +49,6 @@ const extensions = ['.ts', '.tsx', '.js', '.jsx', '.cjs', '.gql']
 const clientConfig = {
   name: 'client',
   mode: NODE_ENV,
-  devtool: devMode ? 'cheap-module-eval-source-map' : undefined,
   entry: ['./src/client/index'],
   resolve: {
     extensions,
@@ -82,7 +81,6 @@ const clientConfig = {
       output: path.join(path.resolve(OUTPUT_DIR), 'manifest.json'),
       writeToDisk: true,
     }),
-    ...(! devMode ? [new OptimizeCssAssetsPlugin({ cssProcessor: require('cssnano') })] : []),
   ],
   stats,
 }

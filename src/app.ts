@@ -32,7 +32,9 @@ export const staticFiles: Koa.Middleware = async (ctx, next) => {
     if (ctx.path !== '/') {
       return await send(ctx, ctx.path, { root: PUBLIC_DIR })
     }
-  } catch (e) { /* fallthrough */ }
+  } catch (e) {
+    /* fallthrough */
+  }
   return next()
 }
 
@@ -42,12 +44,5 @@ export default function app(): Koa.Middleware {
     playground: true,
     introspection: true,
   })
-  return kcompose([
-    koaHelmet(),
-    logErrors,
-    logger,
-    staticFiles,
-    apolloServer.getMiddleware(),
-    SSR,
-  ])
+  return kcompose([koaHelmet(), logErrors, logger, staticFiles, apolloServer.getMiddleware(), SSR])
 }

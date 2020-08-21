@@ -1,11 +1,11 @@
 import 'dotenv/config'
 import http from 'http'
 import Koa from 'koa'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { execute, subscribe } from 'graphql'
+// import { SubscriptionServer } from 'subscriptions-transport-ws'
+// import { execute, subscribe } from 'graphql'
 import { promises as fs } from 'fs'
 import app from './app'
-import schema from './schema'
+// import schema from './schema'
 
 const { NODE_ENV, PORT, HOST, APP_URL } = process.env
 
@@ -30,19 +30,21 @@ async function main() {
   koa.use(app())
 
   const server = http.createServer(koa.callback())
-  await new Promise(res => { server.listen(Number(PORT), HOST, res) })
+  await new Promise(res => {
+    server.listen(Number(PORT), HOST, res)
+  })
   console.info(`server now running on http://${APP_URL}`)
-  SubscriptionServer.create(
-    {
-      execute,
-      subscribe,
-      schema,
-    },
-    {
-      server,
-      path: '/subscriptions',
-    },
-  )
+  // SubscriptionServer.create(
+  //   {
+  //     execute,
+  //     subscribe,
+  //     schema,
+  //   },
+  //   {
+  //     server,
+  //     path: '/subscriptions',
+  //   },
+  // )
 }
 main().catch(die)
 

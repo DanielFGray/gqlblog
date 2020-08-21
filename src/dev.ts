@@ -4,9 +4,9 @@ import webpack from 'webpack'
 import koaWebpack from 'koa-webpack'
 import WebpackBar from 'webpackbar'
 import fetch from 'isomorphic-unfetch'
-import config from '../webpack.config'
 import * as R from 'ramda'
 import chalk from 'chalk'
+import config from '../webpack.config'
 
 const { APP_URL } = process.env
 
@@ -17,19 +17,22 @@ const prettyCodegen = R.pipe(
   R.toString,
   R.split('\n'),
   R.filter(Boolean),
-  R.map(R.pipe(
-    R.replace(/^(\[[0-9:]+\])?\s*/, ''),
-    R.cond([
-      [R.endsWith('[failed]'), chalk.red.bold],
-      [R.endsWith('[completed]'), chalk.green],
-      [R.includes('ℹ'), chalk.blue],
-      [R.T, R.identity],
-    ]),
-    x => `${chalk.gray('gql-codegen:')} ${x}`,
-  )),
+  R.map(
+    R.pipe(
+      R.replace(/^(\[[0-9:]+\])?\s*/, ''),
+      R.cond([
+        [R.endsWith('[failed]'), chalk.red.bold],
+        [R.endsWith('[completed]'), chalk.green],
+        [R.includes('ℹ'), chalk.blue],
+        [R.T, R.identity],
+      ]),
+      x => `${chalk.gray('gql-codegen:')} ${x}`,
+    ),
+  ),
   x => process.stdout.write(`${x.join('\n')}\n`),
 )
 
+/* eslint-disable-next-line import/prefer-default-export */
 export async function devMiddleware() {
   const multiCompiler = webpack(config)
   const clientCompiler = multiCompiler.compilers.find(c => c.name === 'client')
@@ -42,14 +45,19 @@ export async function devMiddleware() {
 
     c.hooks.done.tap('built', async () => {
       try {
-        if (! watchingQueries) {
+        if (!watchingQueries) {
           watchingQueries = true
-          spawn('yarn', ['-s', 'graphql-codegen', '--watch'], { stdio: [null, 'pipe'] })
-            .on('exit', () => { watchingQueries = false })
+          spawn('yarn', ['-s', 'graphql-codegen', '--watch'], {
+            stdio: [null, 'pipe'],
+          })
+            .on('exit', () => {
+              watchingQueries = false
+            })
             .stdout.on('data', prettyCodegen)
         }
 
-        await Promise.all([ // FIXME: these should be tests
+        await Promise.all([
+          // FIXME: these should be tests
           fetch(`http://${APP_URL}/`),
           fetch(`http://${APP_URL}/projects`),
           fetch(`http://${APP_URL}/music/rudimental-permutations`),
