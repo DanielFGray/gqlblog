@@ -42,7 +42,7 @@ const getAssets = (ctx: Koa.Context): Assets => {
   )
 }
 
-export default async function SSR(ctx: Koa.Context): Promise<void> {
+const SSR: Koa.Middleware = async ctx => {
   const { styles, scripts } = getAssets(ctx)
   const client = new ApolloClient({
     ssrMode: true,
@@ -88,3 +88,4 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
     scripts,
   })
 }
+export default SSR
