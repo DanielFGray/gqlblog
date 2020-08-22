@@ -17,7 +17,7 @@ type Assets = {
 
 const { APP_BASE, NODE_ENV } = process.env
 
-const getApp = (): React.ReactNode => {
+const getApp = (): React.FC => {
   if (NODE_ENV === 'production') return require('./client/Layout').default // eslint-disable-line
   const importFresh = require('import-fresh') // eslint-disable-line
   return importFresh('./client/Layout').default // eslint-disable-line
