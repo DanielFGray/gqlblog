@@ -4,6 +4,7 @@
   @typescript-eslint/no-unsafe-member-access */
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { HelmetData } from 'react-helmet-async'
 
 const { NODE_ENV, APP_BASE, MOUNT } = process.env
 
@@ -14,8 +15,8 @@ export default function Html({
   styles,
   scripts,
 }: {
-  data: any
-  helmet: any
+  data: { [key: string]: any } // eslint-disable-line @typescript-eslint/no-explicit-any
+  helmet: HelmetData
   html: string
   styles: string[]
   scripts: string[]
