@@ -59,7 +59,6 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
   const helmetCtx = {}
 
   const Layout = getApp()
-  console.log(Layout)
   const App = (
     <ApolloProvider client={client}>
       <StaticRouter basename={APP_BASE} location={ctx.url} context={routerCtx}>

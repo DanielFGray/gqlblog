@@ -33,7 +33,7 @@ const cache: PostCache = {}
 const basenameWithoutExtension = R.replace(/^.*[\\/](.*?).md$/, '$1')
 
 async function file2markdown(path: string) {
-  console.log('process markdown file: %s', path)
+  if (NODE_ENV !== 'production') console.log('processing markdown file: %s', path)
   const source = await fs.readFile(path)
   const { data, content: orig } = matter(source)
   const { title, date, category, tags } = data
