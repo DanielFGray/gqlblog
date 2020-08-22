@@ -2,8 +2,7 @@ import Koa from 'koa'
 import React from 'react'
 import type webpack from 'webpack'
 import { StaticRouter, StaticRouterContext } from 'react-router'
-import { HelmetProvider } from 'react-helmet-async'
-import { HelmetData } from 'react-helmet'
+import { HelmetProvider, FilledContext, HelmetData } from 'react-helmet-async'
 import { ApolloProvider, ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
 import { renderToStringWithData } from '@apollo/client/react/ssr'
 import { SchemaLink } from '@apollo/client/link/schema'
@@ -18,11 +17,10 @@ type Assets = {
 
 const { APP_BASE, NODE_ENV } = process.env
 
-const getApp = async (): Promise<React.FC> => {
-  // eslint-disable-next-line global-require
-  if (NODE_ENV === 'production') return require('./client/Layout')
-  const importFresh = (await import('import-fresh')).default
-  return (await importFresh('./client/Layout')).default
+const getApp = (): React.ReactNode => {
+  if (NODE_ENV === 'production') return require('./client/Layout').default // eslint-disable-line
+  const importFresh = require('import-fresh') // eslint-disable-line
+  return importFresh('./client/Layout').default // eslint-disable-line
 }
 
 const getAssets = (ctx: Koa.Context): Assets => {
@@ -60,7 +58,8 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
   const routerCtx: StaticRouterContext = {}
   const helmetCtx = {}
 
-  const Layout = await getApp()
+  const Layout = getApp()
+  console.log(Layout)
   const App = (
     <ApolloProvider client={client}>
       <StaticRouter basename={APP_BASE} location={ctx.url} context={routerCtx}>
@@ -72,7 +71,7 @@ export default async function SSR(ctx: Koa.Context): Promise<void> {
   )
 
   const html = await renderToStringWithData(App)
-  const { helmet }: HelmetData = helmetCtx
+  const { helmet } = helmetCtx as FilledContext
   const data = client.extract()
 
   if (routerCtx.statusCode) {
