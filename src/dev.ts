@@ -47,7 +47,8 @@ export async function devMiddleware() {
       try {
         if (!watchingQueries) {
           watchingQueries = true
-          spawn('yarn', ['-s', 'graphql-codegen', '--watch'], {
+          console.log('starting graphql-codegen')
+          spawn('yarn', ['-s', 'gql-gen', '--watch'], {
             stdio: [null, 'pipe'],
           })
             .on('exit', () => {
