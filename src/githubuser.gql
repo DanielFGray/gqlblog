@@ -61,6 +61,9 @@ query GithubUserActivity(
                   history(first: $commits) {
                     nodes {
                       ... on Commit {
+                        author {
+                          name
+                        }
                         id
                         committedDate
                         message

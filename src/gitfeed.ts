@@ -145,6 +145,7 @@ const GHResponse = T.type({
                     history: T.type({
                       nodes: T.array(
                         T.type({
+                          author: T.type({ name: T.string }),
                           id: T.string,
                           committedDate: T.string,
                           message: T.string,
@@ -190,7 +191,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
     res.right.data.user.repositories.nodes,
     R.map(({ refs, stargazers, licenseInfo, primaryLanguage, ...rest }) => {
       const branches = pipe(
-        R.filter(x => !x.name.startsWith('dependabot'), refs.nodes),
+        refs.nodes,
         R.map(({ name, target }) => {
           const [node] = target.history.nodes
           return {
@@ -199,6 +200,7 @@ const githubRepos = async (): Promise<GitActivity[]> => {
             committedDate: seconds(node.committedDate),
           }
         }),
+        R.filter(x => !(x.author?.name?.endsWith('[bot]') || x.author?.name?.endsWith('bot'))),
         R.sort(R.descend(x => x.committedDate)),
       )
       return {
