@@ -80,7 +80,7 @@ const FeedItem = ({
 export default function GitActivity() {
   const { data, error, loading } = useGitActivityQuery()
   const [filter, filter$] = useState<string | null>(null)
-  const [sort, sort$] = useState<string | null>('date')
+  const [sort, sort$] = useState<'date' | 'stars' | null>('stars')
 
   if (error) {
     console.error(error)
