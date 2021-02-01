@@ -15,6 +15,8 @@ const { NODE_ENV, PUBLIC_DIR, OUTPUT_DIR, APP_TITLE, APP_BASE, APP_URL, MOUNT } 
 
 const devMode = NODE_ENV === 'development'
 
+/** @typedef {import('webpack').RuleSetRule} WebpackRules */
+/** @type WebpackRules[] */
 const cssLoaders = [
   {
     test: /\.css$/,
@@ -28,6 +30,7 @@ const cssLoaders = [
   },
 ]
 
+/** @type WebpackRules[] */
 const babelLoader = [
   {
     test: /\.(gql|[tj]sx?)$/,
