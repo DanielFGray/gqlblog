@@ -9,7 +9,7 @@ import app from './app'
 
 const { NODE_ENV, PORT, HOST, APP_URL } = process.env
 
-const die = (e?: Error | string) => {
+const die = (e?: Error | string): never => {
   if (e) console.error(e)
   process.exit(1)
 }

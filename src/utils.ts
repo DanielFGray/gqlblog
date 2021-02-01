@@ -4,10 +4,17 @@ export const thread = curry((as, a) => as.reduce((x, f) => f(x), a))
 
 export const uniq = <T>(x: T[]): T[] => Array.from(new Set(x))
 
-interface Token {
-  type: 'string' | 'url'
+type urlToken = {
+  type: 'url'
   value: string
 }
+
+type strToken = {
+  type: 'string'
+  value: string
+}
+
+type Token = urlToken | strToken
 
 /* blame greenjello on freenode for this */
 export const urlTokens = (str: string) => {

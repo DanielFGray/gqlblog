@@ -28,7 +28,7 @@ export default function Layout() {
   const tagList = uniq(data.BlogList.flatMap(x => x?.tags ?? []))
 
   // FIXME: this should probably be lifted and computed sooner?
-  const routes: (RouteProps & { label: string })[] = [
+  const routes: (RouteProps & { path: string; label: string })[] = [
     {
       label: 'Home',
       path: '/',

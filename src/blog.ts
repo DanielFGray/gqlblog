@@ -24,11 +24,7 @@ const md = new MarkdownIt({})
 
 export const markdown = (text: string) => md.render(`\${toc}${text}`)
 
-type PostCache = {
-  [key: string]: Blog
-}
-
-const cache: PostCache = {}
+const cache: StrMap<Blog> = {}
 
 const basenameWithoutExtension = R.replace(/^.*[\\/](.*?).md$/, '$1')
 

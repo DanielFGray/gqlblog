@@ -1,3 +1,7 @@
+/// <reference types="node" />
+/// <reference types="react" />
+/// <reference types="react-dom" />
+
 declare namespace NodeJS {
   export interface ProcessEnv {
     APP_TITLE: string
@@ -17,3 +21,7 @@ declare namespace NodeJS {
     GITHUB_KEY: string
   }
 }
+type StrMap<T> = { [k: string]: T }
+type Scalar = number | string | boolean | Date | symbol | bigint
+type Mixed = Scalar[] | StrMap<Scalar> | StrMap<Scalar[]>
+type Nullable<T> = T | null | undefined
