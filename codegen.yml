@@ -20,5 +20,5 @@ generates:
       withHooks: true
       withMutationFn: true
 hooks:
-  afterAllFileWrite:
-    - prettier './src/**/*.gql' --write
+  afterOneFileWrite:
+    - prettier './src/generated-types.ts' --write
