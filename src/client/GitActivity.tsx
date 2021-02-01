@@ -32,13 +32,13 @@ const prettyData = (data: Partial<TGitActivity>) =>
     return p
   }, [])
 
-const FeedItem = ({
+function FeedItem({
   data: { description, name, url, language, ...data },
   toggleFilter,
 }: {
   data: TGitActivity
   toggleFilter: () => void
-}) => {
+}) {
   const [branch] = data.branches ?? []
   const date = new Date(branch ? branch.committedDate : data.updated)
   const pretty = prettyData(data)

@@ -44,5 +44,12 @@ export default function app(): Koa.Middleware {
     playground: true,
     introspection: true,
   })
-  return kcompose([koaHelmet(), logErrors, logger, staticFiles, apolloServer.getMiddleware(), SSR])
+  return kcompose([
+    koaHelmet(),
+    logErrors,
+    logger,
+    staticFiles,
+    apolloServer.getMiddleware(),
+    SSR,
+  ])
 }

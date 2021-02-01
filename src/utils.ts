@@ -17,11 +17,11 @@ type strToken = {
 type Token = urlToken | strToken
 
 /* blame greenjello on freenode for this */
-export const urlTokens = (str: string) => {
+export function urlTokens(str: string) {
   const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
   const tokens: Token[] = []
   let last = 0
-  if (!str) return tokens
+  if (! str) return tokens
   str.replace(regex, (m, ...args) => {
     const index = args[args.length - 2]
     tokens.push({

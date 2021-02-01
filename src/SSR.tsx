@@ -29,17 +29,14 @@ const getAssets = (ctx: Koa.Context): Assets => {
       ? ctx.state.manifest
       : (ctx.state.webpackStats as webpack.Stats).toJson().assetsByChunkName?.main,
   )
-  return list.reduce(
-    (p: Assets, x) => {
-      if (x.endsWith('.css')) {
-        p.styles.push(x)
-      } else if (x.endsWith('.js')) {
-        p.scripts.push(x)
-      }
-      return p
-    },
-    { styles: [], scripts: [] },
-  )
+  return list.reduce((p: Assets, x) => {
+    if (x.endsWith('.css')) {
+      p.styles.push(x)
+    } else if (x.endsWith('.js')) {
+      p.scripts.push(x)
+    }
+    return p
+  }, { styles: [], scripts: [] })
 }
 
 const SSR: Koa.Middleware = async ctx => {
@@ -73,13 +70,12 @@ const SSR: Koa.Middleware = async ctx => {
   const { helmet } = helmetCtx as FilledContext
   const data = client.extract()
 
-  if (routerCtx.statusCode) {
-    ctx.status = routerCtx.statusCode
-  }
+  if (routerCtx.statusCode) ctx.status = routerCtx.statusCode
   if (routerCtx.url) {
-    ctx.redirect(routerCtx.url)
+    ctx.redirect(routerCtx.statusCode ?? 307, routerCtx.url)
     return
   }
+
   ctx.body = Html({
     data,
     helmet,

@@ -17,7 +17,7 @@ import './font-awesome.css'
 const { APP_BASE, MOUNT } = process.env
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!MOUNT) throw new Error('missing MOUNT env')
+  if (! MOUNT) throw new Error('missing MOUNT env')
 
   const cache = new InMemoryCache()
   try {

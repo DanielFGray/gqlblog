@@ -73,7 +73,7 @@ export default function Layout() {
   return (
     <div className="layout">
       <Helmet defaultTitle={APP_TITLE} titleTemplate={`${APP_TITLE} | %s`} />
-      <Nav {...{ routes }} />
+      <Nav routes={routes} />
       <main>
         <Switch>
           {routes.map(({ path, render, label: _, component: C, ...rest }) => (
