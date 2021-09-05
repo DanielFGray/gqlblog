@@ -60,7 +60,7 @@
     "readdirp": "^3.3.0",
     "reading-time": "^1.2.0",
     "s-ago": "^2.1.0",
-    "typesync": "^0.7.0"
+    "typesync": "^0.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
