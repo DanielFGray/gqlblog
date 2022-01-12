@@ -44,7 +44,7 @@
     "koa-compose": "^4.1.0",
     "koa-helmet": "^5.2.0",
     "koa-send": "^5.0.0",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^12.3.2",
     "markdown-it-anchor": "^5.2.5",
     "markdown-it-prism": "^2.0.3",
     "markdown-it-toc-done-right": "^4.1.0",
