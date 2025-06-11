@@ -39,7 +39,7 @@
     "import-fresh": "^3.2.1",
     "io-ts": "^2.2.7",
     "isomorphic-unfetch": "^3.0.0",
-    "koa": "^2.11.0",
+    "koa": "^2.16.1",
     "koa-body": "^4.1.1",
     "koa-compose": "^4.1.0",
     "koa-helmet": "^5.2.0",
