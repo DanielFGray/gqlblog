@@ -12940,9 +12940,9 @@ symbol-observable@^1.0.4, symbol-observable@^1.1.0, symbol-observable@^1.2.0:
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
 
 systeminformation@^4.23.3:
-  version "4.26.10"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.26.10.tgz#2244e7529ca9e7b8ecd6941e19fe7df7e3da9146"
-  integrity sha512-bO4FIzrjESAfh4KHwkUJym3jvKtJ4oJ2PG0BBQGBmKa0pF2oanpkB7CF4ZsSX7vfp3+GKaLzioVwpV/3Tyk+lQ==
+  version "4.34.23"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.34.23.tgz#54c54ced5adc49c27cda953b73c0819ed56edd45"
+  integrity sha512-33+lQwlLxXoxy0o9WLOgw8OjbXeS3Jv+pSl+nxKc2AOClBI28HsdRPpH0u9Xa9OVjHLT9vonnOMw1ug7YXI0dA==
 
 table@^5.2.3, table@^5.4.6:
   version "5.4.6"
